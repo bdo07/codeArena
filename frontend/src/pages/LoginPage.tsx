@@ -4,23 +4,25 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Terminal, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
-const loginSchema = z.object({
-  login: z.string().min(1, 'Please enter your email or username'),
-  password: z.string().min(1, 'Please enter your password'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const loginSchema = z.object({
+    login: z.string().min(1, t('auth.errors.loginRequired')),
+    password: z.string().min(1, t('auth.errors.passwordRequired')),
+  });
+
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
@@ -43,7 +45,7 @@ export const LoginPage: React.FC = () => {
       } else if (err.response?.data?.message) {
         setServerError(err.response.data.message);
       } else {
-        setServerError('An unexpected error occurred. Please check your credentials.');
+        setServerError(t('auth.unexpectedError'));
       }
     }
   };
@@ -53,29 +55,29 @@ export const LoginPage: React.FC = () => {
       <div className="w-full max-w-sm space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-violet-400 mx-auto">
+          <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-violet-600 dark:text-violet-400 mx-auto shadow-2xs">
             <Terminal className="w-5 h-5" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-100">Welcome Back</h1>
-          <p className="text-xs text-zinc-400">Sign in to your CodeArena account</p>
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">{t('auth.welcomeBack')}</h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">{t('auth.signInSubtitle')}</p>
         </div>
 
         {/* Demo credentials hint */}
-        <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded-lg text-xs text-zinc-400 space-y-1 text-left">
-          <div className="font-medium text-zinc-300">Quick Test Credentials:</div>
-          <div className="font-mono text-[11px] text-zinc-400">
-            Username: <span className="text-violet-300">alexchen</span> · Pass:{' '}
-            <span className="text-violet-300">Password123!</span>
+        <div className="p-3 bg-zinc-100/90 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-600 dark:text-zinc-400 space-y-1 text-left shadow-2xs">
+          <div className="font-medium text-zinc-800 dark:text-zinc-300">{t('auth.quickTestCredentials')}</div>
+          <div className="font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
+            Username: <span className="text-violet-600 dark:text-violet-300 font-semibold">alexchen</span> · Pass:{' '}
+            <span className="text-violet-600 dark:text-violet-300">Password123!</span>
           </div>
-          <div className="font-mono text-[11px] text-zinc-400">
-            Admin: <span className="text-violet-300">admin</span> · Pass:{' '}
-            <span className="text-violet-300">Password123!</span>
+          <div className="font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
+            Admin: <span className="text-violet-600 dark:text-violet-300 font-semibold">admin</span> · Pass:{' '}
+            <span className="text-violet-600 dark:text-violet-300">Password123!</span>
           </div>
         </div>
 
         {serverError && (
-          <div className="p-3 bg-rose-950/40 border border-rose-800/50 rounded-lg text-xs text-rose-300 flex items-center gap-2 text-left">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 rounded-lg text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2 text-left">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400" />
             <span>{serverError}</span>
           </div>
         )}
@@ -84,8 +86,8 @@ export const LoginPage: React.FC = () => {
         <Card className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              label="Username or Email"
-              placeholder="e.g. alexchen or alex@example.com"
+              label={t('auth.usernameOrEmail')}
+              placeholder={t('auth.usernameOrEmailPlaceholder')}
               autoComplete="username"
               leftIcon={<Mail className="w-4 h-4" />}
               error={errors.login?.message}
@@ -93,9 +95,9 @@ export const LoginPage: React.FC = () => {
             />
 
             <Input
-              label="Password"
+              label={t('auth.password')}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.passwordPlaceholder')}
               autoComplete="current-password"
               leftIcon={<Lock className="w-4 h-4" />}
               error={errors.password?.message}
@@ -110,15 +112,15 @@ export const LoginPage: React.FC = () => {
               isLoading={isSubmitting}
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
-              Sign In
+              {t('common.signIn')}
             </Button>
           </form>
         </Card>
 
         <p className="text-xs text-center text-zinc-500">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-violet-400 hover:text-violet-300 font-medium">
-            Create an account
+          {t('auth.dontHaveAccount')}{' '}
+          <Link to="/register" className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-medium">
+            {t('auth.createAccount')}
           </Link>
         </p>
       </div>
