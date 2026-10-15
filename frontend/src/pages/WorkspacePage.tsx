@@ -17,7 +17,6 @@ import {
   AlertTriangle,
   Award,
   Sparkles,
-  ExternalLink,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Challenge, RunResult, SubmitResult, Submission } from '@/types';
