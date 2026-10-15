@@ -18,13 +18,13 @@ export const Badge: React.FC<BadgeProps> = ({
   }[size];
 
   const variantStyles = {
-    default: 'bg-zinc-800/80 text-zinc-300 border border-zinc-700/50',
-    Easy: 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40',
-    Medium: 'bg-amber-950/40 text-amber-400 border border-amber-800/40',
-    Hard: 'bg-rose-950/40 text-rose-400 border border-rose-800/40',
-    violet: 'bg-violet-950/40 text-violet-300 border border-violet-800/40',
-    zinc: 'bg-zinc-900 text-zinc-400 border border-zinc-800',
-    outline: 'bg-transparent text-zinc-400 border border-zinc-800',
+    default: 'bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-800/80 dark:text-zinc-300 dark:border-zinc-700/50',
+    Easy: 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/40',
+    Medium: 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40',
+    Hard: 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800/40',
+    violet: 'bg-violet-50 text-violet-700 border border-violet-200 dark:bg-violet-950/40 dark:text-violet-300 dark:border-violet-800/40',
+    zinc: 'bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:border-zinc-800',
+    outline: 'bg-transparent text-zinc-600 border border-zinc-300 dark:text-zinc-400 dark:border-zinc-800',
   }[variant];
 
   return (
