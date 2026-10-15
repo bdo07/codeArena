@@ -98,29 +98,49 @@ export const SEEDED_BADGE_TRANSLATIONS_FR: Record<
  * Returns translated challenge content if language is French and a translation exists;
  * otherwise preserves the original challenge text unchanged.
  */
-export function getTranslatedChallenge(
-  challenge: Challenge,
-  language: string
-): Challenge {
+export function getTranslatedChallenge<
+  T extends {
+    slug: string;
+    title: string;
+    description?: string;
+    input_description?: string;
+    output_description?: string;
+    constraints?: string;
+  }
+>(challenge: T, language: string): T {
   if (language.startsWith('fr')) {
     const translation = SEEDED_CHALLENGE_TRANSLATIONS_FR[challenge.slug];
     if (translation) {
       return {
         ...challenge,
         title: translation.title || challenge.title,
-        description: translation.description || challenge.description,
-        input_description:
-          translation.input_description !== undefined
-            ? translation.input_description
-            : challenge.input_description,
-        output_description:
-          translation.output_description !== undefined
-            ? translation.output_description
-            : challenge.output_description,
-        constraints:
-          translation.constraints !== undefined
-            ? translation.constraints
-            : challenge.constraints,
+        ...(challenge.description !== undefined
+          ? { description: translation.description || challenge.description }
+          : {}),
+        ...(challenge.input_description !== undefined
+          ? {
+              input_description:
+                translation.input_description !== undefined
+                  ? translation.input_description
+                  : challenge.input_description,
+            }
+          : {}),
+        ...(challenge.output_description !== undefined
+          ? {
+              output_description:
+                translation.output_description !== undefined
+                  ? translation.output_description
+                  : challenge.output_description,
+            }
+          : {}),
+        ...(challenge.constraints !== undefined
+          ? {
+              constraints:
+                translation.constraints !== undefined
+                  ? translation.constraints
+                  : challenge.constraints,
+            }
+          : {}),
       };
     }
   }
