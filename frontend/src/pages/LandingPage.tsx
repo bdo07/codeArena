@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Trophy, Code2, Cpu, CheckCircle2, ShieldCheck, Flame, ChevronRight } from 'lucide-react';
+import { ArrowRight, Trophy, Code2, Cpu, ShieldCheck, Flame, ChevronRight, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Challenge, Challenge as ChallengeType } from '@/types';
+import { Challenge as ChallengeType, LeaderboardUser } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
@@ -17,7 +17,7 @@ export const LandingPage: React.FC = () => {
     },
   });
 
-  const { data: leaderboardData } = useQuery({
+  const { data: leaderboardData } = useQuery<{ data: LeaderboardUser[] }>({
     queryKey: ['leaderboard-preview'],
     queryFn: async () => {
       const res = await api.get('/leaderboard', { params: { per_page: 3 } });
@@ -140,6 +140,53 @@ export const LandingPage: React.FC = () => {
           )}
         </div>
       </section>
+
+      {/* Top Programmers Leaderboard Preview */}
+      {leaderboardData?.data && leaderboardData.data.length > 0 && (
+        <section className="w-full max-w-5xl mx-auto px-4 py-8 text-left">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-400" />
+                Top Competitors
+              </h2>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Current leaderboard leaders based on verified solve XP
+              </p>
+            </div>
+            <Link
+              to="/leaderboard"
+              className="text-xs font-medium text-violet-400 hover:text-violet-300 flex items-center gap-1"
+            >
+              Full Leaderboard <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {leaderboardData.data.slice(0, 3).map((item) => (
+              <Link key={item.id} to={`/profile/${item.username}`}>
+                <Card hoverable className="p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700/60 font-bold text-xs text-zinc-200 flex items-center justify-center font-mono">
+                      #{item.rank}
+                    </span>
+                    <div>
+                      <div className="font-semibold text-xs text-zinc-100">{item.name}</div>
+                      <div className="text-[11px] text-zinc-500 font-mono">@{item.username}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-bold text-violet-400 font-mono">
+                      {item.xp.toLocaleString()} XP
+                    </span>
+                    <div className="text-[10px] text-zinc-500">Lvl {item.level}</div>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Feature Highlights Grid */}
       <section className="w-full max-w-5xl mx-auto px-4 py-12 text-left">
