@@ -9,15 +9,12 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
-  AlertTriangle,
-  Code2,
 } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Challenge, TestCase } from '@/types';
+import { Challenge } from '@/types';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 
@@ -67,17 +64,40 @@ export const AdminPage: React.FC = () => {
     { input_data: '', expected_output: '', is_sample: false, points: 30 },
   ]);
 
-  // Authorization check
-  if (!user || user.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
   // Fetch admin challenges
   const { data, isLoading } = useQuery<{ data: Challenge[] }>({
     queryKey: ['admin-challenges'],
     queryFn: async () => {
       const res = await api.get('/admin/challenges');
       return res.data;
+    },
+    enabled: Boolean(user && user.role === 'admin'),
+  });
+
+  // Create or Update Mutation
+  const saveMutation = useMutation({
+    mutationFn: async (payload: AdminChallengePayload) => {
+      if (editingChallenge) {
+        return api.put(`/admin/challenges/${editingChallenge.id}`, payload);
+      }
+      return api.post('/admin/challenges', payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-challenges'] });
+      queryClient.invalidateQueries({ queryKey: ['challenges'] });
+      setIsModalOpen(false);
+      resetForm();
+    },
+  });
+
+  // Delete Mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return api.delete(`/admin/challenges/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-challenges'] });
+      queryClient.invalidateQueries({ queryKey: ['challenges'] });
     },
   });
 
@@ -138,33 +158,6 @@ export const AdminPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  // Create or Update Mutation
-  const saveMutation = useMutation({
-    mutationFn: async (payload: AdminChallengePayload) => {
-      if (editingChallenge) {
-        return api.put(`/admin/challenges/${editingChallenge.id}`, payload);
-      }
-      return api.post('/admin/challenges', payload);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-challenges'] });
-      queryClient.invalidateQueries({ queryKey: ['challenges'] });
-      setIsModalOpen(false);
-      resetForm();
-    },
-  });
-
-  // Delete Mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return api.delete(`/admin/challenges/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-challenges'] });
-      queryClient.invalidateQueries({ queryKey: ['challenges'] });
-    },
-  });
-
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const tags = tagsInput
@@ -204,6 +197,11 @@ export const AdminPage: React.FC = () => {
       testCases.map((tc, i) => (i === index ? { ...tc, [field]: value } : tc))
     );
   };
+
+  // Authorization check after hooks
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6 text-left">
