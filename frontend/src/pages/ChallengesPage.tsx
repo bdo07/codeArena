@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Filter, CheckCircle2, Circle, ArrowUpDown, ChevronLeft, ChevronRight, X, Code2 } from 'lucide-react';
+import { Search, CheckCircle2, Circle, ArrowUpDown, ChevronLeft, ChevronRight, X, Code2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Challenge, Tag, UserProgressItem, PaginationMeta } from '@/types';
 import { useAuth } from '@/features/auth/AuthContext';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Trophy, Medal, Award, ChevronLeft, ChevronRight, User as UserIcon, Sparkles } from 'lucide-react';
+import { Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '@/lib/api';
 import { LeaderboardUser, PaginationMeta } from '@/types';
 import { Button } from '@/components/ui/Button';
