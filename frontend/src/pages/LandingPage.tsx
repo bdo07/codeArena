@@ -1,0 +1,180 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowRight, Trophy, Code2, Cpu, CheckCircle2, ShieldCheck, Flame, ChevronRight } from 'lucide-react';
+import { api } from '@/lib/api';
+import { Challenge, Challenge as ChallengeType } from '@/types';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
+
+export const LandingPage: React.FC = () => {
+  const { data: challengesData, isLoading } = useQuery<{ data: ChallengeType[] }>({
+    queryKey: ['featured-challenges'],
+    queryFn: async () => {
+      const res = await api.get('/challenges', { params: { per_page: 4 } });
+      return res.data;
+    },
+  });
+
+  const { data: leaderboardData } = useQuery({
+    queryKey: ['leaderboard-preview'],
+    queryFn: async () => {
+      const res = await api.get('/leaderboard', { params: { per_page: 3 } });
+      return res.data;
+    },
+  });
+
+  return (
+    <div className="flex flex-col items-center">
+      {/* Hero Section */}
+      <section className="w-full max-w-5xl mx-auto px-4 pt-20 pb-16 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 mb-8">
+          <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+          <span>Competitive Programming Platform</span>
+          <span className="text-zinc-600">·</span>
+          <span className="text-violet-400 font-medium">Judge0 Isolated Sandbox</span>
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-zinc-100 max-w-3xl mx-auto leading-tight sm:leading-none">
+          Think. Code. <span className="text-violet-400">Conquer.</span>
+        </h1>
+
+        <p className="mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          CodeArena is built for developers who care about mastering algorithmic problem solving.
+          Run code in an isolated environment, submit solutions against strict test suites, earn XP, and climb the leaderboard.
+        </p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Link to="/challenges">
+            <Button variant="primary" size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
+              Explore Challenges
+            </Button>
+          </Link>
+          <Link to="/leaderboard">
+            <Button variant="outline" size="lg" leftIcon={<Trophy className="w-4 h-4 text-violet-400" />}>
+              View Leaderboard
+            </Button>
+          </Link>
+        </div>
+
+        {/* Compact stats bar */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-zinc-800/60 rounded-xl overflow-hidden border border-zinc-800">
+          <div className="bg-zinc-950/80 p-5 text-center">
+            <div className="text-2xl font-bold text-zinc-100 font-mono">100%</div>
+            <div className="text-xs text-zinc-500 mt-1">Isolated Sandbox</div>
+          </div>
+          <div className="bg-zinc-950/80 p-5 text-center">
+            <div className="text-2xl font-bold text-zinc-100 font-mono">3+</div>
+            <div className="text-xs text-zinc-500 mt-1">Supported Languages</div>
+          </div>
+          <div className="bg-zinc-950/80 p-5 text-center">
+            <div className="text-2xl font-bold text-zinc-100 font-mono">Real-time</div>
+            <div className="text-xs text-zinc-500 mt-1">Async Evaluation</div>
+          </div>
+          <div className="bg-zinc-950/80 p-5 text-center">
+            <div className="text-2xl font-bold text-violet-400 font-mono">Server-verified</div>
+            <div className="text-xs text-zinc-500 mt-1">Anti-cheat Scoring</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Challenges Preview */}
+      <section className="w-full max-w-5xl mx-auto px-4 py-12 text-left">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+              <Code2 className="w-5 h-5 text-violet-400" />
+              Featured Challenges
+            </h2>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Practice fundamental algorithms and data structures
+            </p>
+          </div>
+          <Link
+            to="/challenges"
+            className="text-xs font-medium text-violet-400 hover:text-violet-300 flex items-center gap-1"
+          >
+            All Challenges <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-28 rounded-xl bg-zinc-900/40 border border-zinc-800 animate-pulse" />
+            ))
+          ) : (
+            challengesData?.data?.map((challenge) => (
+              <Link key={challenge.id} to={`/challenges/${challenge.slug}`}>
+                <Card hoverable className="h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <h3 className="text-sm font-semibold text-zinc-100 group-hover:text-violet-300">
+                        {challenge.title}
+                      </h3>
+                      <Badge variant={challenge.difficulty} size="sm">
+                        {challenge.difficulty}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      {challenge.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-500">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {challenge.tags.slice(0, 2).map((tag) => (
+                        <span key={tag.id} className="text-zinc-400">
+                          #{tag.name}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="font-mono text-zinc-400">
+                      {challenge.total_test_cases_count} Tests
+                    </span>
+                  </div>
+                </Card>
+              </Link>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* Feature Highlights Grid */}
+      <section className="w-full max-w-5xl mx-auto px-4 py-12 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="p-6">
+            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-violet-400 mb-4">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-semibold text-zinc-100 mb-2">Monaco Code Workspace</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Full VS Code editor in browser with syntax highlighting, language switching (Python, JavaScript, C++), and split layout.
+            </p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-emerald-400 mb-4">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-semibold text-zinc-100 mb-2">Private Hidden Test Suites</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Public sample test cases for immediate debugging, with strictly confidential edge-case test suites on submission.
+            </p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-amber-400 mb-4">
+              <Flame className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-semibold text-zinc-100 mb-2">XP & Level Progression</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Earn XP on verified solves, level up from beginner to grandmaster, and collect milestone achievement badges.
+            </p>
+          </Card>
+        </div>
+      </section>
+    </div>
+  );
+};
