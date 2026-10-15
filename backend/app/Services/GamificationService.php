@@ -82,7 +82,7 @@ class GamificationService
 
         if ($solvedCount >= 1) {
             $badge = Badge::where('rule_key', 'first_solve')->first();
-            if ($badge && !in_array($badge->id, $existingBadgeIds)) {
+            if ($badge && ! in_array($badge->id, $existingBadgeIds)) {
                 $user->badges()->attach($badge->id, ['earned_at' => Carbon::now()]);
                 $existingBadgeIds[] = $badge->id;
                 $awarded[] = $badge;
@@ -92,7 +92,7 @@ class GamificationService
         // 2. Problem Solver (3 solves)
         if ($solvedCount >= 3) {
             $badge = Badge::where('rule_key', 'solve_3')->first();
-            if ($badge && !in_array($badge->id, $existingBadgeIds)) {
+            if ($badge && ! in_array($badge->id, $existingBadgeIds)) {
                 $user->badges()->attach($badge->id, ['earned_at' => Carbon::now()]);
                 $existingBadgeIds[] = $badge->id;
                 $awarded[] = $badge;
@@ -102,7 +102,7 @@ class GamificationService
         // 3. Decathlon Coder (5 solves)
         if ($solvedCount >= 5) {
             $badge = Badge::where('rule_key', 'solve_5')->first();
-            if ($badge && !in_array($badge->id, $existingBadgeIds)) {
+            if ($badge && ! in_array($badge->id, $existingBadgeIds)) {
                 $user->badges()->attach($badge->id, ['earned_at' => Carbon::now()]);
                 $existingBadgeIds[] = $badge->id;
                 $awarded[] = $badge;
@@ -112,7 +112,7 @@ class GamificationService
         // 4. Apex Master (Hard solve)
         if ($currentChallenge->difficulty === 'Hard') {
             $badge = Badge::where('rule_key', 'hard_solve')->first();
-            if ($badge && !in_array($badge->id, $existingBadgeIds)) {
+            if ($badge && ! in_array($badge->id, $existingBadgeIds)) {
                 $user->badges()->attach($badge->id, ['earned_at' => Carbon::now()]);
                 $existingBadgeIds[] = $badge->id;
                 $awarded[] = $badge;

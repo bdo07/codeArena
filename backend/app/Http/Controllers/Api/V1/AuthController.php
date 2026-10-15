@@ -56,7 +56,7 @@ class AuthController extends Controller
         // Support login by email or username
         $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (!Auth::attempt([$fieldType => strtolower($login), 'password' => $password], true)) {
+        if (! Auth::attempt([$fieldType => strtolower($login), 'password' => $password], true)) {
             throw ValidationException::withMessages([
                 'login' => ['The provided credentials do not match our records.'],
             ]);
@@ -103,7 +103,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 

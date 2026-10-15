@@ -39,7 +39,7 @@ class SubmissionService
                 $challenge->memory_limit_mb
             );
 
-            if (!$execResult['passed']) {
+            if (! $execResult['passed']) {
                 $allPassed = false;
             }
 
@@ -116,7 +116,7 @@ class SubmissionService
                     $isDemoMode = true;
                 }
 
-                if (!$execResult['passed'] && $firstFailingStatus === null) {
+                if (! $execResult['passed'] && $firstFailingStatus === null) {
                     $firstFailingStatus = $execResult['status'];
                     $firstErrorMessage = $execResult['stderr'];
                 }

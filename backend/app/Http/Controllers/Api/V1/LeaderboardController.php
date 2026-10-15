@@ -19,13 +19,13 @@ class LeaderboardController extends Controller
         $users = User::withCount([
             'progress as solved_count' => function ($q) {
                 $q->whereNotNull('solved_at');
-            }
+            },
         ])
-        ->with('badges')
-        ->orderBy('xp', 'desc')
-        ->orderBy('solved_count', 'desc')
-        ->orderBy('id', 'asc')
-        ->paginate($perPage);
+            ->with('badges')
+            ->orderBy('xp', 'desc')
+            ->orderBy('solved_count', 'desc')
+            ->orderBy('id', 'asc')
+            ->paginate($perPage);
 
         $startRank = ($users->currentPage() - 1) * $users->perPage();
 

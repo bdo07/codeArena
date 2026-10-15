@@ -51,9 +51,9 @@ class SubmissionController extends Controller
     {
         $user = $request->user();
 
-        if ($submission->user_id !== $user->id && !$user->isAdmin()) {
+        if ($submission->user_id !== $user->id && ! $user->isAdmin()) {
             return response()->json([
-                'message' => 'You are not authorized to view this submission.'
+                'message' => 'You are not authorized to view this submission.',
             ], 403);
         }
 

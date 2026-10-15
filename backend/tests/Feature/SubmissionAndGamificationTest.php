@@ -16,6 +16,7 @@ class SubmissionAndGamificationTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Challenge $challenge;
 
     protected function setUp(): void
@@ -48,7 +49,7 @@ class SubmissionAndGamificationTest extends TestCase
         ChallengeTestCase::create([
             'challenge_id' => $this->challenge->id,
             'input_data' => "2,7,11,15\n9",
-            'expected_output' => "0,1",
+            'expected_output' => '0,1',
             'is_sample' => true,
             'points' => 50,
             'position' => 1,
@@ -57,7 +58,7 @@ class SubmissionAndGamificationTest extends TestCase
         ChallengeTestCase::create([
             'challenge_id' => $this->challenge->id,
             'input_data' => "3,3\n6",
-            'expected_output' => "0,1",
+            'expected_output' => '0,1',
             'is_sample' => false,
             'points' => 50,
             'position' => 2,
@@ -68,7 +69,7 @@ class SubmissionAndGamificationTest extends TestCase
     {
         $response = $this->postJson("/api/v1/challenges/{$this->challenge->id}/submit", [
             'language' => 'python',
-            'source_code' => "def two_sum(): pass",
+            'source_code' => 'def two_sum(): pass',
         ]);
 
         $response->assertStatus(401);

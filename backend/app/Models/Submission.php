@@ -12,12 +12,19 @@ class Submission extends Model
     use HasFactory;
 
     public const STATUS_PENDING = 'Pending';
+
     public const STATUS_RUNNING = 'Running';
+
     public const STATUS_ACCEPTED = 'Accepted';
+
     public const STATUS_WRONG_ANSWER = 'Wrong Answer';
+
     public const STATUS_COMPILATION_ERROR = 'Compilation Error';
+
     public const STATUS_RUNTIME_ERROR = 'Runtime Error';
+
     public const STATUS_TIME_LIMIT_EXCEEDED = 'Time Limit Exceeded';
+
     public const STATUS_INTERNAL_ERROR = 'Internal Error';
 
     protected $fillable = [

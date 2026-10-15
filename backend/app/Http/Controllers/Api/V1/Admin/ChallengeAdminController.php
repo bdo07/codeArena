@@ -62,7 +62,7 @@ class ChallengeAdminController extends Controller
             $challenge = Challenge::create($challengeData);
 
             // Tags
-            if (!empty($validated['tags'])) {
+            if (! empty($validated['tags'])) {
                 $tagIds = [];
                 foreach ($validated['tags'] as $tagName) {
                     $tag = Tag::firstOrCreate(

@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Log;
 class CodeExecutionService
 {
     protected string $judgeUrl;
+
     protected ?string $apiKey;
+
     protected bool $useFallback;
 
     // Judge0 CE Language IDs
@@ -46,14 +48,14 @@ class CodeExecutionService
         $expectedTrimmed = trim(str_replace("\r\n", "\n", $expectedOutput));
 
         // Try Judge0 if URL is configured
-        if (!empty($this->judgeUrl)) {
+        if (! empty($this->judgeUrl)) {
             try {
                 $result = $this->executeViaJudge0($languageKey, $sourceCode, $stdin, $expectedTrimmed, $timeLimitMs, $memoryLimitMb);
                 if ($result !== null) {
                     return $result;
                 }
             } catch (Exception $e) {
-                Log::warning('Judge0 execution failed or unreachable: ' . $e->getMessage());
+                Log::warning('Judge0 execution failed or unreachable: '.$e->getMessage());
             }
         }
 
@@ -79,7 +81,7 @@ class CodeExecutionService
      */
     protected function executeViaJudge0(string $language, string $sourceCode, string $stdin, string $expectedOutput, int $timeLimitMs, int $memoryLimitMb): ?array
     {
-        if (!isset($this->languageMap[$language])) {
+        if (! isset($this->languageMap[$language])) {
             throw new Exception("Unsupported language: {$language}");
         }
 
@@ -91,7 +93,7 @@ class CodeExecutionService
             'Accept' => 'application/json',
         ];
 
-        if (!empty($this->apiKey)) {
+        if (! empty($this->apiKey)) {
             $headers['X-Auth-Token'] = $this->apiKey;
             $headers['X-RapidAPI-Key'] = $this->apiKey;
         }
@@ -110,6 +112,7 @@ class CodeExecutionService
 
         if ($response->successful()) {
             $data = $response->json();
+
             return $this->parseJudge0Result($data, $expectedOutput);
         }
 
@@ -189,6 +192,7 @@ class CodeExecutionService
             $computed = $this->solveTwoSum($stdin);
             if ($computed !== null) {
                 $passed = (trim($computed) === trim($expectedOutput));
+
                 return [
                     'status' => $passed ? 'Accepted' : 'Wrong Answer',
                     'stdout' => $computed,
@@ -207,6 +211,7 @@ class CodeExecutionService
             $computed = $this->solveValidParentheses($stdin);
             if ($computed !== null) {
                 $passed = (trim($computed) === trim($expectedOutput));
+
                 return [
                     'status' => $passed ? 'Accepted' : 'Wrong Answer',
                     'stdout' => $computed,
@@ -225,6 +230,7 @@ class CodeExecutionService
             $computed = $this->solveLongestSubstring($stdin);
             if ($computed !== null) {
                 $passed = (trim($computed) === trim($expectedOutput));
+
                 return [
                     'status' => $passed ? 'Accepted' : 'Wrong Answer',
                     'stdout' => (string) $computed,
@@ -243,6 +249,7 @@ class CodeExecutionService
             $computed = $this->solveContainerWithMostWater($stdin);
             if ($computed !== null) {
                 $passed = (trim($computed) === trim($expectedOutput));
+
                 return [
                     'status' => $passed ? 'Accepted' : 'Wrong Answer',
                     'stdout' => (string) $computed,
@@ -261,6 +268,7 @@ class CodeExecutionService
             $computed = $this->solveTrappingWater($stdin);
             if ($computed !== null) {
                 $passed = (trim($computed) === trim($expectedOutput));
+
                 return [
                     'status' => $passed ? 'Accepted' : 'Wrong Answer',
                     'stdout' => (string) $computed,
@@ -290,7 +298,9 @@ class CodeExecutionService
     protected function solveTwoSum(string $stdin): ?string
     {
         $lines = explode("\n", trim(str_replace("\r\n", "\n", $stdin)));
-        if (count($lines) < 2) return null;
+        if (count($lines) < 2) {
+            return null;
+        }
         $nums = array_map('intval', explode(',', trim($lines[0])));
         $target = intval(trim($lines[1]));
 
@@ -298,10 +308,11 @@ class CodeExecutionService
         foreach ($nums as $idx => $num) {
             $diff = $target - $num;
             if (isset($map[$diff])) {
-                return $map[$diff] . ',' . $idx;
+                return $map[$diff].','.$idx;
             }
             $map[$num] = $idx;
         }
+
         return '';
     }
 
@@ -321,6 +332,7 @@ class CodeExecutionService
                 $stack[] = $char;
             }
         }
+
         return empty($stack) ? 'true' : 'false';
     }
 
@@ -338,13 +350,16 @@ class CodeExecutionService
             $map[$char] = $right;
             $maxLen = max($maxLen, $right - $left + 1);
         }
+
         return $maxLen;
     }
 
     protected function solveContainerWithMostWater(string $stdin): ?int
     {
         $line = trim(str_replace("\r\n", "\n", $stdin));
-        if (empty($line)) return 0;
+        if (empty($line)) {
+            return 0;
+        }
         $h = array_map('intval', explode(',', $line));
         $left = 0;
         $right = count($h) - 1;
@@ -358,15 +373,20 @@ class CodeExecutionService
                 $right--;
             }
         }
+
         return $maxWater;
     }
 
     protected function solveTrappingWater(string $stdin): ?int
     {
         $line = trim(str_replace("\r\n", "\n", $stdin));
-        if (empty($line)) return 0;
+        if (empty($line)) {
+            return 0;
+        }
         $h = array_map('intval', explode(',', $line));
-        if (empty($h)) return 0;
+        if (empty($h)) {
+            return 0;
+        }
         $left = 0;
         $right = count($h) - 1;
         $leftMax = $h[$left];
@@ -383,6 +403,7 @@ class CodeExecutionService
                 $water += $rightMax - $h[$right];
             }
         }
+
         return $water;
     }
 }

@@ -67,7 +67,7 @@ class ChallengeTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'slug', 'title', 'difficulty', 'tags', 'sample_test_cases', 'total_test_cases_count']
+                    '*' => ['id', 'slug', 'title', 'difficulty', 'tags', 'sample_test_cases', 'total_test_cases_count'],
                 ],
                 'meta',
             ])

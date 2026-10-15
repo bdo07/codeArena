@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Badge;
 use App\Models\Challenge;
 use App\Models\Submission;
-use App\Models\SubmissionTestResult;
 use App\Models\Tag;
 use App\Models\TestCase;
 use App\Models\User;
@@ -139,8 +138,8 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Two Sum',
                 'difficulty' => 'Easy',
                 'description' => "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.\n\nYou can return the answer in any order.",
-                'input_description' => "First line contains comma-separated numbers representing `nums`. Second line contains the integer `target`.",
-                'output_description' => "Return the two 0-based indices separated by a comma (e.g. `0,1`).",
+                'input_description' => 'First line contains comma-separated numbers representing `nums`. Second line contains the integer `target`.',
+                'output_description' => 'Return the two 0-based indices separated by a comma (e.g. `0,1`).',
                 'constraints' => "• 2 <= nums.length <= 10^4\n• -10^9 <= nums[i] <= 10^9\n• -10^9 <= target <= 10^9\n• Only one valid answer exists.",
                 'time_limit_ms' => 2000,
                 'memory_limit_mb' => 128,
@@ -222,31 +221,31 @@ int main() {
                 'test_cases' => [
                     [
                         'input_data' => "2,7,11,15\n9",
-                        'expected_output' => "0,1",
+                        'expected_output' => '0,1',
                         'is_sample' => true,
                         'points' => 20,
                     ],
                     [
                         'input_data' => "3,2,4\n6",
-                        'expected_output' => "1,2",
+                        'expected_output' => '1,2',
                         'is_sample' => true,
                         'points' => 20,
                     ],
                     [
                         'input_data' => "3,3\n6",
-                        'expected_output' => "0,1",
+                        'expected_output' => '0,1',
                         'is_sample' => false,
                         'points' => 20,
                     ],
                     [
                         'input_data' => "1,5,9,14,20\n23",
-                        'expected_output' => "1,4",
+                        'expected_output' => '1,4',
                         'is_sample' => false,
                         'points' => 20,
                     ],
                     [
                         'input_data' => "-3,4,3,90\n0",
-                        'expected_output' => "0,2",
+                        'expected_output' => '0,2',
                         'is_sample' => false,
                         'points' => 20,
                     ],
@@ -257,8 +256,8 @@ int main() {
                 'title' => 'Valid Parentheses',
                 'difficulty' => 'Easy',
                 'description' => "Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.",
-                'input_description' => "A single line containing the string `s`.",
-                'output_description' => "Output `true` if valid, otherwise `false`.",
+                'input_description' => 'A single line containing the string `s`.',
+                'output_description' => 'Output `true` if valid, otherwise `false`.',
                 'constraints' => "• 1 <= s.length <= 10^4\n• `s` consists of parentheses only `'()[]{}'`.",
                 'time_limit_ms' => 2000,
                 'memory_limit_mb' => 128,
@@ -333,26 +332,26 @@ int main() {
                 ],
                 'test_cases' => [
                     [
-                        'input_data' => "()",
-                        'expected_output' => "true",
+                        'input_data' => '()',
+                        'expected_output' => 'true',
                         'is_sample' => true,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "()[]{}",
-                        'expected_output' => "true",
+                        'input_data' => '()[]{}',
+                        'expected_output' => 'true',
                         'is_sample' => true,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "(]",
-                        'expected_output' => "false",
+                        'input_data' => '(]',
+                        'expected_output' => 'false',
                         'is_sample' => false,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "([)]",
-                        'expected_output' => "false",
+                        'input_data' => '([)]',
+                        'expected_output' => 'false',
                         'is_sample' => false,
                         'points' => 25,
                     ],
@@ -362,9 +361,9 @@ int main() {
                 'slug' => 'longest-substring-without-repeating-characters',
                 'title' => 'Longest Substring Without Repeating Characters',
                 'difficulty' => 'Medium',
-                'description' => "Given a string `s`, find the length of the longest substring without duplicate characters.",
-                'input_description' => "A single line containing the string `s`.",
-                'output_description' => "An integer representing the length of the longest substring without repeating characters.",
+                'description' => 'Given a string `s`, find the length of the longest substring without duplicate characters.',
+                'input_description' => 'A single line containing the string `s`.',
+                'output_description' => 'An integer representing the length of the longest substring without repeating characters.',
                 'constraints' => "• 0 <= s.length <= 5 * 10^4\n• `s` consists of English letters, digits, symbols and spaces.",
                 'time_limit_ms' => 2000,
                 'memory_limit_mb' => 128,
@@ -407,7 +406,7 @@ function lengthOfLongestSubstring(s) {
 const input = fs.readFileSync(0, 'utf-8').replace(/[\\r\\n]+$/, '');
 console.log(lengthOfLongestSubstring(input));
 ",
-                    'cpp' => "#include <iostream>
+                    'cpp' => '#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <algorithm>
@@ -429,30 +428,30 @@ int main() {
     cout << max_len << endl;
     return 0;
 }
-",
+',
                 ],
                 'test_cases' => [
                     [
-                        'input_data' => "abcabcbb",
-                        'expected_output' => "3",
+                        'input_data' => 'abcabcbb',
+                        'expected_output' => '3',
                         'is_sample' => true,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "bbbbb",
-                        'expected_output' => "1",
+                        'input_data' => 'bbbbb',
+                        'expected_output' => '1',
                         'is_sample' => true,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "pwwkew",
-                        'expected_output' => "3",
+                        'input_data' => 'pwwkew',
+                        'expected_output' => '3',
                         'is_sample' => false,
                         'points' => 25,
                     ],
                     [
-                        'input_data' => "aab",
-                        'expected_output' => "2",
+                        'input_data' => 'aab',
+                        'expected_output' => '2',
                         'is_sample' => false,
                         'points' => 25,
                     ],
@@ -463,8 +462,8 @@ int main() {
                 'title' => 'Container With Most Water',
                 'difficulty' => 'Medium',
                 'description' => "You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i`th line are `(i, 0)` and `(i, height[i])`.\n\nFind two lines that together with the x-axis form a container, such that the container contains the most water.\n\nReturn the maximum amount of water a container can store.",
-                'input_description' => "A single line containing comma-separated integers representing bar heights.",
-                'output_description' => "An integer representing the maximum water area.",
+                'input_description' => 'A single line containing comma-separated integers representing bar heights.',
+                'output_description' => 'An integer representing the maximum water area.',
                 'constraints' => "• n == height.length\n• 2 <= n <= 10^5\n• 0 <= height[i] <= 10^4",
                 'time_limit_ms' => 2000,
                 'memory_limit_mb' => 128,
@@ -542,20 +541,20 @@ int main() {
                 ],
                 'test_cases' => [
                     [
-                        'input_data' => "1,8,6,2,5,4,8,3,7",
-                        'expected_output' => "49",
+                        'input_data' => '1,8,6,2,5,4,8,3,7',
+                        'expected_output' => '49',
                         'is_sample' => true,
                         'points' => 30,
                     ],
                     [
-                        'input_data' => "1,1",
-                        'expected_output' => "1",
+                        'input_data' => '1,1',
+                        'expected_output' => '1',
                         'is_sample' => true,
                         'points' => 30,
                     ],
                     [
-                        'input_data' => "4,3,2,1,4",
-                        'expected_output' => "16",
+                        'input_data' => '4,3,2,1,4',
+                        'expected_output' => '16',
                         'is_sample' => false,
                         'points' => 40,
                     ],
@@ -565,9 +564,9 @@ int main() {
                 'slug' => 'trapping-rain-water',
                 'title' => 'Trapping Rain Water',
                 'difficulty' => 'Hard',
-                'description' => "Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.",
-                'input_description' => "A single line containing comma-separated integers representing elevations.",
-                'output_description' => "Total units of trapped rainwater as an integer.",
+                'description' => 'Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.',
+                'input_description' => 'A single line containing comma-separated integers representing elevations.',
+                'output_description' => 'Total units of trapped rainwater as an integer.',
                 'constraints' => "• n == height.length\n• 1 <= n <= 2 * 10^4\n• 0 <= height[i] <= 10^5",
                 'time_limit_ms' => 2000,
                 'memory_limit_mb' => 128,
@@ -668,14 +667,14 @@ int main() {
                 ],
                 'test_cases' => [
                     [
-                        'input_data' => "0,1,0,2,1,0,1,3,2,1,2,1",
-                        'expected_output' => "6",
+                        'input_data' => '0,1,0,2,1,0,1,3,2,1,2,1',
+                        'expected_output' => '6',
                         'is_sample' => true,
                         'points' => 50,
                     ],
                     [
-                        'input_data' => "4,2,0,3,2,5",
-                        'expected_output' => "9",
+                        'input_data' => '4,2,0,3,2,5',
+                        'expected_output' => '9',
                         'is_sample' => true,
                         'points' => 50,
                     ],
