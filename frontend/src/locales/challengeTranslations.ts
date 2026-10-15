@@ -1,4 +1,4 @@
-import { Challenge, Badge } from '@/types';
+import { Badge } from '@/types';
 
 export interface ChallengeContentTranslation {
   title: string;
