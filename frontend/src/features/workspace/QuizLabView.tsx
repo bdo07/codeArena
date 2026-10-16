@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { HelpCircle, CheckCircle2, XCircle, Send, Award, AlertCircle } from 'lucide-react';
+import { HelpCircle, CheckCircle2, XCircle, Send, AlertCircle, RotateCcw } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { Challenge, QuizResult, SubmitResult } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/features/auth/AuthContext';
 
 interface QuizLabViewProps {
   challenge: Challenge;
@@ -10,12 +12,13 @@ interface QuizLabViewProps {
 }
 
 export const QuizLabView: React.FC<QuizLabViewProps> = ({ challenge, onSubmitted }) => {
+  const { user } = useAuth();
   const questions = challenge.quiz_data?.questions || [];
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string | number, number>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  const handleSelectOption = (questionId: number, optionIndex: number) => {
+  const handleSelectOption = (questionId: string | number, optionIndex: number) => {
     if (quizResult) return; // Locked once submitted
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -23,7 +26,17 @@ export const QuizLabView: React.FC<QuizLabViewProps> = ({ challenge, onSubmitted
     }));
   };
 
+  const handleRetake = () => {
+    setQuizResult(null);
+    setSelectedAnswers({});
+  };
+
   const handleSubmitQuiz = async () => {
+    if (questions.length === 0) {
+      alert('No questions available in this quiz.');
+      return;
+    }
+
     if (Object.keys(selectedAnswers).length < questions.length) {
       alert('Please answer all questions before submitting.');
       return;
@@ -72,88 +85,120 @@ export const QuizLabView: React.FC<QuizLabViewProps> = ({ challenge, onSubmitted
         </div>
 
         {/* Questions list */}
-        <div className="space-y-6">
-          {questions.map((q, qIndex) => {
-            const review = quizResult?.review.find((r) => r.id === q.id);
-            const isAnswered = selectedAnswers[q.id] !== undefined;
+        {questions.length === 0 ? (
+          <div className="p-8 text-center text-zinc-400 bg-zinc-900/40 rounded-xl border border-zinc-800">
+            <AlertCircle className="w-8 h-8 mx-auto mb-2 text-zinc-500" />
+            <p className="text-sm">No quiz questions available for this challenge.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {questions.map((q, qIndex) => {
+              const review = quizResult?.review?.find((r) => String(r.id) === String(q.id));
+              const isAnswered = selectedAnswers[q.id] !== undefined;
 
-            return (
-              <div
-                key={q.id}
-                className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800/80 transition-colors"
-              >
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <h3 className="text-sm font-medium text-zinc-200">
-                    <span className="text-indigo-400 font-bold mr-2">Q{qIndex + 1}.</span>
-                    {q.question}
-                  </h3>
-                  {review && (
-                    <span className={`text-xs px-2 py-0.5 rounded font-semibold shrink-0 ${
-                      review.is_correct
-                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/60'
-                        : 'bg-red-950 text-red-400 border border-red-800/60'
-                    }`}>
-                      {review.is_correct ? 'Correct' : 'Incorrect'}
-                    </span>
+              return (
+                <div
+                  key={String(q.id)}
+                  className={`p-5 rounded-xl bg-zinc-900/60 border transition-colors ${
+                    isAnswered ? 'border-zinc-700/80' : 'border-zinc-800/80'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <h3 className="text-sm font-medium text-zinc-200">
+                      <span className="text-indigo-400 font-bold mr-2">Q{qIndex + 1}.</span>
+                      {q.question}
+                    </h3>
+                    {review && (
+                      <span className={`text-xs px-2 py-0.5 rounded font-semibold shrink-0 ${
+                        review.is_correct
+                          ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/60'
+                          : 'bg-red-950 text-red-400 border border-red-800/60'
+                      }`}>
+                        {review.is_correct ? 'Correct' : 'Incorrect'}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Options */}
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {q.options.map((opt, optIndex) => {
+                      const isSelected = selectedAnswers[q.id] === optIndex;
+                      const isCorrectAnswer = review && review.correct_answer === optIndex;
+                      const isUserWrongAnswer = review && !review.is_correct && isSelected;
+
+                      let optionStyle = 'border-zinc-800 bg-zinc-950/50 hover:bg-zinc-800/60 text-zinc-300';
+                      if (isSelected && !review) {
+                        optionStyle = 'border-indigo-500 bg-indigo-950/40 text-indigo-200 font-medium';
+                      } else if (isCorrectAnswer) {
+                        optionStyle = 'border-emerald-600 bg-emerald-950/60 text-emerald-200 font-medium';
+                      } else if (isUserWrongAnswer) {
+                        optionStyle = 'border-red-600 bg-red-950/60 text-red-200';
+                      }
+
+                      return (
+                        <button
+                          key={optIndex}
+                          type="button"
+                          disabled={Boolean(quizResult)}
+                          onClick={() => handleSelectOption(q.id, optIndex)}
+                          className={`w-full text-left p-3 rounded-lg border text-xs flex items-center gap-3 transition-all ${optionStyle}`}
+                        >
+                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                            isSelected ? 'border-indigo-400 bg-indigo-600' : 'border-zinc-600'
+                          }`}>
+                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </div>
+                          <span>{opt}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Explanation */}
+                  {review && review.explanation && (
+                    <div className="mt-3 p-3 rounded bg-zinc-950 border border-zinc-800 text-xs text-zinc-400">
+                      <span className="font-semibold text-zinc-300 block mb-1">Explanation:</span>
+                      {review.explanation}
+                    </div>
                   )}
                 </div>
-
-                {/* Options */}
-                <div className="grid grid-cols-1 gap-2.5">
-                  {q.options.map((opt, optIndex) => {
-                    const isSelected = selectedAnswers[q.id] === optIndex;
-                    const isCorrectAnswer = review && review.correct_answer === optIndex;
-                    const isUserWrongAnswer = review && !review.is_correct && isSelected;
-
-                    let optionStyle = 'border-zinc-800 bg-zinc-950/50 hover:bg-zinc-800/60 text-zinc-300';
-                    if (isSelected && !review) {
-                      optionStyle = 'border-indigo-500 bg-indigo-950/40 text-indigo-200 font-medium';
-                    } else if (isCorrectAnswer) {
-                      optionStyle = 'border-emerald-600 bg-emerald-950/60 text-emerald-200 font-medium';
-                    } else if (isUserWrongAnswer) {
-                      optionStyle = 'border-red-600 bg-red-950/60 text-red-200';
-                    }
-
-                    return (
-                      <button
-                        key={optIndex}
-                        type="button"
-                        onClick={() => handleSelectOption(q.id, optIndex)}
-                        className={`w-full text-left p-3 rounded-lg border text-xs flex items-center gap-3 transition-all ${optionStyle}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                          isSelected ? 'border-indigo-400 bg-indigo-600' : 'border-zinc-600'
-                        }`}>
-                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                        </div>
-                        <span>{opt}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Explanation */}
-                {review && review.explanation && (
-                  <div className="mt-3 p-3 rounded bg-zinc-950 border border-zinc-800 text-xs text-zinc-400">
-                    <span className="font-semibold text-zinc-300 block mb-1">Explanation:</span>
-                    {review.explanation}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Action Button */}
-        {!quizResult && (
+        {!quizResult ? (
+          <div className="pt-4 flex items-center justify-between">
+            <span className="text-xs text-zinc-500">
+              {Object.keys(selectedAnswers).length} of {questions.length} questions answered
+            </span>
+            {user ? (
+              <Button
+                onClick={handleSubmitQuiz}
+                disabled={isSubmitting || questions.length === 0 || Object.keys(selectedAnswers).length < questions.length}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {isSubmitting ? 'Evaluating Answers...' : 'Submit Answers'}
+              </Button>
+            ) : (
+              <Link to="/login">
+                <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6">
+                  Sign In to Submit
+                </Button>
+              </Link>
+            )}
+          </div>
+        ) : (
           <div className="pt-4 flex justify-end">
             <Button
-              onClick={handleSubmitQuiz}
-              disabled={isSubmitting || Object.keys(selectedAnswers).length < questions.length}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6"
+              variant="outline"
+              onClick={handleRetake}
+              className="border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium px-5"
             >
-              <Send className="w-4 h-4 mr-2" />
-              {isSubmitting ? 'Evaluating Answers...' : 'Submit Answers'}
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Retake Quiz
             </Button>
           </div>
         )}
@@ -161,3 +206,4 @@ export const QuizLabView: React.FC<QuizLabViewProps> = ({ challenge, onSubmitted
     </div>
   );
 };
+
