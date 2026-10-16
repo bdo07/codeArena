@@ -26,6 +26,7 @@ class SubmissionResource extends JsonResource
                 'id' => $this->user->id,
                 'username' => $this->user->username,
                 'name' => $this->user->name,
+                'avatar_url' => $this->user->avatar_url,
             ],
             'language' => $this->language,
             'source_code' => $this->source_code,

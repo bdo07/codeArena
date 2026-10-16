@@ -74,7 +74,7 @@ class DiscussionController extends Controller
             'upvotes_count' => 0,
         ]);
 
-        $discussion->load('user:id,name,username,xp');
+        $discussion->load('user:id,name,username,xp,avatar');
 
         return response()->json(['data' => $discussion], 201);
     }
@@ -112,7 +112,7 @@ class DiscussionController extends Controller
             ]);
         }
 
-        $reply->load('user:id,name,username,xp');
+        $reply->load('user:id,name,username,xp,avatar');
 
         return response()->json(['data' => $reply], 201);
     }
