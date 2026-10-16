@@ -75,6 +75,28 @@ export interface UserProfileData {
     submitted_at: string;
   }>;
   is_owner: boolean;
+  snake_stats?: SnakePersonalStats;
+}
+
+export interface SnakeGameSession {
+  id: number;
+  session_id: string;
+  score: number;
+  apples_eaten: number;
+  moves_count: number;
+  duration_seconds: number;
+  is_verified: boolean;
+  is_imported: boolean;
+  ended_at?: string;
+}
+
+export interface SnakePersonalStats {
+  total_games: number;
+  high_score: number;
+  cumulative_score: number;
+  average_score: number;
+  apples_eaten_total: number;
+  recent_games?: SnakeGameSession[];
 }
 
 export interface Badge {
@@ -281,6 +303,7 @@ export interface DashboardStats {
       total: number;
       percentage: number;
     }>;
+    snake_stats?: SnakePersonalStats;
   };
   recent_submissions: Submission[];
   streak?: {
