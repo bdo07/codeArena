@@ -13,6 +13,7 @@ import {
   Zap,
   ShieldCheck,
   Flame,
+  User as UserIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
@@ -21,6 +22,7 @@ import { useAuth } from '@/features/auth/AuthContext';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { Avatar } from '@/components/ui/Avatar';
 import {
   getDifficultyLabel,
   getTranslatedBadge,
