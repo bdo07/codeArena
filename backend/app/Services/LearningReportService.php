@@ -59,7 +59,7 @@ class LearningReportService
         $submissions = $submissionsQuery->get();
 
         $totalSubmissions = $submissions->count();
-        $acceptedSubmissions = $submissions->where('status', 'accepted')->count();
+        $acceptedSubmissions = $submissions->filter(fn($s) => in_array(strtolower((string)$s->status), ['accepted', 'pass']))->count();
         $accuracyRate = $totalSubmissions > 0
             ? (int) round(($acceptedSubmissions / $totalSubmissions) * 100)
             : 0;
@@ -143,7 +143,7 @@ class LearningReportService
             $dayKey = $sub->created_at->format('Y-m-d');
             if (isset($timelineData[$dayKey])) {
                 $timelineData[$dayKey]['submissions']++;
-                if ($sub->status === 'accepted') {
+                if (in_array(strtolower((string)$sub->status), ['accepted', 'pass'])) {
                     $timelineData[$dayKey]['accepted']++;
                 }
             }

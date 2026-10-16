@@ -57,8 +57,8 @@ class LearningReportTest extends TestCase
             'user_id' => $user->id,
             'challenge_id' => $challenge->id,
             'language' => 'python',
-            'code' => 'def solve(): return True',
-            'status' => 'accepted',
+            'source_code' => 'def solve(): return True',
+            'status' => 'Accepted',
         ]);
 
         // Create Git Playground progress
