@@ -98,6 +98,8 @@ Route::prefix('v1')->group(function () {
             ->middleware('throttle:15,1');
         Route::post('/challenges/{challenge}/submit-quiz', [ChallengeController::class, 'submitQuiz'])
             ->middleware('throttle:15,1');
+        Route::post('/challenges/{challenge}/quiz/submit', [ChallengeController::class, 'submitQuiz'])
+            ->middleware('throttle:15,1');
         Route::post('/challenges/{challenge}/bookmark', [ChallengeController::class, 'toggleBookmark']);
 
         // Private Notes

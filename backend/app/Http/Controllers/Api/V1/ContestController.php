@@ -59,8 +59,10 @@ class ContestController extends Controller
         }
 
         return response()->json([
+            'live' => $active,
             'active' => $active,
             'upcoming' => $upcoming,
+            'past' => $finished,
             'finished' => $finished,
         ]);
     }

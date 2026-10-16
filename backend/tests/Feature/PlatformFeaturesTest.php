@@ -188,7 +188,16 @@ class PlatformFeaturesTest extends TestCase
     public function test_user_notes_and_bookmarks(): void
     {
         $user = User::factory()->create();
-        $challenge = Challenge::factory()->create();
+        $challenge = Challenge::create([
+            'title' => 'Bookmark Test Challenge ' . uniqid(),
+            'slug' => 'bookmark-test-' . uniqid(),
+            'description' => 'Test description',
+            'difficulty' => 'Easy',
+            'category' => 'algorithms',
+            'time_limit_ms' => 1000,
+            'memory_limit_mb' => 128,
+            'is_published' => true,
+        ]);
 
         // Bookmark toggle
         $bmResponse = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/bookmark");
