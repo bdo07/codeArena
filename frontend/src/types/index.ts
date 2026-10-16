@@ -62,7 +62,7 @@ export interface Challenge {
   };
   quiz_data?: {
     questions: Array<{
-      id: number;
+      id: string | number;
       question: string;
       options: string[];
     }>;
@@ -186,7 +186,7 @@ export interface QuizResult {
   correct_count: number;
   total_questions: number;
   review: Array<{
-    id: number;
+    id: string | number;
     user_answer: number;
     correct_answer: number;
     is_correct: boolean;
