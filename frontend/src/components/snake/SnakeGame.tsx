@@ -167,150 +167,6 @@ export const SnakeGame: React.FC = () => {
   };
 
   // Start new game session
-  const startGame = useCallback(async () => {
-    // Reset snake & food
-    const initialSnake = [
-      { x: 6, y: 10 },
-      { x: 5, y: 10 },
-      { x: 4, y: 10 },
-    ];
-    snakeRef.current = initialSnake;
-    dirRef.current = 'RIGHT';
-    nextDirRef.current = 'RIGHT';
-    foodRef.current = spawnFood(initialSnake);
-    movesCountRef.current = 0;
-
-    setScore(0);
-    setApplesEaten(0);
-    setStatus('playing');
-    playTone(320, 640, 0.12, 'triangle');
-
-    // If authenticated, initiate server session
-    if (user) {
-      try {
-        const res = await api.post('/snake/start');
-        setSessionId(res.data.session_id);
-      } catch {
-        setSessionId(null);
-      }
-    } else {
-      setSessionId(null);
-    }
-  }, [user, spawnFood, playTone]);
-
-  // Pause / Resume
-  const togglePause = useCallback(() => {
-    setStatus((prev) => {
-      if (prev === 'playing') return 'paused';
-      if (prev === 'paused') return 'playing';
-      return prev;
-    });
-  }, []);
-
-  // Game Over handler
-  const handleGameOver = useCallback(async () => {
-    setStatus('game_over');
-    playTone(180, 70, 0.25, 'sawtooth');
-
-    const finalScore = score;
-    const finalApples = applesEaten;
-    const finalMoves = movesCountRef.current;
-    const currentSessionId = sessionId;
-
-    // Guest score persistence
-    if (!user) {
-      if (finalScore > guestHighScore) {
-        setGuestHighScore(finalScore);
-        localStorage.setItem(GUEST_STORAGE_KEY, String(finalScore));
-      }
-    } else if (currentSessionId) {
-      // Authenticated score submission to server
-      try {
-        setIsSubmittingScore(true);
-        await api.post('/snake/finish', {
-          session_id: currentSessionId,
-          score: finalScore,
-          apples_eaten: finalApples,
-          moves_count: finalMoves,
-        });
-
-        // Invalidate relevant queries
-        queryClient.invalidateQueries({ queryKey: ['snake-stats'] });
-        queryClient.invalidateQueries({ queryKey: ['profile', user.username] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
-      } catch {
-        // Backend verification or conflict handled silently
-      } finally {
-        setIsSubmittingScore(false);
-      }
-    }
-  }, [score, applesEaten, sessionId, user, guestHighScore, playTone, queryClient]);
-
-  // Handle direction change safely (disallow immediate 180° turnaround)
-  const changeDirection = useCallback((newDir: Direction) => {
-    if (status !== 'playing') return;
-    if (!isOppositeDirection(dirRef.current, newDir)) {
-      nextDirRef.current = newDir;
-    }
-  }, [status]);
-
-  // Main game tick
-  const gameTick = useCallback(() => {
-    if (status !== 'playing') return;
-
-    dirRef.current = nextDirRef.current;
-    const currentSnake = snakeRef.current;
-    const head = currentSnake[0];
-    const nextHead = getNextHead(head, dirRef.current);
-
-    movesCountRef.current += 1;
-
-    // 1. Wall collision
-    if (checkWallCollision(nextHead, GRID_SIZE)) {
-      handleGameOver();
-      return;
-    }
-
-    // 2. Self collision (excluding the tail segment that will move)
-    if (checkSelfCollision(nextHead, currentSnake)) {
-      handleGameOver();
-      return;
-    }
-
-    // 3. Move snake
-    const newSnake = [nextHead, ...currentSnake];
-
-    // Check if food eaten
-    if (nextHead.x === foodRef.current.x && nextHead.y === foodRef.current.y) {
-      playTone(550, 880, 0.08, 'sine');
-      setApplesEaten((prev) => {
-        const nextApples = prev + 1;
-        setScore(calculateScore(nextApples));
-        return nextApples;
-      });
-      foodRef.current = spawnFood(newSnake);
-    } else {
-      newSnake.pop(); // Remove tail
-    }
-
-    snakeRef.current = newSnake;
-  }, [status, spawnFood, handleGameOver, playTone]);
-
-  // Game loop interval based on score
-  useEffect(() => {
-    if (status === 'playing') {
-      const speed = calculateSpeed(applesEaten);
-      gameLoopTimerRef.current = setInterval(gameTick, speed);
-    }
-
-    return () => {
-      if (gameLoopTimerRef.current) {
-        clearInterval(gameLoopTimerRef.current);
-        gameLoopTimerRef.current = null;
-      }
-    };
-  }, [status, applesEaten, gameTick]);
-
   // Render canvas frame
   const drawGame = useCallback(() => {
     const canvas = canvasRef.current;
@@ -367,7 +223,9 @@ export const SnakeGame: React.FC = () => {
 
     // Draw Snake
     const snake = snakeRef.current;
-    const currentDir = dirRef.current;
+    // Use nextDirRef for instant visual feedback on direction change
+    const headDir = nextDirRef.current || dirRef.current;
+
     snake.forEach((seg, idx) => {
       const isHead = idx === 0;
       const x = seg.x * cellSize;
@@ -403,13 +261,13 @@ export const SnakeGame: React.FC = () => {
         let eye1: Position;
         let eye2: Position;
 
-        if (currentDir === 'RIGHT') {
+        if (headDir === 'RIGHT') {
           eye1 = { x: x + cellSize - eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + cellSize - eyeOffset, y: y + cellSize - eyeOffset };
-        } else if (currentDir === 'LEFT') {
+        } else if (headDir === 'LEFT') {
           eye1 = { x: x + eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + eyeOffset, y: y + cellSize - eyeOffset };
-        } else if (currentDir === 'UP') {
+        } else if (headDir === 'UP') {
           eye1 = { x: x + eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + cellSize - eyeOffset, y: y + eyeOffset };
         } else {
@@ -431,6 +289,163 @@ export const SnakeGame: React.FC = () => {
       }
     });
   }, []);
+
+  // Start new game session
+  const startGame = useCallback(async (initialDir?: Direction) => {
+    // Reset snake & food
+    const initialSnake = [
+      { x: 6, y: 10 },
+      { x: 5, y: 10 },
+      { x: 4, y: 10 },
+    ];
+    snakeRef.current = initialSnake;
+    const startDir = initialDir && !isOppositeDirection('RIGHT', initialDir) ? initialDir : 'RIGHT';
+    dirRef.current = startDir;
+    nextDirRef.current = startDir;
+    foodRef.current = spawnFood(initialSnake);
+    movesCountRef.current = 0;
+
+    setScore(0);
+    setApplesEaten(0);
+    setStatus('playing');
+    playTone(320, 640, 0.12, 'triangle');
+    drawGame();
+
+    // If authenticated, initiate server session
+    if (user) {
+      try {
+        const res = await api.post('/snake/start');
+        setSessionId(res.data.session_id);
+      } catch {
+        setSessionId(null);
+      }
+    } else {
+      setSessionId(null);
+    }
+  }, [user, spawnFood, playTone, drawGame]);
+
+  // Pause / Resume
+  const togglePause = useCallback(() => {
+    setStatus((prev) => {
+      if (prev === 'playing') return 'paused';
+      if (prev === 'paused') return 'playing';
+      return prev;
+    });
+  }, []);
+
+  // Game Over handler
+  const handleGameOver = useCallback(async () => {
+    setStatus('game_over');
+    drawGame();
+    playTone(180, 70, 0.25, 'sawtooth');
+
+    const finalScore = score;
+    const finalApples = applesEaten;
+    const finalMoves = movesCountRef.current;
+    const currentSessionId = sessionId;
+
+    // Guest score persistence
+    if (!user) {
+      if (finalScore > guestHighScore) {
+        setGuestHighScore(finalScore);
+        localStorage.setItem(GUEST_STORAGE_KEY, String(finalScore));
+      }
+    } else if (currentSessionId) {
+      // Authenticated score submission to server
+      try {
+        setIsSubmittingScore(true);
+        await api.post('/snake/finish', {
+          session_id: currentSessionId,
+          score: finalScore,
+          apples_eaten: finalApples,
+          moves_count: finalMoves,
+        });
+
+        // Invalidate relevant queries
+        queryClient.invalidateQueries({ queryKey: ['snake-stats'] });
+        queryClient.invalidateQueries({ queryKey: ['profile', user.username] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
+      } catch {
+        // Backend verification or conflict handled silently
+      } finally {
+        setIsSubmittingScore(false);
+      }
+    }
+  }, [score, applesEaten, sessionId, user, guestHighScore, playTone, queryClient, drawGame]);
+
+  // Handle direction change safely (disallow immediate 180° turnaround)
+  const changeDirection = useCallback((newDir: Direction) => {
+    if (status === 'idle') {
+      startGame(newDir);
+      return;
+    }
+    if (status === 'paused') {
+      setStatus('playing');
+    }
+    if (status !== 'playing' && status !== 'paused') return;
+    if (!isOppositeDirection(dirRef.current, newDir)) {
+      nextDirRef.current = newDir;
+      drawGame(); // Immediately orient eyes/head
+    }
+  }, [status, startGame, drawGame]);
+
+  // Main game tick
+  const gameTick = useCallback(() => {
+    if (status !== 'playing') return;
+
+    dirRef.current = nextDirRef.current;
+    const currentSnake = snakeRef.current;
+    const head = currentSnake[0];
+    const nextHead = getNextHead(head, dirRef.current);
+
+    movesCountRef.current += 1;
+
+    // 1. Wall collision
+    if (checkWallCollision(nextHead, GRID_SIZE)) {
+      handleGameOver();
+      return;
+    }
+
+    // 2. Self collision (excluding the tail segment that will move)
+    if (checkSelfCollision(nextHead, currentSnake)) {
+      handleGameOver();
+      return;
+    }
+
+    // 3. Move snake
+    const newSnake = [nextHead, ...currentSnake];
+
+    // Check if food eaten
+    if (nextHead.x === foodRef.current.x && nextHead.y === foodRef.current.y) {
+      playTone(550, 880, 0.08, 'sine');
+      setApplesEaten((prev) => {
+        const nextApples = prev + 1;
+        setScore(calculateScore(nextApples));
+        return nextApples;
+      });
+      foodRef.current = spawnFood(newSnake);
+    } else {
+      newSnake.pop(); // Remove tail
+    }
+
+    snakeRef.current = newSnake;
+    drawGame(); // Redraw canvas every single movement tick
+  }, [status, spawnFood, handleGameOver, playTone, drawGame]);
+
+  // Game loop interval based on score
+  useEffect(() => {
+    if (status === 'playing') {
+      const speed = calculateSpeed(applesEaten);
+      gameLoopTimerRef.current = setInterval(gameTick, speed);
+    }
+
+    return () => {
+      if (gameLoopTimerRef.current) {
+        clearInterval(gameLoopTimerRef.current);
+        gameLoopTimerRef.current = null;
+      }
+    };
+  }, [status, applesEaten, gameTick]);
 
   // Redraw canvas on mount, status change, or theme toggle
   useEffect(() => {
@@ -458,21 +473,55 @@ export const SnakeGame: React.FC = () => {
         }
       }
 
-      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+      // Check key and code for broad keyboard layout support (Arrow keys, WASD, and French ZQSD)
+      const key = e.key;
+      const code = e.code;
+
+      if (
+        key === 'ArrowUp' ||
+        key === 'w' ||
+        key === 'W' ||
+        key === 'z' ||
+        key === 'Z' ||
+        code === 'ArrowUp' ||
+        code === 'KeyW' ||
+        code === 'KeyZ'
+      ) {
         changeDirection('UP');
-      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+      } else if (
+        key === 'ArrowDown' ||
+        key === 's' ||
+        key === 'S' ||
+        code === 'ArrowDown' ||
+        code === 'KeyS'
+      ) {
         changeDirection('DOWN');
-      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      } else if (
+        key === 'ArrowLeft' ||
+        key === 'a' ||
+        key === 'A' ||
+        key === 'q' ||
+        key === 'Q' ||
+        code === 'ArrowLeft' ||
+        code === 'KeyA' ||
+        code === 'KeyQ'
+      ) {
         changeDirection('LEFT');
-      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      } else if (
+        key === 'ArrowRight' ||
+        key === 'd' ||
+        key === 'D' ||
+        code === 'ArrowRight' ||
+        code === 'KeyD'
+      ) {
         changeDirection('RIGHT');
-      } else if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
+      } else if (key === ' ' || key === 'p' || key === 'P' || code === 'Space') {
         if (status === 'playing' || status === 'paused') {
           togglePause();
         } else if (status === 'idle' || status === 'game_over') {
           startGame();
         }
-      } else if (e.key === 'Enter' && (status === 'idle' || status === 'game_over')) {
+      } else if (key === 'Enter' && (status === 'idle' || status === 'game_over')) {
         startGame();
       }
     };
