@@ -23,6 +23,7 @@ import { ContestLeaderboardPage } from './pages/ContestLeaderboardPage';
 import { QuestPage } from './pages/QuestPage';
 import { GitPlaygroundPage } from './pages/GitPlaygroundPage';
 import { InterviewPage } from './pages/InterviewPage';
+import { LearningReportsPage } from './pages/LearningReportsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -65,6 +66,14 @@ export const App: React.FC = () => {
                   element={
                     <ProtectedRoute>
                       <DashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="reports"
+                  element={
+                    <ProtectedRoute>
+                      <LearningReportsPage />
                     </ProtectedRoute>
                   }
                 />
