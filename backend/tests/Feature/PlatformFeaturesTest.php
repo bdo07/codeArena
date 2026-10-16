@@ -14,6 +14,7 @@ use Tests\TestCase;
 
 class PlatformFeaturesTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test SQL isolated execution service.
      */
