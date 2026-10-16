@@ -434,6 +434,8 @@ addChallenge($challenges, [
     ],
     'test_cases' => [
         ['input' => "10", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => '2, 3, 5, 7.'],
+        ['input' => "0", 'expected_output' => "0", 'is_hidden' => true, 'explanation' => 'No primes strictly less than 0.'],
+        ['input' => "100", 'expected_output' => "25", 'is_hidden' => true, 'explanation' => '25 primes strictly less than 100.'],
     ],
     'hints' => ["Sieve of Eratosthenes."],
     'explanation' => "O(N log log N) sieve.",
