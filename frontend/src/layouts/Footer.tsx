@@ -28,13 +28,13 @@ export const Footer: React.FC = () => {
             {t('nav.quest')}
           </Link>
           <Link to="/git-playground" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
-            Git Playground
+            {t('nav.gitPlayground', 'Git Playground')}
           </Link>
           <Link to="/interview" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
-            Mock Interview
+            {t('nav.interview', 'Mock Interview')}
           </Link>
           <Link to="/reports" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
-            Learning Reports
+            {t('nav.reports', 'Learning Reports')}
           </Link>
           <Link to="/leaderboard" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
             {t('footer.leaderboard')}
