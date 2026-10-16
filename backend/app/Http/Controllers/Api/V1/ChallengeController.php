@@ -337,15 +337,21 @@ class ChallengeController extends Controller
 
         $userAnswers = $request->input('answers');
         $quizData = $challenge->quiz_data;
-        $questions = $quizData['questions'] ?? [];
+        $questions = [];
+        if (is_array($quizData)) {
+            $questions = isset($quizData['questions']) ? $quizData['questions'] : $quizData;
+        } elseif (is_string($quizData)) {
+            $decoded = json_decode($quizData, true);
+            $questions = isset($decoded['questions']) ? $decoded['questions'] : ($decoded ?: []);
+        }
 
         $total = count($questions);
         $correct = 0;
         $review = [];
 
-        foreach ($questions as $q) {
-            $qId = $q['id'];
-            $correctAns = $q['answer'];
+        foreach ($questions as $index => $q) {
+            $qId = $q['id'] ?? (string)$index;
+            $correctAns = $q['correct_index'] ?? $q['answer'] ?? 0;
             $userAns = $userAnswers[$qId] ?? null;
             $isCorrect = ($userAns !== null && (int)$userAns === (int)$correctAns);
 
