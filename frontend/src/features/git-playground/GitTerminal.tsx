@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Terminal as TerminalIcon, CornerDownLeft, Sparkles } from 'lucide-react';
 import { getCurrentBranchName } from './gitEngine';
 import { GitRepoState } from './types';
