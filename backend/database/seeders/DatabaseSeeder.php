@@ -739,6 +739,7 @@ int main() {
             RoadmapSeeder::class,
             CollectionSeeder::class,
             ContestSeeder::class,
+            QuestSeeder::class,
         ]);
     }
 }
