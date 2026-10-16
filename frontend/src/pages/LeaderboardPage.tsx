@@ -127,9 +127,15 @@ export const LeaderboardPage: React.FC = () => {
                   <td className="py-3.5 px-4">
                     <Link
                       to={`/profile/${item.username}`}
-                      className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors flex items-center gap-2"
+                      className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors flex items-center gap-2.5"
                     >
-                      <span>{item.name}</span>
+                      <Avatar
+                        src={item.avatar_url}
+                        name={item.name}
+                        size="xs"
+                        className="shrink-0"
+                      />
+                      <span className="truncate">{item.name}</span>
                       <span className="text-xs text-zinc-500 font-mono font-normal">
                         @{item.username}
                       </span>
