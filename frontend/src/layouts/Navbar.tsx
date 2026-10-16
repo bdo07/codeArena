@@ -15,6 +15,7 @@ import {
   Flame,
   Edit3,
   Settings,
+  Layers,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/features/auth/AuthContext';

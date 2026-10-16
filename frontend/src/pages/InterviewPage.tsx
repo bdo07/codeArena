@@ -73,7 +73,7 @@ export const InterviewPage: React.FC = () => {
   const [resultData, setResultData] = useState<CompletedInterviewResult | null>(null);
 
   // Autosave timer ref
-  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Topics catalog
   const topics: Array<{
