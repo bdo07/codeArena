@@ -74,6 +74,7 @@ export const InterviewPage: React.FC = () => {
 
   // Autosave timer ref
   const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleFinalSubmitRef = useRef<(expired?: boolean) => Promise<void>>(async () => {});
 
   // Topics catalog
   const topics: Array<{
