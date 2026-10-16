@@ -183,6 +183,74 @@ class PlatformFeaturesTest extends TestCase
     }
 
     /**
+     * Test Quiz challenge show endpoint returns questions regardless of quiz_data format.
+     */
+    public function test_quiz_challenge_show_returns_questions_for_direct_array_format(): void
+    {
+        $challenge = Challenge::create([
+            'title' => 'Docker Quiz Test ' . uniqid(),
+            'slug' => 'docker-quiz-test-' . uniqid(),
+            'description' => 'Test docker quiz questions',
+            'difficulty' => 'Beginner',
+            'challenge_type' => 'quiz',
+            'category' => 'DevOps',
+            'quiz_data' => [
+                [
+                    'id' => 'd1',
+                    'question' => 'What is Docker?',
+                    'options' => ['Container tool', 'Virtual Machine', 'Database'],
+                    'correct_index' => 0,
+                    'explanation' => 'Docker is a containerization platform.'
+                ]
+            ],
+            'time_limit_ms' => 1000,
+            'memory_limit_mb' => 64,
+            'is_published' => true,
+        ]);
+
+        $response = $this->getJson("/api/v1/challenges/{$challenge->slug}");
+
+        $response->assertStatus(200)
+            ->assertJsonPath('challenge.quiz_data.questions.0.id', 'd1')
+            ->assertJsonPath('challenge.quiz_data.questions.0.question', 'What is Docker?')
+            ->assertJsonCount(1, 'challenge.quiz_data.questions');
+    }
+
+    /**
+     * Test Quiz submission returns validation error if answers are missing.
+     */
+    public function test_quiz_submission_validation_fails_when_answers_missing(): void
+    {
+        $user = User::factory()->create();
+        $challenge = Challenge::create([
+            'title' => 'Docker Quiz Validation ' . uniqid(),
+            'slug' => 'docker-quiz-val-' . uniqid(),
+            'description' => 'Test docker validation',
+            'difficulty' => 'Beginner',
+            'challenge_type' => 'quiz',
+            'category' => 'DevOps',
+            'quiz_data' => [
+                [
+                    'id' => 'd1',
+                    'question' => 'What is Docker?',
+                    'options' => ['A', 'B'],
+                    'correct_index' => 0,
+                ]
+            ],
+            'time_limit_ms' => 1000,
+            'memory_limit_mb' => 64,
+            'is_published' => true,
+        ]);
+
+        $response = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/submit-quiz", [
+            'answers' => []
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['answers']);
+    }
+
+    /**
      * Test Personal Notes and Bookmark toggling for authenticated user.
      */
     public function test_user_notes_and_bookmarks(): void
