@@ -205,6 +205,7 @@ class ProfileTest extends TestCase
         $challenge = Challenge::create([
             'title' => 'Sample Challenge',
             'slug' => 'sample-challenge-' . uniqid(),
+            'description' => 'A test challenge description',
             'difficulty' => 'Easy',
             'category' => 'Algorithms',
             'time_limit_ms' => 1000,
