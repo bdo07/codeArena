@@ -127,4 +127,99 @@ class PlatformFeaturesTest extends TestCase
         $this->assertEquals(1, $res2['skipped']);
         $this->assertStringContainsString('Duplicate', $res2['errors'][0]);
     }
+
+    /**
+     * Test Contests listing endpoint.
+     */
+    public function test_contests_listing(): void
+    {
+        $response = $this->getJson('/api/v1/contests');
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'live',
+                'upcoming',
+                'past'
+            ]);
+    }
+
+    /**
+     * Test Quiz submission endpoint returns evaluated score and explanations.
+     */
+    public function test_quiz_submission_evaluates_answers(): void
+    {
+        $user = User::factory()->create();
+        $challenge = Challenge::create([
+            'title' => 'Git Basics Quiz ' . uniqid(),
+            'slug' => 'git-basics-quiz-' . uniqid(),
+            'description' => 'Test your Git knowledge',
+            'difficulty' => 'Beginner',
+            'challenge_type' => 'quiz',
+            'category' => 'Git',
+            'quiz_data' => [
+                [
+                    'id' => 'q1',
+                    'question' => 'Which command creates a new branch?',
+                    'options' => ['git checkout -b', 'git init', 'git push', 'git pull'],
+                    'correct_index' => 0,
+                    'explanation' => 'git checkout -b creates and switches to a new branch.'
+                ]
+            ],
+            'time_limit_ms' => 1000,
+            'memory_limit_mb' => 64,
+            'is_published' => true,
+        ]);
+
+        $response = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/quiz/submit", [
+            'answers' => ['q1' => 0]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'passed' => true,
+                'correct_count' => 1,
+                'total_questions' => 1,
+                'score_percent' => 100,
+            ]);
+    }
+
+    /**
+     * Test Personal Notes and Bookmark toggling for authenticated user.
+     */
+    public function test_user_notes_and_bookmarks(): void
+    {
+        $user = User::factory()->create();
+        $challenge = Challenge::factory()->create();
+
+        // Bookmark toggle
+        $bmResponse = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/bookmark");
+        $bmResponse->assertStatus(200)->assertJson(['bookmarked' => true]);
+
+        // Unbookmark
+        $bmResponse2 = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/bookmark");
+        $bmResponse2->assertStatus(200)->assertJson(['bookmarked' => false]);
+
+        // Save private note
+        $noteResponse = $this->actingAs($user)->postJson("/api/v1/challenges/{$challenge->id}/note", [
+            'content' => 'Remember to use a hash map for O(n) lookup time!'
+        ]);
+        $noteResponse->assertStatus(200)->assertJson(['content' => 'Remember to use a hash map for O(n) lookup time!']);
+    }
+
+    /**
+     * Test Admin Analytics API for admin user.
+     */
+    public function test_admin_analytics_accessible_by_admin(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($admin)->getJson('/api/v1/admin/analytics');
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'overview' => ['total_users', 'total_challenges', 'total_submissions', 'acceptance_rate'],
+                'status_breakdown',
+                'category_breakdown',
+                'difficulty_breakdown',
+                'evaluator_health'
+            ]);
+    }
 }
