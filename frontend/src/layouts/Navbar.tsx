@@ -16,6 +16,7 @@ import {
   Edit3,
   Settings,
   Layers,
+  TrendingUp,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/features/auth/AuthContext';
