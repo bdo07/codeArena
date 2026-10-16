@@ -109,13 +109,13 @@ export const ChallengesPage: React.FC = () => {
   const getTypeIcon = (type: ChallengeType) => {
     switch (type) {
       case 'sql':
-        return <Table className="w-3.5 h-3.5 text-emerald-400" title="SQL Lab" />;
+        return <span title="SQL Lab"><Table className="w-3.5 h-3.5 text-emerald-400" /></span>;
       case 'web':
-        return <Layout className="w-3.5 h-3.5 text-blue-400" title="Web Sandbox" />;
+        return <span title="Web Sandbox"><Layout className="w-3.5 h-3.5 text-blue-400" /></span>;
       case 'quiz':
-        return <HelpCircle className="w-3.5 h-3.5 text-indigo-400" title="Concept Quiz" />;
+        return <span title="Concept Quiz"><HelpCircle className="w-3.5 h-3.5 text-indigo-400" /></span>;
       default:
-        return <Code2 className="w-3.5 h-3.5 text-violet-400" title="Code Problem" />;
+        return <span title="Code Problem"><Code2 className="w-3.5 h-3.5 text-violet-400" /></span>;
     }
   };
 

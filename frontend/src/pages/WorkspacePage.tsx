@@ -425,7 +425,7 @@ export const WorkspacePage: React.FC = () => {
                         key={tag.id}
                         className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-mono"
                       >
-                        #{getTranslatedTagName(tag.name, i18n.language)}
+                        #{getTranslatedTagName(tag.slug || tag.name, tag.name, i18n.language)}
                       </span>
                     ))}
                   </div>
