@@ -1,6 +1,12 @@
 export type Difficulty = 'Beginner' | 'Easy' | 'Medium' | 'Hard' | 'Expert';
 export type ChallengeType = 'code' | 'sql' | 'web' | 'quiz';
 
+export interface UserStreak {
+  current_streak: number;
+  longest_streak: number;
+  last_activity_date?: string;
+}
+
 export interface User {
   id: number;
   name: string;
@@ -9,9 +15,66 @@ export interface User {
   role: 'user' | 'admin';
   xp: number;
   level: number;
+  avatar_url?: string | null;
+  tagline?: string | null;
+  bio?: string | null;
+  location?: string | null;
+  website_url?: string | null;
+  github_url?: string | null;
+  linkedin_url?: string | null;
+  favorite_languages?: string[];
+  is_activity_public?: boolean;
+  streak?: UserStreak;
   badges: Badge[];
   created_at?: string;
   joined_at?: string;
+}
+
+export interface UserProfileData {
+  id: number;
+  name: string;
+  username: string;
+  avatar_url?: string | null;
+  tagline?: string | null;
+  bio?: string | null;
+  location?: string | null;
+  website_url?: string | null;
+  github_url?: string | null;
+  linkedin_url?: string | null;
+  favorite_languages: string[];
+  is_activity_public: boolean;
+  xp: number;
+  level: number;
+  role: string;
+  joined_at: string;
+  solved_count: number;
+  accepted_count: number;
+  total_submissions: number;
+  success_rate: number;
+  streak: UserStreak;
+  badges: Badge[];
+  solved_challenges?: Array<{
+    id: number;
+    title: string;
+    slug: string;
+    difficulty: Difficulty;
+    tags: string[];
+    best_score: number;
+    solved_at: string;
+  }>;
+  recent_activity?: Array<{
+    id: number;
+    challenge_id: number;
+    challenge_title: string;
+    challenge_slug: string;
+    challenge_difficulty: Difficulty;
+    language: string;
+    status: string;
+    score: number;
+    execution_time_ms: number;
+    submitted_at: string;
+  }>;
+  is_owner: boolean;
 }
 
 export interface Badge {
