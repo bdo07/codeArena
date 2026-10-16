@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Flame,
   User as UserIcon,
+  Gamepad2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
@@ -272,6 +273,51 @@ export const DashboardPage: React.FC = () => {
               </div>
             )}
           </Card>
+
+          {/* Arcade Stats Card (if played) */}
+          {stats.snake_stats && stats.snake_stats.total_games > 0 && (
+            <Card className="p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-violet-100 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400">
+                    <Gamepad2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                      {t('dashboard.arcadeTitle', 'Snake Arena Record')}
+                    </h3>
+                    <p className="text-[10px] text-zinc-500">
+                      {t('dashboard.arcadeSubtitle', 'Terminal reflexes score')}
+                    </p>
+                  </div>
+                </div>
+                <Link to="/#snake-arena" className="text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline">
+                  {t('dashboard.playArena', 'Play')}
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+                <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 block">{t('snake.personalBest', 'Best')}</span>
+                  <span className="text-xs font-bold font-mono text-violet-600 dark:text-violet-400">
+                    {stats.snake_stats.high_score}
+                  </span>
+                </div>
+                <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 block">{t('snake.gamesPlayed', 'Games')}</span>
+                  <span className="text-xs font-bold font-mono text-zinc-900 dark:text-zinc-100">
+                    {stats.snake_stats.total_games}
+                  </span>
+                </div>
+                <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 block">{t('snake.averageScore', 'Avg')}</span>
+                  <span className="text-xs font-bold font-mono text-zinc-900 dark:text-zinc-100">
+                    {stats.snake_stats.average_score}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import { Challenge as ChallengeType, LeaderboardUser } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { SnakeGame } from '@/components/snake/SnakeGame';
 import { getTranslatedChallenge, getDifficultyLabel, getTranslatedTagName } from '@/locales/challengeTranslations';
 
 export const LandingPage: React.FC = () => {
@@ -192,7 +193,10 @@ export const LandingPage: React.FC = () => {
             ))}
           </div>
         </section>
-      )}
+      {/* Interactive Arcade Snake Arena */}
+      <section id="snake-arena" className="w-full max-w-5xl mx-auto px-4 py-8">
+        <SnakeGame />
+      </section>
 
       {/* Feature Highlights Grid */}
       <section className="w-full max-w-5xl mx-auto px-4 py-12 text-left">

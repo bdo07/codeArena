@@ -21,6 +21,7 @@ import {
   Clock,
   Code2,
   EyeOff,
+  Gamepad2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
@@ -328,6 +329,46 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Arcade Highlights (if played) */}
+        {profile.snake_stats && profile.snake_stats.total_games > 0 && (
+          <div className="mt-6 p-4 rounded-xl bg-violet-50/50 dark:bg-zinc-950/40 border border-violet-100 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-violet-100 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400">
+                <Gamepad2 className="w-4 h-4" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                  {t('profile.arcadeTitle', 'Terminal Reflexes: Snake Arena')}
+                </h4>
+                <p className="text-[11px] text-zinc-500">
+                  {t('profile.arcadeSubtitle', 'Arcade personal records and reflex performance')}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between sm:justify-end gap-6 text-center text-xs">
+              <div>
+                <span className="text-[10px] text-zinc-500 block">{t('snake.personalBest', 'Best Score')}</span>
+                <span className="text-sm font-bold font-mono text-violet-600 dark:text-violet-400">
+                  {profile.snake_stats.high_score} pts
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-500 block">{t('snake.gamesPlayed', 'Games')}</span>
+                <span className="text-sm font-bold font-mono text-zinc-900 dark:text-zinc-100">
+                  {profile.snake_stats.total_games}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-500 block">{t('snake.averageScore', 'Average')}</span>
+                <span className="text-sm font-bold font-mono text-zinc-900 dark:text-zinc-100">
+                  {profile.snake_stats.average_score}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </Card>
 
       {/* 3. Section Tabs */}
