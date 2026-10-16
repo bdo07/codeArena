@@ -83,26 +83,41 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 text-left">
       {/* Welcome & CTA banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-              {t('dashboard.welcome', { name: data.user.name })}
-            </h1>
-            <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded">
-              @{data.user.username}
-            </span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-6 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-xs">
+        <div className="flex items-center gap-4">
+          <Avatar
+            src={user?.avatar_url || data.user.avatar_url}
+            name={data.user.name}
+            size="lg"
+            className="ring-2 ring-violet-500/20 shrink-0"
+          />
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                {t('dashboard.welcome', { name: data.user.name })}
+              </h1>
+              <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded">
+                @{data.user.username}
+              </span>
+            </div>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              {t('dashboard.subtitle')}
+            </p>
           </div>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            {t('dashboard.subtitle')}
-          </p>
         </div>
 
-        <Link to="/challenges">
-          <Button variant="primary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
-            {t('dashboard.continueSolving')}
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <Link to={`/profile/${data.user.username}`}>
+            <Button variant="outline" size="sm" leftIcon={<UserIcon className="w-3.5 h-3.5" />}>
+              {t('nav.myProfile', 'My Profile')}
+            </Button>
+          </Link>
+          <Link to="/challenges">
+            <Button variant="primary" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
+              {t('dashboard.continueSolving')}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Primary KPI Grid */}
