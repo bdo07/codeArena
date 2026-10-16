@@ -55,7 +55,7 @@ class PlatformFeaturesTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'name', 'slug', 'category', 'evaluator_type', 'is_executable']
+                    '*' => ['name', 'slug', 'category', 'evaluator_type', 'is_executable']
                 ],
                 'evaluator_status' => ['sqlite_sandbox', 'client_sandbox']
             ]);
