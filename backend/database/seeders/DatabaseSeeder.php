@@ -731,5 +731,14 @@ int main() {
                 'solved_at' => Carbon::now()->subDays(2),
             ]);
         }
+
+        // 6. Platform Extensions
+        $this->call([
+            LanguageSeeder::class,
+            ChallengeLibrarySeeder::class,
+            RoadmapSeeder::class,
+            CollectionSeeder::class,
+            ContestSeeder::class,
+        ]);
     }
 }
