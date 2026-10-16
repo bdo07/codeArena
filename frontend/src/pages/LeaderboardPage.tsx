@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
 import { LeaderboardUser, PaginationMeta } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { Avatar } from '@/components/ui/Avatar';
 
 interface LeaderboardApiResponse {
   data: LeaderboardUser[];
