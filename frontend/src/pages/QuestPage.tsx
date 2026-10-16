@@ -840,7 +840,7 @@ export const QuestPage: React.FC = () => {
                           </span>
                           <Button
                             size="sm"
-                            variant={isAvailable || isInProgress ? 'default' : 'outline'}
+                            variant={isAvailable || isInProgress ? 'primary' : 'outline'}
                             onClick={() => setSelectedStage(stage)}
                             className="text-xs font-semibold"
                           >
