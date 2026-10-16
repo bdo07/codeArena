@@ -1819,6 +1819,364 @@
             "slug": "quiz-solid-principles",
             "title": "SOLID Architecture Principles",
             "description": "Test your mastery of Object-Oriented Design and the five SOLID principles."
+        },
+        {
+            "challenge_type": "quiz",
+            "category": "testing",
+            "difficulty": "Beginner",
+            "estimated_time_min": 10,
+            "supported_languages": [
+                "python",
+                "javascript",
+                "cpp",
+                "java"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "testing",
+                "tdd",
+                "qa"
+            ],
+            "starter_code": [],
+            "test_cases": [],
+            "hints": [
+                "Consider test doubles and coverage metrics."
+            ],
+            "explanation": "Testing fundamentals ensure software stability and regression safety.",
+            "reference_solution": null,
+            "sql_schema": null,
+            "sql_seed": null,
+            "sql_solution": null,
+            "web_template": null,
+            "quiz_data": {
+                "questions": [
+                    {
+                        "id": 1,
+                        "question": "What is the primary difference between a Mock and a Stub in unit testing?",
+                        "options": [
+                            "Stubs provide canned answers to calls made during tests, while Mocks also verify that expected calls were made",
+                            "Mocks are written in Python while Stubs are written in Java",
+                            "Stubs test database connections while Mocks test frontend DOM elements",
+                            "There is no difference between them"
+                        ],
+                        "answer": 0,
+                        "explanation": "Stubs return predetermined fake data; Mocks additionally register expectations and verify interactions."
+                    },
+                    {
+                        "id": 2,
+                        "question": "What does 100% line coverage in a test suite guarantee?",
+                        "options": [
+                            "The program is 100% bug-free",
+                            "Every line was executed at least once during test execution, but edge cases and branch logic may still be untested",
+                            "All concurrency race conditions have been identified",
+                            "Performance meets production SLA"
+                        ],
+                        "answer": 1,
+                        "explanation": "Line coverage only indicates code execution; it does not ensure branch completeness or bug-free operation."
+                    }
+                ]
+            },
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "quiz-unit-testing-fundamentals",
+            "title": "Unit Testing & Test-Driven Development",
+            "description": "Test your knowledge of unit testing principles, assertions, test doubles, and test coverage."
+        },
+        {
+            "challenge_type": "quiz",
+            "category": "Linux",
+            "difficulty": "Easy",
+            "estimated_time_min": 15,
+            "supported_languages": [
+                "python",
+                "javascript",
+                "cpp",
+                "java"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "linux",
+                "bash",
+                "devops"
+            ],
+            "starter_code": [],
+            "test_cases": [],
+            "hints": [
+                "Octal permissions: r=4, w=2, x=1."
+            ],
+            "explanation": "Linux administration mastery is critical for DevOps and backend engineering.",
+            "reference_solution": null,
+            "sql_schema": null,
+            "sql_seed": null,
+            "sql_solution": null,
+            "web_template": null,
+            "quiz_data": {
+                "questions": [
+                    {
+                        "id": 1,
+                        "question": "What permissions are granted by `chmod 755 filename`?",
+                        "options": [
+                            "Owner: rwx, Group: r-x, Others: r-x",
+                            "Owner: rw-, Group: r--, Others: r--",
+                            "Owner: rwx, Group: rw-, Others: r--",
+                            "Full read and write for everyone"
+                        ],
+                        "answer": 0,
+                        "explanation": "7 (4+2+1 = rwx) for owner, 5 (4+1 = r-x) for group and others."
+                    },
+                    {
+                        "id": 2,
+                        "question": "Which kill signal allows a process to perform graceful cleanup before shutting down?",
+                        "options": [
+                            "SIGKILL (9)",
+                            "SIGTERM (15)",
+                            "SIGSTOP (19)",
+                            "SIGSEGV (11)"
+                        ],
+                        "answer": 1,
+                        "explanation": "SIGTERM (15) can be caught and handled for graceful cleanup, whereas SIGKILL (9) terminates immediately."
+                    }
+                ]
+            },
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "quiz-linux-permissions-processes",
+            "title": "Linux Permissions & Process Management",
+            "description": "Test your understanding of Unix permissions (chmod/chown), POSIX signals, and process management."
+        },
+        {
+            "challenge_type": "quiz",
+            "category": "database",
+            "difficulty": "Medium",
+            "estimated_time_min": 15,
+            "supported_languages": [
+                "python",
+                "javascript",
+                "cpp",
+                "java"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "database",
+                "sql",
+                "performance"
+            ],
+            "starter_code": [],
+            "test_cases": [],
+            "hints": [
+                "ACID = Atomicity, Consistency, Isolation, Durability."
+            ],
+            "explanation": "Index management and ACID properties form the bedrock of production data systems.",
+            "reference_solution": null,
+            "sql_schema": null,
+            "sql_seed": null,
+            "sql_solution": null,
+            "web_template": null,
+            "quiz_data": {
+                "questions": [
+                    {
+                        "id": 1,
+                        "question": "What does the 'I' in ACID stand for?",
+                        "options": [
+                            "Integrity",
+                            "Isolation",
+                            "Immutability",
+                            "Indexing"
+                        ],
+                        "answer": 1,
+                        "explanation": "Isolation ensures concurrent transactions execute without interfering with one another."
+                    },
+                    {
+                        "id": 2,
+                        "question": "Why can adding too many indexes degrade database performance?",
+                        "options": [
+                            "Indexes make SELECT queries slower",
+                            "Every INSERT, UPDATE, and DELETE must also update and rebalance the index B-Trees",
+                            "Indexes limit maximum database file size to 2GB",
+                            "Database engines can only use one index per database"
+                        ],
+                        "answer": 1,
+                        "explanation": "Indexes speed up read queries at the cost of slower write/modification throughput."
+                    }
+                ]
+            },
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "quiz-database-indexing-acid",
+            "title": "Database Indexing & ACID Transactions",
+            "description": "Test your understanding of Relational DB B-Tree indexes, query execution plans, and ACID properties."
+        },
+        {
+            "challenge_type": "code",
+            "category": "data structures",
+            "difficulty": "Easy",
+            "estimated_time_min": 15,
+            "supported_languages": [
+                "python",
+                "javascript",
+                "cpp",
+                "java"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "tree",
+                "recursion"
+            ],
+            "starter_code": {
+                "python": "import sys\nline = sys.stdin.read().strip()\nif not line: print(''); sys.exit()\nvals = line.split(',')\n# Invert level order\nres = []\ni, length = 0, 1\nwhile i < len(vals):\n    level = vals[i:i+length]\n    res.extend(level[::-1])\n    i += length\n    length *= 2\nprint(','.join(res))\n"
+            },
+            "test_cases": [
+                {
+                    "input": "4,2,7,1,3,6,9",
+                    "expected_output": "4,7,2,9,6,3,1",
+                    "is_hidden": false,
+                    "explanation": "Tree inverted left-to-right."
+                },
+                {
+                    "input": "2,1,3",
+                    "expected_output": "2,3,1",
+                    "is_hidden": false,
+                    "explanation": "Left and right swapped."
+                }
+            ],
+            "hints": [
+                "Recursively invert left and right children."
+            ],
+            "explanation": "Swapping left and right child pointers recursively inverts the tree in O(N) time.",
+            "reference_solution": null,
+            "sql_schema": null,
+            "sql_seed": null,
+            "sql_solution": null,
+            "web_template": null,
+            "quiz_data": null,
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "invert-binary-tree",
+            "title": "Invert Binary Tree",
+            "description": "Given the root of a binary tree represented as level-order comma-separated values, invert the tree (swap left and right subtrees at every level) and return the inverted level-order values.\n\nInput format: Comma-separated integers or empty string.\nOutput format: Comma-separated inverted integers."
+        },
+        {
+            "challenge_type": "code",
+            "category": "recursion",
+            "difficulty": "Medium",
+            "estimated_time_min": 25,
+            "supported_languages": [
+                "python",
+                "javascript",
+                "cpp",
+                "java"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "backtracking",
+                "recursion"
+            ],
+            "starter_code": {
+                "python": "import sys\nnums = list(map(int, sys.stdin.read().strip().split(',')))\nres = [[]]\nfor n in sorted(nums):\n    res += [curr + [n] for curr in res]\nres.sort(key=lambda s: (len(s), s))\nformatted = [','.join(map(str, s)) for s in res]\nprint(';'.join(formatted))\n"
+            },
+            "test_cases": [
+                {
+                    "input": "1,2",
+                    "expected_output": ";1;2;1,2",
+                    "is_hidden": false,
+                    "explanation": "All subsets of [1,2]."
+                },
+                {
+                    "input": "0",
+                    "expected_output": ";0",
+                    "is_hidden": false,
+                    "explanation": "Subsets of [0]."
+                }
+            ],
+            "hints": [
+                "Cascading or backtracking generates 2^N subsets."
+            ],
+            "explanation": "Power set generation runs in O(2^N) time.",
+            "reference_solution": null,
+            "sql_schema": null,
+            "sql_seed": null,
+            "sql_solution": null,
+            "web_template": null,
+            "quiz_data": null,
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "subsets-power-set",
+            "title": "Subsets (Power Set)",
+            "description": "Given an integer array `nums` of unique elements, return all possible subsets (the power set).\n\nThe solution set must not contain duplicate subsets. Return the subsets sorted, separated by semicolons (e.g. `;1;1,2;2`).\n\nInput format: Comma-separated integers.\nOutput format: Subsets formatted."
+        },
+        {
+            "challenge_type": "sql",
+            "category": "SQL",
+            "difficulty": "Easy",
+            "estimated_time_min": 15,
+            "supported_languages": [
+                "sql"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "sql",
+                "group-by",
+                "having"
+            ],
+            "starter_code": {
+                "sql": "SELECT class FROM Courses GROUP BY class HAVING COUNT(student) >= 5;"
+            },
+            "test_cases": [],
+            "hints": [
+                "Use GROUP BY class HAVING COUNT(student) >= 5."
+            ],
+            "explanation": "Group by class and filter groups by student count.",
+            "reference_solution": null,
+            "sql_schema": "CREATE TABLE Courses (student VARCHAR(50), class VARCHAR(50));",
+            "sql_seed": "INSERT INTO Courses VALUES ('A', 'Math'), ('B', 'English'), ('C', 'Math'), ('D', 'Biology'), ('E', 'Math'), ('F', 'Computer'), ('G', 'Math'), ('H', 'Math'), ('I', 'Math');",
+            "sql_solution": "SELECT class FROM Courses GROUP BY class HAVING COUNT(student) >= 5;",
+            "web_template": null,
+            "quiz_data": null,
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "sql-classes-more-than-5-students",
+            "title": "Classes More Than 5 Students",
+            "description": "Write an SQL query to report all the classes that have at least five students.\n\nReturn the result table with column name `class`."
+        },
+        {
+            "challenge_type": "sql",
+            "category": "SQL",
+            "difficulty": "Easy",
+            "estimated_time_min": 15,
+            "supported_languages": [
+                "sql"
+            ],
+            "time_limit_ms": 2000,
+            "memory_limit_mb": 128,
+            "tags": [
+                "sql",
+                "case-when"
+            ],
+            "starter_code": {
+                "sql": "SELECT id, name, CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END AS sex, salary FROM Salary ORDER BY id;"
+            },
+            "test_cases": [],
+            "hints": [
+                "Use CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END."
+            ],
+            "explanation": "CASE expressions provide conditional column transformations.",
+            "reference_solution": null,
+            "sql_schema": "CREATE TABLE Salary (id INT PRIMARY KEY, name VARCHAR(50), sex CHAR(1), salary INT);",
+            "sql_seed": "INSERT INTO Salary VALUES (1, 'A', 'm', 2500), (2, 'B', 'f', 1500), (3, 'C', 'm', 5500), (4, 'D', 'f', 500);",
+            "sql_solution": "SELECT id, name, CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END AS sex, salary FROM Salary ORDER BY id;",
+            "web_template": null,
+            "quiz_data": null,
+            "is_daily": false,
+            "daily_date": null,
+            "slug": "sql-swap-salary",
+            "title": "Swap Salary",
+            "description": "Write an SQL query to select all records with `sex` values swapped (i.e., change all `'f'` values to `'m'` and all `'m'` values to `'f'`).\n\nColumns: `id`, `name`, `sex`, `salary`."
         }
     ]
 }
