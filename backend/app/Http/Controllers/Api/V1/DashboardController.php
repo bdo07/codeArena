@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\SubmissionResource;
 use App\Models\Challenge;
+use App\Models\SnakeGame;
 use App\Models\Submission;
 use App\Models\UserChallengeProgress;
 use Illuminate\Http\JsonResponse;
@@ -62,11 +63,22 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Snake stats
+        $snakeCompleted = SnakeGame::where('user_id', $user->id)->where('status', 'completed');
+        $snakeGamesCount = (clone $snakeCompleted)->count();
+        $snakeStats = [
+            'total_games' => $snakeGamesCount,
+            'high_score' => (clone $snakeCompleted)->max('score') ?? 0,
+            'cumulative_score' => (clone $snakeCompleted)->sum('score') ?? 0,
+            'average_score' => $snakeGamesCount > 0 ? round((clone $snakeCompleted)->avg('score'), 1) : 0,
+        ];
+
         return response()->json([
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'username' => $user->username,
+                'avatar_url' => $user->avatar_url,
                 'xp' => $user->xp,
                 'level' => $user->calculateLevel(),
                 'role' => $user->role,
@@ -87,6 +99,7 @@ class DashboardController extends Controller
                     ? (int) round((Submission::where('user_id', $user->id)->where('status', Submission::STATUS_ACCEPTED)->count() / $totalSubmissions) * 100)
                     : 0,
                 'difficulty_breakdown' => $difficultyStats,
+                'snake_stats' => $snakeStats,
             ],
             'recent_submissions' => SubmissionResource::collection($recentSubmissions),
         ]);

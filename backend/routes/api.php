@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\NoteController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RoadmapController;
+use App\Http\Controllers\Api\V1\SnakeGameController;
 use App\Http\Controllers\Api\V1\SubmissionController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
@@ -96,6 +97,15 @@ Route::prefix('v1')->group(function () {
         Route::put('/profile', [ProfileController::class, 'update']);
         Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
         Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
+
+        // Snake Arcade Game Endpoints
+        Route::post('/snake/start', [SnakeGameController::class, 'start'])
+            ->middleware('throttle:60,1');
+        Route::post('/snake/finish', [SnakeGameController::class, 'finish'])
+            ->middleware('throttle:60,1');
+        Route::get('/snake/stats', [SnakeGameController::class, 'stats']);
+        Route::post('/snake/import-guest-score', [SnakeGameController::class, 'importGuestScore'])
+            ->middleware('throttle:15,1');
 
         // Challenge Submissions (Grading & XP)
         Route::post('/challenges/{challenge}/submit', [ChallengeController::class, 'submit'])

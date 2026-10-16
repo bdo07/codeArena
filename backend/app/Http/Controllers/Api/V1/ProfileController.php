@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\SnakeGame;
 use App\Models\Submission;
 use App\Models\User;
 use App\Models\UserChallengeProgress;
@@ -89,6 +90,15 @@ class ProfileController extends Controller
             });
         }
 
+        $snakeCompleted = SnakeGame::where('user_id', $user->id)->where('status', 'completed');
+        $snakeGamesCount = (clone $snakeCompleted)->count();
+        $snakeStats = [
+            'total_games' => $snakeGamesCount,
+            'high_score' => (clone $snakeCompleted)->max('score') ?? 0,
+            'cumulative_score' => (clone $snakeCompleted)->sum('score') ?? 0,
+            'average_score' => $snakeGamesCount > 0 ? round((clone $snakeCompleted)->avg('score'), 1) : 0,
+        ];
+
         return response()->json([
             'profile' => [
                 'id' => $user->id,
@@ -126,6 +136,7 @@ class ProfileController extends Controller
                 ]),
                 'solved_challenges' => $solvedChallenges,
                 'recent_activity' => $recentActivity,
+                'snake_stats' => $snakeStats,
                 'is_owner' => $isOwner,
             ],
         ]);
