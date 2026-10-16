@@ -41,13 +41,18 @@
     "toggleThemeLight": "Passer en mode clair",
     "toggleThemeDark": "Passer en mode sombre",
     "language": "Langue",
-    "theme": "Thème"
+    "theme": "Thème",
+    "roadmaps": "Parcours",
+    "contests": "Compétitions",
+    "notifications": "Notifications"
   },
   "difficulty": {
     "all": "Tous",
+    "Beginner": "Débutant",
     "Easy": "Facile",
     "Medium": "Moyen",
-    "Hard": "Difficile"
+    "Hard": "Difficile",
+    "Expert": "Expert"
   },
   "landing": {
     "badge": "Plateforme de programmation compétitive",
@@ -102,7 +107,18 @@
     "noChallengesFound": "Aucun défi trouvé",
     "noChallengesAdjust": "Essayez de modifier vos filtres ou vos termes de recherche.",
     "clearFilters": "Effacer les filtres",
-    "pagination": "Affichage de {{start}} à {{end}} sur {{total}} problèmes"
+    "pagination": "Affichage de {{start}} à {{end}} sur {{total}} problèmes",
+    "dailyChallenge": "Défi Quotidien",
+    "streak": "Série",
+    "bonusXp": "+{{xp}} XP",
+    "filterType": "Type :",
+    "typeAll": "Tous les types",
+    "typeCode": "Code Standard",
+    "typeSql": "Labo SQL",
+    "typeWeb": "HTML / CSS / JS",
+    "typeQuiz": "Quiz Interactif",
+    "filterCategory": "Catégorie :",
+    "bookmarkedOnly": "Favoris uniquement"
   },
   "workspace": {
     "problems": "Problèmes",
@@ -282,6 +298,49 @@
       "expectedOutputPlaceholder": "Sortie attendue",
       "saveChanges": "Enregistrer les modifications",
       "createBtn": "Créer le défi"
+    },
+    "tabs": {
+      "challenges": "Défis",
+      "importExport": "Import & Export",
+      "analytics": "Analytique Plateforme"
+    },
+    "import": {
+      "title": "Import Massif de Défis",
+      "description": "Téléversez un fichier JSON ou CSV validé comprenant les énoncés, cas de test et code initial.",
+      "chooseFile": "Choisir un fichier JSON ou CSV",
+      "pasteData": "Ou collez directement les données JSON / CSV",
+      "overwriteLabel": "Écraser les défis existants en cas de correspondance de slug/titre",
+      "importBtn": "Lancer l'importation",
+      "importing": "Import en cours...",
+      "results": "Résumé de l'importation :",
+      "imported": "Créés : {{count}}",
+      "updated": "Mis à jour : {{count}}",
+      "skipped": "Ignorés : {{count}}",
+      "errors": "Erreurs lors de l'import ({{count}}) :"
+    },
+    "export": {
+      "title": "Exporter la Bibliothèque",
+      "description": "Téléchargez l'intégralité des défis et suites de tests pour sauvegarde ou migration.",
+      "exportJson": "Exporter en JSON",
+      "exportCsv": "Exporter en CSV"
+    },
+    "analytics": {
+      "title": "Métriques du Système en Direct",
+      "overview": "Vue d'Ensemble",
+      "totalUsers": "Utilisateurs Inscrits",
+      "totalChallenges": "Défis au Total",
+      "totalSubmissions": "Soumissions Totales",
+      "acceptanceRate": "Taux d'Acceptation",
+      "evaluatorStatus": "État des Moteurs d'Évaluation",
+      "judge0Status": "Service Judge0",
+      "judge0Online": "En ligne & Opérationnel",
+      "judge0Offline": "Hors-ligne (Mode Dégradé Sécurisé)",
+      "supportedLanguages": "Langages Disponibles : {{count}}",
+      "statusBreakdown": "Soumissions par Statut",
+      "categoryBreakdown": "Défis par Catégorie",
+      "difficultyBreakdown": "Défis par Difficulté",
+      "typeBreakdown": "Défis par Type",
+      "activityTrend": "Activité des 7 Derniers Jours"
     }
   },
   "notFound": {
@@ -296,5 +355,53 @@
     "leaderboard": "Classement",
     "github": "GitHub",
     "judge0Ready": "Judge0 Prêt"
+  },
+  "roadmaps": {
+    "title": "Parcours d'Apprentissage",
+    "subtitle": "Des programmes structurés étape par étape pour maîtriser langages, algorithmes et domaines d'ingénierie.",
+    "exploreTrack": "Explorer le parcours",
+    "continueTrack": "Continuer le parcours",
+    "completed": "Terminé",
+    "modulesCount": "{{count}} Modules",
+    "backToRoadmaps": "Retour aux parcours",
+    "trackCurriculum": "Programme du parcours",
+    "modulesDescription": "Suivez ce chemin progressif pour valider chaque compétence clé.",
+    "prerequisites": "Prérequis :",
+    "solveChallenge": "Résoudre le défi",
+    "loading": "Chargement du parcours..."
+  },
+  "contests": {
+    "title": "Compétitions de Code",
+    "subtitle": "Mesurez votre esprit algorithmique sous contrainte de temps et grimpez dans le classement compétitif.",
+    "live": "En direct",
+    "upcoming": "À venir",
+    "past": "Compétitions passées",
+    "duration": "{{minutes}} minutes",
+    "register": "S'inscrire",
+    "registered": "Inscrit",
+    "enterContest": "Accéder au concours",
+    "viewStandings": "Voir le classement",
+    "startsIn": "Début dans",
+    "endsIn": "Fin dans",
+    "contestEnded": "Compétition terminée",
+    "leaderboardTitle": "Classement du Concours",
+    "rank": "Rang",
+    "contestant": "Compétiteur",
+    "score": "Score",
+    "penalty": "Pénalité (min)",
+    "noParticipants": "Aucun participant inscrit pour l'instant."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "noNotifications": "Aucune notification pour le moment"
+  },
+  "daily": {
+    "title": "Défi Quotidien",
+    "streakDays": "Série de {{count}} jours",
+    "bonusXp": "+{{xp}} XP Bonus",
+    "solveToday": "Résoudre le problème du jour",
+    "solvedToday": "Validé aujourd'hui !",
+    "resetsIn": "Renouvellement dans {{hours}}h {{minutes}}m"
   }
 }

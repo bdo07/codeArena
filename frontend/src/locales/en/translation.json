@@ -41,13 +41,18 @@
     "toggleThemeLight": "Switch to Light Mode",
     "toggleThemeDark": "Switch to Dark Mode",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "roadmaps": "Roadmaps",
+    "contests": "Contests",
+    "notifications": "Notifications"
   },
   "difficulty": {
     "all": "All",
+    "Beginner": "Beginner",
     "Easy": "Easy",
     "Medium": "Medium",
-    "Hard": "Hard"
+    "Hard": "Hard",
+    "Expert": "Expert"
   },
   "landing": {
     "badge": "Competitive Programming Platform",
@@ -102,7 +107,18 @@
     "noChallengesFound": "No challenges found",
     "noChallengesAdjust": "Try adjusting your filters or search keywords.",
     "clearFilters": "Clear Filters",
-    "pagination": "Showing {{start}} to {{end}} of {{total}} problems"
+    "pagination": "Showing {{start}} to {{end}} of {{total}} problems",
+    "dailyChallenge": "Daily Challenge",
+    "streak": "Streak",
+    "bonusXp": "+{{xp}} XP",
+    "filterType": "Type:",
+    "typeAll": "All Types",
+    "typeCode": "Standard Code",
+    "typeSql": "SQL Lab",
+    "typeWeb": "HTML / CSS / JS",
+    "typeQuiz": "Interactive Quiz",
+    "filterCategory": "Category:",
+    "bookmarkedOnly": "Saved Only"
   },
   "workspace": {
     "problems": "Problems",
@@ -282,6 +298,49 @@
       "expectedOutputPlaceholder": "Expected output",
       "saveChanges": "Save Changes",
       "createBtn": "Create Challenge"
+    },
+    "tabs": {
+      "challenges": "Challenges",
+      "importExport": "Import & Export",
+      "analytics": "Platform Analytics"
+    },
+    "import": {
+      "title": "Bulk Challenge Import",
+      "description": "Upload a validated JSON or CSV file containing challenge definitions, test cases, and starter code.",
+      "chooseFile": "Select JSON or CSV file",
+      "pasteData": "Or paste raw JSON / CSV data",
+      "overwriteLabel": "Overwrite existing challenges with matching slug/title",
+      "importBtn": "Start Import",
+      "importing": "Importing...",
+      "results": "Import Summary:",
+      "imported": "Created: {{count}}",
+      "updated": "Updated: {{count}}",
+      "skipped": "Skipped: {{count}}",
+      "errors": "Import Errors ({{count}}):"
+    },
+    "export": {
+      "title": "Export Library",
+      "description": "Download the entire challenge library and test suites for backup or migration.",
+      "exportJson": "Export as JSON",
+      "exportCsv": "Export as CSV"
+    },
+    "analytics": {
+      "title": "Live System Analytics",
+      "overview": "Overview Metrics",
+      "totalUsers": "Total Users",
+      "totalChallenges": "Total Challenges",
+      "totalSubmissions": "Total Submissions",
+      "acceptanceRate": "Acceptance Rate",
+      "evaluatorStatus": "Evaluator Engine Status",
+      "judge0Status": "Judge0 Service",
+      "judge0Online": "Online & Healthy",
+      "judge0Offline": "Offline (Safe Fallback Active)",
+      "supportedLanguages": "Supported Languages: {{count}}",
+      "statusBreakdown": "Submissions by Status",
+      "categoryBreakdown": "Challenges by Category",
+      "difficultyBreakdown": "Challenges by Difficulty",
+      "typeBreakdown": "Challenges by Type",
+      "activityTrend": "Recent 7-Day Activity"
     }
   },
   "notFound": {
@@ -296,5 +355,53 @@
     "leaderboard": "Leaderboard",
     "github": "GitHub",
     "judge0Ready": "Judge0 Ready"
+  },
+  "roadmaps": {
+    "title": "Learning Roadmaps",
+    "subtitle": "Structured curriculum tracks to master programming languages, algorithms, and engineering domains.",
+    "exploreTrack": "Explore Track",
+    "continueTrack": "Continue Track",
+    "completed": "Completed",
+    "modulesCount": "{{count}} Modules",
+    "backToRoadmaps": "Back to Roadmaps",
+    "trackCurriculum": "Track Curriculum",
+    "modulesDescription": "Follow this step-by-step path to master all concepts.",
+    "prerequisites": "Prerequisites:",
+    "solveChallenge": "Solve Challenge",
+    "loading": "Loading roadmap..."
+  },
+  "contests": {
+    "title": "Coding Contests",
+    "subtitle": "Test your algorithmic problem-solving under real-time constraints and climb the competitive ladder.",
+    "live": "Live Now",
+    "upcoming": "Upcoming",
+    "past": "Past Contests",
+    "duration": "{{minutes}} minutes",
+    "register": "Register Now",
+    "registered": "Registered",
+    "enterContest": "Enter Contest",
+    "viewStandings": "View Standings",
+    "startsIn": "Starts in",
+    "endsIn": "Ends in",
+    "contestEnded": "Contest Finished",
+    "leaderboardTitle": "Contest Leaderboard",
+    "rank": "Rank",
+    "contestant": "Contestant",
+    "score": "Score",
+    "penalty": "Penalty (min)",
+    "noParticipants": "No participants registered yet."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications at this time"
+  },
+  "daily": {
+    "title": "Daily Challenge",
+    "streakDays": "{{count}} day streak",
+    "bonusXp": "+{{xp}} Bonus XP",
+    "solveToday": "Solve Today's Problem",
+    "solvedToday": "Completed Today!",
+    "resetsIn": "Resets in {{hours}}h {{minutes}}m"
   }
 }
