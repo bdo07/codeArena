@@ -23,7 +23,8 @@
     "attempted": "Attempted",
     "unsolved": "Unsolved",
     "all": "All",
-    "lvl": "Lvl"
+    "lvl": "Lvl",
+    "dismiss": "Dismiss"
   },
   "nav": {
     "brand": "CodeArena",
@@ -187,7 +188,10 @@
     "recentActivity": "Recent Activity",
     "noRecentActivity": "No recent activity yet. Explore challenges to start practicing!",
     "failedMetrics": "Failed to load dashboard metrics.",
-    "loading": "Loading dashboard statistics..."
+    "loading": "Loading dashboard statistics...",
+    "arcadeTitle": "Snake Arena Record",
+    "arcadeSubtitle": "Terminal reflexes score",
+    "playArena": "Play"
   },
   "leaderboard": {
     "title": "Global Hall of Fame",
@@ -259,7 +263,9 @@
     "taglineMax": "Tagline cannot exceed 100 characters.",
     "bioMax": "Bio cannot exceed 300 characters.",
     "invalidUrlProtocol": "URL must start with http:// or https://",
-    "invalidUrl": "Please enter a valid URL."
+    "invalidUrl": "Please enter a valid URL.",
+    "arcadeTitle": "Terminal Reflexes: Snake Arena",
+    "arcadeSubtitle": "Arcade personal records and reflex performance"
   },
   "auth": {
     "welcomeBack": "Welcome Back",
@@ -449,5 +455,40 @@
     "solveToday": "Solve Today's Problem",
     "solvedToday": "Completed Today!",
     "resetsIn": "Resets in {{hours}}h {{minutes}}m"
+  },
+  "snake": {
+    "title": "Terminal Reflexes: Snake Arena",
+    "subtitle": "Sharpen your reaction speed between coding challenges. Fully playable before and after login.",
+    "verifiedMode": "Verified User",
+    "guestMode": "Guest Play",
+    "guestImportPrompt": "You have an unlinked guest score of {{score}} pts. Would you like to import it to your profile as an unverified record?",
+    "guestImportSuccess": "Guest record successfully imported!",
+    "importRecord": "Import Record",
+    "readyTitle": "Ready to test your reflexes?",
+    "readyDesc": "Use Arrow Keys, WASD, or the on-screen buttons below.",
+    "startGame": "Start Game",
+    "paused": "Game Paused",
+    "resumePrompt": "Press Space or Resume to continue",
+    "resumeGame": "Resume",
+    "gameOver": "Game Over",
+    "finalScore": "Score",
+    "apples": "Apples",
+    "newBest": "New Personal Best!",
+    "playAgain": "Play Again",
+    "currentScore": "Current Score",
+    "applesEaten": "apples",
+    "personalBest": "Personal Best",
+    "verifiedServer": "Verified Account",
+    "localSession": "Browser Local",
+    "arcadeStats": "Your Arcade Stats",
+    "gamesPlayed": "games",
+    "cumulativeScore": "Total Score",
+    "averageScore": "Average",
+    "controlsTitle": "Controls & Keybindings",
+    "steer": "Steer",
+    "pause": "Pause",
+    "restart": "Restart",
+    "resume": "Resume",
+    "play": "Play Now"
   }
 }

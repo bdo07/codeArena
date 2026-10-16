@@ -23,7 +23,8 @@
     "attempted": "Tenté",
     "unsolved": "Non résolu",
     "all": "Tous",
-    "lvl": "Niv."
+    "lvl": "Niv.",
+    "dismiss": "Ignorer"
   },
   "nav": {
     "brand": "CodeArena",
@@ -187,7 +188,10 @@
     "recentActivity": "Activité récente",
     "noRecentActivity": "Aucune soumission récente. Explorez les défis pour commencer à vous entraîner !",
     "failedMetrics": "Échec du chargement des statistiques.",
-    "loading": "Chargement du tableau de bord..."
+    "loading": "Chargement du tableau de bord...",
+    "arcadeTitle": "Record Snake Arena",
+    "arcadeSubtitle": "Score de réflexes au terminal",
+    "playArena": "Jouer"
   },
   "leaderboard": {
     "title": "Panthéon mondial",
@@ -259,7 +263,9 @@
     "taglineMax": "Le slogan ne peut pas dépasser 100 caractères.",
     "bioMax": "La biographie ne peut pas dépasser 300 caractères.",
     "invalidUrlProtocol": "L'URL doit commencer par http:// ou https://",
-    "invalidUrl": "Veuillez saisir une URL valide."
+    "invalidUrl": "Veuillez saisir une URL valide.",
+    "arcadeTitle": "Réflexes Terminal : Snake Arena",
+    "arcadeSubtitle": "Records d'arcade personnels et performance de réflexes"
   },
   "auth": {
     "welcomeBack": "Bon retour",
@@ -449,5 +455,40 @@
     "solveToday": "Résoudre le problème du jour",
     "solvedToday": "Validé aujourd'hui !",
     "resetsIn": "Renouvellement dans {{hours}}h {{minutes}}m"
+  },
+  "snake": {
+    "title": "Réflexes Terminal : Snake Arena",
+    "subtitle": "Aiguisez votre vitesse de réaction entre deux défis d'algorithmes. Entièrement jouable avant et après connexion.",
+    "verifiedMode": "Utilisateur vérifié",
+    "guestMode": "Mode Invité",
+    "guestImportPrompt": "Vous avez un record invité non lié de {{score}} pts. Souhaitez-vous l'importer dans votre profil en tant qu'enregistrement non vérifié ?",
+    "guestImportSuccess": "Record invité importé avec succès !",
+    "importRecord": "Importer le record",
+    "readyTitle": "Prêt à tester vos réflexes ?",
+    "readyDesc": "Utilisez les flèches, ZQSD/WASD, ou les boutons ci-dessous.",
+    "startGame": "Lancer la partie",
+    "paused": "Partie en pause",
+    "resumePrompt": "Appuyez sur Espace ou Reprendre pour continuer",
+    "resumeGame": "Reprendre",
+    "gameOver": "Partie terminée",
+    "finalScore": "Score",
+    "apples": "Pommes",
+    "newBest": "Nouveau record personnel !",
+    "playAgain": "Rejouer",
+    "currentScore": "Score actuel",
+    "applesEaten": "pommes",
+    "personalBest": "Meilleur score",
+    "verifiedServer": "Compte vérifié",
+    "localSession": "Session locale",
+    "arcadeStats": "Vos statistiques d'arcade",
+    "gamesPlayed": "parties",
+    "cumulativeScore": "Score cumulé",
+    "averageScore": "Moyenne",
+    "controlsTitle": "Contrôles et raccourcis",
+    "steer": "Diriger",
+    "pause": "Pause",
+    "restart": "Recommencer",
+    "resume": "Reprendre",
+    "play": "Jouer maintenant"
   }
 }
