@@ -135,7 +135,7 @@ export const SnakeGame: React.FC = () => {
   const dirRef = useRef<Direction>('RIGHT');
   const nextDirRef = useRef<Direction>('RIGHT');
   const movesCountRef = useRef<number>(0);
-  const gameLoopTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const gameLoopTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
 
   // Determine current active best score
@@ -184,7 +184,7 @@ export const SnakeGame: React.FC = () => {
   };
 
   // Start new game session
-  const startGame = async () => {
+  const startGame = useCallback(async () => {
     // Reset snake & food
     const initialSnake = [
       { x: 6, y: 10 },
@@ -213,16 +213,16 @@ export const SnakeGame: React.FC = () => {
     } else {
       setSessionId(null);
     }
-  };
+  }, [user, spawnFood, playTone]);
 
   // Pause / Resume
-  const togglePause = () => {
-    if (status === 'playing') {
-      setStatus('paused');
-    } else if (status === 'paused') {
-      setStatus('playing');
-    }
-  };
+  const togglePause = useCallback(() => {
+    setStatus((prev) => {
+      if (prev === 'playing') return 'paused';
+      if (prev === 'paused') return 'playing';
+      return prev;
+    });
+  }, []);
 
   // Game Over handler
   const handleGameOver = useCallback(async () => {
