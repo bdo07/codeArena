@@ -23,10 +23,8 @@ import {
   Layers,
   ArrowRight,
   Info,
-  BookOpen,
   Compass,
   AlertCircle,
-  Clock,
   Code2,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
