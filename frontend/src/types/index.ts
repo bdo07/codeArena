@@ -295,6 +295,7 @@ export interface LeaderboardUser {
   id: number;
   name: string;
   username: string;
+  avatar_url?: string | null;
   xp: number;
   level: number;
   solved_count: number;
