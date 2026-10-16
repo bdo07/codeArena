@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\LeaderboardController;
 use App\Http\Controllers\Api\V1\NoteController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\QuestController;
 use App\Http\Controllers\Api\V1\RoadmapController;
 use App\Http\Controllers\Api\V1\SnakeGameController;
 use App\Http\Controllers\Api\V1\SubmissionController;
