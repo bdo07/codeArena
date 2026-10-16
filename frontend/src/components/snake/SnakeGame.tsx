@@ -25,29 +25,23 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { SnakePersonalStats } from '@/types';
+import {
+  Direction,
+  Position,
+  DIR_OFFSETS,
+  isOppositeDirection,
+  getNextHead,
+  checkWallCollision,
+  checkSelfCollision,
+  calculateSpeed,
+  spawnFood as spawnFoodUtil,
+  calculateScore,
+} from './snakeLogic';
 
 const GRID_SIZE = 20; // 20x20 cells
-const BASE_SPEED_MS = 130;
-const MIN_SPEED_MS = 75;
 const GUEST_STORAGE_KEY = 'codearena_guest_snake_best';
 
-type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
-type Position = { x: number; y: number };
 type GameStatus = 'idle' | 'playing' | 'paused' | 'game_over';
-
-const DIR_OFFSETS: Record<Direction, Position> = {
-  UP: { x: 0, y: -1 },
-  DOWN: { x: 0, y: 1 },
-  LEFT: { x: -1, y: 0 },
-  RIGHT: { x: 1, y: 0 },
-};
-
-const OPPOSITE_DIRS: Record<Direction, Direction> = {
-  UP: 'DOWN',
-  DOWN: 'UP',
-  LEFT: 'RIGHT',
-  RIGHT: 'LEFT',
-};
 
 export const SnakeGame: React.FC = () => {
   const { t } = useTranslation();
@@ -145,18 +139,7 @@ export const SnakeGame: React.FC = () => {
 
   // Helper to place food not on snake body
   const spawnFood = useCallback((snake: Position[]): Position => {
-    const emptyCells: Position[] = [];
-    for (let x = 0; x < GRID_SIZE; x++) {
-      for (let y = 0; y < GRID_SIZE; y++) {
-        const isOccupied = snake.some((seg) => seg.x === x && seg.y === y);
-        if (!isOccupied) {
-          emptyCells.push({ x, y });
-        }
-      }
-    }
-    if (emptyCells.length === 0) return { x: 0, y: 0 };
-    const randomIndex = Math.floor(Math.random() * emptyCells.length);
-    return emptyCells[randomIndex];
+    return spawnFoodUtil(snake, GRID_SIZE);
   }, []);
 
   // Safe import of guest score to authenticated profile
@@ -266,7 +249,7 @@ export const SnakeGame: React.FC = () => {
   // Handle direction change safely (disallow immediate 180° turnaround)
   const changeDirection = useCallback((newDir: Direction) => {
     if (status !== 'playing') return;
-    if (OPPOSITE_DIRS[newDir] !== dirRef.current) {
+    if (!isOppositeDirection(dirRef.current, newDir)) {
       nextDirRef.current = newDir;
     }
   }, [status]);
@@ -276,31 +259,20 @@ export const SnakeGame: React.FC = () => {
     if (status !== 'playing') return;
 
     dirRef.current = nextDirRef.current;
-    const offset = DIR_OFFSETS[dirRef.current];
     const currentSnake = snakeRef.current;
     const head = currentSnake[0];
-    const nextHead: Position = { x: head.x + offset.x, y: head.y + offset.y };
+    const nextHead = getNextHead(head, dirRef.current);
 
     movesCountRef.current += 1;
 
     // 1. Wall collision
-    if (
-      nextHead.x < 0 ||
-      nextHead.x >= GRID_SIZE ||
-      nextHead.y < 0 ||
-      nextHead.y >= GRID_SIZE
-    ) {
+    if (checkWallCollision(nextHead, GRID_SIZE)) {
       handleGameOver();
       return;
     }
 
     // 2. Self collision (excluding the tail segment that will move)
-    const hitSelf = currentSnake.some((seg, idx) => {
-      if (idx === currentSnake.length - 1) return false;
-      return seg.x === nextHead.x && seg.y === nextHead.y;
-    });
-
-    if (hitSelf) {
+    if (checkSelfCollision(nextHead, currentSnake)) {
       handleGameOver();
       return;
     }
@@ -311,8 +283,11 @@ export const SnakeGame: React.FC = () => {
     // Check if food eaten
     if (nextHead.x === foodRef.current.x && nextHead.y === foodRef.current.y) {
       playTone(550, 880, 0.08, 'sine');
-      setApplesEaten((prev) => prev + 1);
-      setScore((prev) => prev + 10);
+      setApplesEaten((prev) => {
+        const nextApples = prev + 1;
+        setScore(calculateScore(nextApples));
+        return nextApples;
+      });
       foodRef.current = spawnFood(newSnake);
     } else {
       newSnake.pop(); // Remove tail
@@ -324,7 +299,7 @@ export const SnakeGame: React.FC = () => {
   // Game loop interval based on score
   useEffect(() => {
     if (status === 'playing') {
-      const speed = Math.max(MIN_SPEED_MS, BASE_SPEED_MS - Math.floor(applesEaten / 3) * 5);
+      const speed = calculateSpeed(applesEaten);
       gameLoopTimerRef.current = setInterval(gameTick, speed);
     }
 
