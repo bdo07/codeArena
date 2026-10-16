@@ -78,6 +78,7 @@ class LearningReportTest extends TestCase
             'difficulty' => 'Medium',
             'duration_minutes' => 30,
             'started_at' => now()->subMinutes(25),
+            'expires_at' => now()->addMinutes(5),
             'completed_at' => now(),
             'status' => 'completed',
             'score' => 85,
