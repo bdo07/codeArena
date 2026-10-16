@@ -152,10 +152,19 @@ export const WorkspaceDiscussionsTab: React.FC<WorkspaceDiscussionsTabProps> = (
               <div key={d.id} className="p-3 rounded-lg border border-zinc-800 bg-zinc-900/40 space-y-2 text-xs">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400">
-                      <UserIcon className="w-3 h-3" />
-                    </div>
-                    <span className="font-semibold text-zinc-200">{d.user?.username || 'User'}</span>
+                    <Link
+                      to={`/profile/${d.user?.username}`}
+                      className="flex items-center gap-1.5 hover:text-violet-400 transition-colors"
+                    >
+                      <Avatar
+                        src={(d.user as any)?.avatar_url}
+                        name={d.user?.name || d.user?.username || 'User'}
+                        size="xs"
+                      />
+                      <span className="font-semibold text-zinc-200 hover:text-violet-300">
+                        {d.user?.username || 'User'}
+                      </span>
+                    </Link>
                     <span className="text-[10px] text-zinc-500">
                       {new Date(d.created_at).toLocaleDateString()}
                     </span>
@@ -185,9 +194,22 @@ export const WorkspaceDiscussionsTab: React.FC<WorkspaceDiscussionsTabProps> = (
                 {d.replies && d.replies.length > 0 && (
                   <div className="pt-2 pl-3 border-l-2 border-zinc-800 space-y-2 mt-2">
                     {d.replies.map((r) => (
-                      <div key={r.id} className="text-xs bg-zinc-950/60 p-2 rounded border border-zinc-800/60">
-                        <span className="font-semibold text-zinc-300">{r.user?.username}: </span>
-                        <span className="text-zinc-400">{r.content}</span>
+                      <div key={r.id} className="text-xs bg-zinc-950/60 p-2 rounded border border-zinc-800/60 flex items-start gap-2">
+                        <Avatar
+                          src={(r.user as any)?.avatar_url}
+                          name={r.user?.name || r.user?.username || 'User'}
+                          size="xs"
+                          className="shrink-0 mt-0.5"
+                        />
+                        <div>
+                          <Link
+                            to={`/profile/${r.user?.username}`}
+                            className="font-semibold text-zinc-300 hover:text-violet-300 mr-1.5"
+                          >
+                            {r.user?.username}:
+                          </Link>
+                          <span className="text-zinc-400">{r.content}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
