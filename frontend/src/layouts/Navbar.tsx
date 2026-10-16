@@ -101,6 +101,17 @@ export const Navbar: React.FC = () => {
                 {t('nav.quest')}
               </Link>
               <Link
+                to="/git-playground"
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                  location.pathname.startsWith('/git-playground')
+                    ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                }`}
+              >
+                <Terminal className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                Git
+              </Link>
+              <Link
                 to="/contests"
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
                   isActive('/contests')
