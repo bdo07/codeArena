@@ -129,6 +129,21 @@ class User extends Authenticatable
         return $this->hasMany(DailyCompletion::class);
     }
 
+    public function questProgress(): HasMany
+    {
+        return $this->hasMany(UserQuestProgress::class);
+    }
+
+    public function questPathCompletions(): HasMany
+    {
+        return $this->hasMany(UserQuestPathCompletion::class);
+    }
+
+    public function dailyMissions(): HasMany
+    {
+        return $this->hasMany(UserDailyMissionProgress::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
