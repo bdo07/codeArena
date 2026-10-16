@@ -87,9 +87,15 @@ Route::prefix('v1')->group(function () {
     // 9. Public Leaderboard & User Profiles
     Route::get('/leaderboard', [LeaderboardController::class, 'index']);
     Route::get('/users/{username}', [ProfileController::class, 'show']);
+    Route::get('/profile/{username}', [ProfileController::class, 'show']);
 
     // Authenticated Endpoints
     Route::middleware('auth:sanctum')->group(function () {
+
+        // Profile Management (Self)
+        Route::put('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
+        Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 
         // Challenge Submissions (Grading & XP)
         Route::post('/challenges/{challenge}/submit', [ChallengeController::class, 'submit'])

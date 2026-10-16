@@ -20,15 +20,25 @@ class UserResource extends JsonResource
             'role' => $this->role,
             'xp' => $this->xp,
             'level' => $this->calculateLevel(),
-            'badges' => $this->badges->map(fn ($b) => [
+            'avatar_url' => $this->avatar_url,
+            'tagline' => $this->tagline,
+            'bio' => $this->bio,
+            'location' => $this->location,
+            'website_url' => $this->website_url,
+            'github_url' => $this->github_url,
+            'linkedin_url' => $this->linkedin_url,
+            'favorite_languages' => $this->favorite_languages ?? [],
+            'is_activity_public' => (bool) ($this->is_activity_public ?? true),
+            'badges' => $this->badges ? $this->badges->map(fn ($b) => [
                 'id' => $b->id,
                 'name' => $b->name,
                 'slug' => $b->slug,
                 'description' => $b->description,
                 'icon' => $b->icon,
                 'earned_at' => $b->pivot?->earned_at,
-            ]),
+            ]) : [],
             'created_at' => $this->created_at?->toIso8601String(),
+            'joined_at' => $this->created_at?->toIso8601String(),
         ];
     }
 }

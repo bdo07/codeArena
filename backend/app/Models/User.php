@@ -22,6 +22,15 @@ class User extends Authenticatable
         'password',
         'role',
         'xp',
+        'avatar',
+        'tagline',
+        'bio',
+        'location',
+        'website_url',
+        'github_url',
+        'linkedin_url',
+        'favorite_languages',
+        'is_activity_public',
     ];
 
     protected $hidden = [
@@ -31,6 +40,7 @@ class User extends Authenticatable
 
     protected $appends = [
         'level',
+        'avatar_url',
     ];
 
     protected function casts(): array
@@ -39,7 +49,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'xp' => 'integer',
+            'favorite_languages' => 'array',
+            'is_activity_public' => 'boolean',
         ];
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+            return $this->avatar;
+        }
+
+        return url('/storage/' . ltrim($this->avatar, '/'));
     }
 
     public function submissions(): HasMany
