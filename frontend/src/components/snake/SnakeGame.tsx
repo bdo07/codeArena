@@ -668,7 +668,7 @@ export const SnakeGame: React.FC = () => {
                 <p className="text-xs text-zinc-400 mb-5 max-w-xs">
                   {t('snake.readyDesc', 'Use Arrow Keys, WASD, or the on-screen buttons below.')}
                 </p>
-                <Button variant="primary" size="md" onClick={startGame}>
+                <Button variant="primary" size="md" onClick={() => startGame()}>
                   {t('snake.startGame', 'Start Game')}
                 </Button>
               </div>
@@ -723,7 +723,7 @@ export const SnakeGame: React.FC = () => {
                 <Button
                   variant="primary"
                   size="md"
-                  onClick={startGame}
+                  onClick={() => startGame()}
                   leftIcon={<RotateCcw className="w-4 h-4" />}
                 >
                   {t('snake.playAgain', 'Play Again')}
