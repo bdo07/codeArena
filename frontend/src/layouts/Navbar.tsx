@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 <Terminal className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-                Git
+                {t('nav.gitPlayground', 'Git')}
               </Link>
               <Link
                 to="/interview"
@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 <Layers className="w-3.5 h-3.5 text-teal-500 dark:text-teal-400" />
-                Interview
+                {t('nav.interview', 'Interview')}
               </Link>
               <Link
                 to="/contests"
