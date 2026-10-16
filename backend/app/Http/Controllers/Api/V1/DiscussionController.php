@@ -21,7 +21,7 @@ class DiscussionController extends Controller
         $user = $request->user('sanctum');
 
         $discussions = Discussion::where('challenge_id', $challenge->id)
-            ->with(['user:id,name,username,xp', 'replies.user:id,name,username,xp'])
+            ->with(['user:id,name,username,xp,avatar', 'replies.user:id,name,username,xp,avatar'])
             ->orderByDesc('is_pinned')
             ->orderByDesc('upvotes_count')
             ->orderByDesc('created_at')
