@@ -320,6 +320,13 @@ export const Navbar: React.FC = () => {
           </Link>
           {user && (
             <>
+              <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                <Avatar src={user.avatar_url} name={user.name} size="sm" />
+                <div className="truncate">
+                  <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 truncate">{user.name}</p>
+                  <p className="text-[11px] text-zinc-500 font-mono">@{user.username}</p>
+                </div>
+              </div>
               <Link
                 to="/dashboard"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -334,6 +341,16 @@ export const Navbar: React.FC = () => {
               >
                 {t('nav.profileWithXp', { xp: user.xp })}
               </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsEditModalOpen(true);
+                }}
+                className="w-full text-left px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
+              >
+                {t('profile.editProfile', 'Edit Profile')}
+              </button>
               {user.role === 'admin' && (
                 <Link
                   to="/admin"
@@ -370,6 +387,14 @@ export const Navbar: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Edit Profile Modal */}
+      {user && (
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        />
       )}
     </nav>
   );
