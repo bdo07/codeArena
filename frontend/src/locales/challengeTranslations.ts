@@ -178,11 +178,13 @@ export function getTranslatedTagName(slug: string, originalName: string, languag
  * Maps difficulty values ('Easy', 'Medium', 'Hard') to the appropriate locale display label.
  */
 export function getDifficultyLabel(
-  difficulty: 'Easy' | 'Medium' | 'Hard' | string,
+  difficulty: 'Beginner' | 'Easy' | 'Medium' | 'Hard' | 'Expert' | string,
   t: (key: string) => string
 ): string {
+  if (difficulty === 'Beginner') return t('difficulty.Beginner');
   if (difficulty === 'Easy') return t('difficulty.Easy');
   if (difficulty === 'Medium') return t('difficulty.Medium');
   if (difficulty === 'Hard') return t('difficulty.Hard');
+  if (difficulty === 'Expert') return t('difficulty.Expert');
   return difficulty;
 }
