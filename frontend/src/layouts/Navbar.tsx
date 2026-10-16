@@ -263,6 +263,15 @@ export const Navbar: React.FC = () => {
                         {t('nav.dashboard')}
                       </Link>
 
+                      <Link
+                        to="/reports"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
+                      >
+                        <TrendingUp className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                        {t('nav.reports', 'Learning Reports')}
+                      </Link>
+
                       {user.role === 'admin' && (
                         <Link
                           to="/admin"
