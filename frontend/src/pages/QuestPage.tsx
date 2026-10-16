@@ -122,32 +122,32 @@ export const QuestPage: React.FC = () => {
   }, [user]);
 
   // Load active path detail
-  const loadActivePath = async (slug: string) => {
+  const loadActivePath = React.useCallback(async (slug: string) => {
     try {
       setIsLoadingDetail(true);
       const detail = await questApi.getPathDetail(slug);
       setActivePathDetail(detail);
 
       // If a stage was previously selected, update its record
-      if (selectedStage) {
-        const updated = detail.stages.find((s) => s.id === selectedStage.id);
-        if (updated) setSelectedStage(updated);
-      }
+      setSelectedStage((prev) => {
+        if (!prev) return null;
+        return detail.stages.find((s) => s.id === prev.id) || null;
+      });
     } catch (err) {
       console.error('Failed to load quest path details:', err);
     } finally {
       setIsLoadingDetail(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (selectedPathSlug) {
       loadActivePath(selectedPathSlug);
     }
-  }, [selectedPathSlug, user]);
+  }, [selectedPathSlug, user, loadActivePath]);
 
   useEffect(() => {
-    if (routeSlug && routeSlug !== selectedPathSlug) {
+    if (routeSlug) {
       setSelectedPathSlug(routeSlug);
     }
   }, [routeSlug]);
