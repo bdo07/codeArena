@@ -191,7 +191,7 @@ export const LearningReportsPage: React.FC = () => {
               </div>
               <p className="text-xs text-zinc-500 font-mono">
                 @{user.username} • {t('reports.joined', 'Joined')}{' '}
-                {new Date(user.created_at).toLocaleDateString()}
+                {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Recently'}
               </p>
             </div>
           </div>

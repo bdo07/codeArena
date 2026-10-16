@@ -400,6 +400,13 @@ export const Navbar: React.FC = () => {
                 {t('nav.dashboard')}
               </Link>
               <Link
+                to="/reports"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              >
+                {t('nav.reports', 'Learning Reports')}
+              </Link>
+              <Link
                 to={`/profile/${user.username}`}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"

@@ -33,6 +33,9 @@ export const Footer: React.FC = () => {
           <Link to="/interview" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
             Mock Interview
           </Link>
+          <Link to="/reports" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
+            Learning Reports
+          </Link>
           <Link to="/leaderboard" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
             {t('footer.leaderboard')}
           </Link>
