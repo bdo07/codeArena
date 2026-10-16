@@ -40,6 +40,10 @@ class Challenge extends Model
         'created_by',
     ];
 
+    protected $appends = [
+        'supported_languages',
+    ];
+
     protected $casts = [
         'starter_code' => 'array',
         'hints' => 'array',
