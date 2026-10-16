@@ -102,7 +102,7 @@ class LearningReportService
         $gitProgress = UserGitPlaygroundProgress::where('user_id', $user->id)->get();
         $gitScenariosCompleted = $gitProgress->count();
         $gitCommandsCount = (int) $gitProgress->sum('commands_count');
-        $gitXpEarned = (int) $gitProgress->sum('xp_earned');
+        $gitXpEarned = (int) $gitProgress->sum('xp_awarded');
 
         // 5. Mock Interview stats
         $interviewQuery = InterviewSession::where('user_id', $user->id)

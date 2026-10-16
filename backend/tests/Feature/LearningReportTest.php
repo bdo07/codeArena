@@ -66,7 +66,7 @@ class LearningReportTest extends TestCase
             'user_id' => $user->id,
             'scenario_id' => 'first-commit',
             'commands_count' => 4,
-            'xp_earned' => 25,
+            'xp_awarded' => 25,
             'completed_at' => now(),
         ]);
 
