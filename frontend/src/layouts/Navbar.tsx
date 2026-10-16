@@ -341,6 +341,13 @@ export const Navbar: React.FC = () => {
             {t('nav.quest')}
           </Link>
           <Link
+            to="/git-playground"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            Git Playground
+          </Link>
+          <Link
             to="/contests"
             onClick={() => setIsMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"
