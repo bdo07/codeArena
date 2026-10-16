@@ -15,6 +15,11 @@ import { DashboardPage } from './pages/DashboardPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AdminPage } from './pages/AdminPage';
+import { RoadmapsPage } from './pages/RoadmapsPage';
+import { RoadmapDetailPage } from './pages/RoadmapDetailPage';
+import { ContestsPage } from './pages/ContestsPage';
+import { ContestDetailPage } from './pages/ContestDetailPage';
+import { ContestLeaderboardPage } from './pages/ContestLeaderboardPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -38,6 +43,11 @@ export const App: React.FC = () => {
                 <Route index element={<LandingPage />} />
                 <Route path="challenges" element={<ChallengesPage />} />
                 <Route path="challenges/:slug" element={<WorkspacePage />} />
+                <Route path="roadmaps" element={<RoadmapsPage />} />
+                <Route path="roadmaps/:slug" element={<RoadmapDetailPage />} />
+                <Route path="contests" element={<ContestsPage />} />
+                <Route path="contests/:slug" element={<ContestDetailPage />} />
+                <Route path="contests/:slug/leaderboard" element={<ContestLeaderboardPage />} />
                 <Route path="leaderboard" element={<LeaderboardPage />} />
                 <Route path="profile/:username" element={<ProfilePage />} />
                 <Route path="login" element={<LoginPage />} />
