@@ -59,6 +59,46 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function streak(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserStreak::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(ChallengeNote::class);
+    }
+
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class)->latest();
+    }
+
+    public function contestParticipants(): HasMany
+    {
+        return $this->hasMany(ContestParticipant::class);
+    }
+
+    public function roadmapProgress(): HasMany
+    {
+        return $this->hasMany(UserRoadmapProgress::class);
+    }
+
+    public function dailyCompletions(): HasMany
+    {
+        return $this->hasMany(DailyCompletion::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
