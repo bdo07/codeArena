@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\GitPlaygroundController;
 use App\Http\Controllers\Api\V1\InterviewController;
 use App\Http\Controllers\Api\V1\LanguageController;
 use App\Http\Controllers\Api\V1\LeaderboardController;
+use App\Http\Controllers\Api\V1\LearningReportController;
 use App\Http\Controllers\Api\V1\NoteController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -180,6 +181,10 @@ Route::prefix('v1')->group(function () {
 
         // Dashboard Stats
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+        // Personal Learning Reports
+        Route::get('/reports/learning', [LearningReportController::class, 'show']);
+        Route::get('/reports/learning/{userId}', [LearningReportController::class, 'show']);
     });
 
     // Admin Protected Endpoints
