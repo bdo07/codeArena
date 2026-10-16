@@ -90,7 +90,7 @@ export const GitVisualizer: React.FC<GitVisualizerProps> = ({ state }) => {
             {commitsList.map((commit, idx) => {
               const isHead = commit.hash === currentHeadHash;
               const branchesOnThisCommit = Object.entries(state.branches)
-                .filter(([_, hash]) => hash === commit.hash)
+                .filter(([, hash]) => hash === commit.hash)
                 .map(([name]) => name);
 
               return (

@@ -540,7 +540,6 @@ export const executeGitCommand = (
   // 10. git reset
   if (subCmd === 'reset') {
     const isHard = args.includes('--hard');
-    const isSoft = args.includes('--soft');
     const targetHash = args.find((a) => !a.startsWith('-'));
 
     if (targetHash && state.commits[targetHash]) {

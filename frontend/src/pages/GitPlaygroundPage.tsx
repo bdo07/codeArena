@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   Terminal as TerminalIcon,
@@ -9,14 +8,8 @@ import {
   Sparkles,
   HelpCircle,
   ChevronDown,
-  ChevronRight,
   ArrowRight,
-  Award,
-  Zap,
   Info,
-  X,
-  Play,
-  Layers,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { SCENARIOS } from '@/features/git-playground/scenarios';
@@ -28,7 +21,6 @@ import { gitPlaygroundApi } from '@/services/gitPlaygroundApi';
 import { Button } from '@/components/ui/Button';
 
 export const GitPlaygroundPage: React.FC = () => {
-  const { t } = useTranslation();
   const { user, refreshUser } = useAuth();
 
   // Selected scenario

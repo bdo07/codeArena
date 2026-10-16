@@ -1,4 +1,4 @@
-import { GitScenario, GitRepoState } from './types';
+import { GitScenario } from './types';
 import { createEmptyRepo, getCurrentCommitHash, getCurrentBranchName } from './gitEngine';
 
 export const SCENARIOS: GitScenario[] = [
