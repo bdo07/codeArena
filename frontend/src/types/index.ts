@@ -1,3 +1,6 @@
+export type Difficulty = 'Beginner' | 'Easy' | 'Medium' | 'Hard' | 'Expert';
+export type ChallengeType = 'code' | 'sql' | 'web' | 'quiz';
+
 export interface User {
   id: number;
   name: string;
@@ -43,8 +46,30 @@ export interface Challenge {
   input_description?: string;
   output_description?: string;
   constraints?: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: Difficulty;
+  category: string;
+  challenge_type: ChallengeType;
+  estimated_time_min?: number;
   starter_code?: Record<string, string>;
+  hints?: string[];
+  explanation?: string;
+  sql_schema?: string;
+  sql_seed?: string;
+  web_template?: {
+    html: string;
+    css: string;
+    js: string;
+  };
+  quiz_data?: {
+    questions: Array<{
+      id: number;
+      question: string;
+      options: string[];
+    }>;
+  };
+  is_daily?: boolean;
+  daily_date?: string;
+  supported_languages?: string[];
   time_limit_ms: number;
   memory_limit_mb: number;
   is_published: boolean;
@@ -81,7 +106,7 @@ export interface Submission {
     id: number;
     slug: string;
     title: string;
-    difficulty: 'Easy' | 'Medium' | 'Hard';
+    difficulty: Difficulty;
   };
   user?: {
     id: number;
@@ -129,8 +154,46 @@ export interface SubmitResult {
     total_xp: number;
     level: number;
     new_badges: Badge[];
+    streak?: {
+      current_streak: number;
+      longest_streak: number;
+      last_activity_date?: string;
+    };
   };
   is_demo_mode: boolean;
+}
+
+export interface SqlResult {
+  success: boolean;
+  passed: boolean;
+  error: string | null;
+  user_result?: {
+    columns: string[];
+    rows: any[];
+    row_count: number;
+  };
+  expected_result?: {
+    columns: string[];
+    rows: any[];
+    row_count: number;
+  };
+  execution_time_ms: number;
+}
+
+export interface QuizResult {
+  passed: boolean;
+  score: number;
+  correct_count: number;
+  total_questions: number;
+  review: Array<{
+    id: number;
+    user_answer: number;
+    correct_answer: number;
+    is_correct: boolean;
+    explanation?: string;
+  }>;
+  submission: Submission;
+  gamification: any;
 }
 
 export interface PaginationMeta {
@@ -138,6 +201,9 @@ export interface PaginationMeta {
   last_page: number;
   per_page: number;
   total: number;
+  category_counts?: Record<string, number>;
+  difficulty_counts?: Record<string, number>;
+  type_counts?: Record<string, number>;
 }
 
 export interface DashboardStats {
@@ -147,13 +213,18 @@ export interface DashboardStats {
     total_challenges: number;
     total_submissions: number;
     acceptance_rate: number;
-    difficulty_breakdown: Record<'Easy' | 'Medium' | 'Hard', {
+    difficulty_breakdown: Record<Difficulty, {
       solved: number;
       total: number;
       percentage: number;
     }>;
   };
   recent_submissions: Submission[];
+  streak?: {
+    current_streak: number;
+    longest_streak: number;
+    last_activity_date?: string;
+  };
 }
 
 export interface LeaderboardUser {
@@ -170,4 +241,161 @@ export interface LeaderboardUser {
     slug: string;
     icon: string;
   }>;
+}
+
+export interface LanguageCatalogItem {
+  id?: number;
+  name: string;
+  slug: string;
+  category: string;
+  monaco_mode: string;
+  judge0_id?: number | null;
+  evaluator_type: 'judge0' | 'sqlite_sandbox' | 'client_sandbox' | 'quiz_engine' | 'none';
+  version: string;
+  is_executable: boolean;
+  is_active: boolean;
+}
+
+export interface Roadmap {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+  difficulty: Difficulty;
+  estimated_hours: number;
+  modules_count: number;
+  total_challenges: number;
+  solved_challenges: number;
+  progress_percentage: number;
+}
+
+export interface RoadmapDetailModule {
+  id: number;
+  title: string;
+  description: string;
+  position: number;
+  challenges: Array<{
+    id: number;
+    slug: string;
+    title: string;
+    difficulty: Difficulty;
+    challenge_type: ChallengeType;
+    estimated_time_min: number;
+    is_solved: boolean;
+  }>;
+}
+
+export interface RoadmapDetail {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+  difficulty: Difficulty;
+  estimated_hours: number;
+  modules: RoadmapDetailModule[];
+}
+
+export interface CollectionItem {
+  id: number;
+  user_id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  is_public: boolean;
+  challenges_count: number;
+  challenges?: Challenge[];
+}
+
+export interface ContestItem {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  start_time: string;
+  end_time: string;
+  status: 'active' | 'upcoming' | 'finished';
+  banner_color: string;
+  challenges_count: number;
+  participants_count: number;
+  is_registered: boolean;
+  my_score?: number;
+  challenges?: Array<{
+    id: number;
+    slug: string;
+    title: string;
+    difficulty: Difficulty;
+    category: string;
+    points: number;
+    position: number;
+  }>;
+}
+
+export interface NotificationItem {
+  id: number;
+  type: string;
+  title: string;
+  message: string;
+  data?: any;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface DiscussionTopic {
+  id: number;
+  user_id: number;
+  user: {
+    id: number;
+    name: string;
+    username: string;
+    xp: number;
+  };
+  title: string;
+  content: string;
+  category: string;
+  upvotes_count: number;
+  is_pinned: boolean;
+  created_at: string;
+  replies?: DiscussionReplyItem[];
+}
+
+export interface DiscussionReplyItem {
+  id: number;
+  discussion_id: number;
+  user_id: number;
+  user: {
+    id: number;
+    name: string;
+    username: string;
+    xp: number;
+  };
+  content: string;
+  upvotes_count: number;
+  is_solution: boolean;
+  created_at: string;
+}
+
+export interface AdminAnalytics {
+  overview: {
+    total_users: number;
+    total_challenges: number;
+    published_challenges: number;
+    total_submissions: number;
+    acceptance_rate: number;
+  };
+  status_breakdown: Record<string, number>;
+  category_breakdown: Record<string, number>;
+  difficulty_breakdown: Record<string, number>;
+  type_breakdown: Record<string, number>;
+  activity_trend: Array<{ date: string; submissions: number }>;
+  evaluator_health: {
+    online: boolean;
+    version?: string;
+    supported_languages_count?: number;
+    error?: string;
+  };
 }
