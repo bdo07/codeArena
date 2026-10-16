@@ -53,9 +53,8 @@ addChallenge($challenges, [
     'description' => "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.\n\nReturn the answer as comma-separated indices (e.g. `0,1`).",
     'tags' => ['array', 'hash-table'],
     'starter_code' => [
-        'python' => "import sys\n\ndef two_sum(nums, target):\n    # Write your solution here\n    lookup = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in lookup:\n            return f\"{lookup[diff]},{i}\"\n        lookup[num] = i\n    return \"\"\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().splitlines()\n    if len(lines) >= 2:\n        nums = list(map(int, lines[0].split(',')))\n        target = int(lines[1])\n        print(two_sum(nums, target))\n",
+        'python' => "import sys\n\ndef two_sum(nums, target):\n    lookup = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in lookup:\n            return f\"{lookup[diff]},{i}\"\n        lookup[num] = i\n    return \"\"\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().splitlines()\n    if len(lines) >= 2:\n        nums = list(map(int, lines[0].split(',')))\n        target = int(lines[1])\n        print(two_sum(nums, target))\n",
         'javascript' => "const fs = require('fs');\n\nfunction twoSum(nums, target) {\n    const map = new Map();\n    for (let i = 0; i < nums.length; i++) {\n        const diff = target - nums[i];\n        if (map.has(diff)) return map.get(diff) + ',' + i;\n        map.set(nums[i], i);\n    }\n    return '';\n}\n\nconst input = fs.readFileSync(0, 'utf-8').trim().split('\\n');\nif (input.length >= 2) {\n    const nums = input[0].split(',').map(Number);\n    const target = Number(input[1]);\n    console.log(twoSum(nums, target));\n}\n",
-        'cpp' => "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    string line1, line2;\n    if (getline(cin, line1) && getline(cin, line2)) {\n        stringstream ss(line1);\n        string token;\n        vector<int> nums;\n        while (getline(ss, token, ',')) nums.push_back(stoi(token));\n        int target = stoi(line2);\n        unordered_map<int, int> map;\n        for (int i = 0; i < nums.size(); i++) {\n            int diff = target - nums[i];\n            if (map.count(diff)) {\n                cout << map[diff] << \",\" << i << endl;\n                return 0;\n            }\n            map[nums[i]] = i;\n        }\n    }\n    return 0;\n}\n",
     ],
     'test_cases' => [
         ['input' => "2,7,11,15\n9", 'expected_output' => "0,1", 'is_hidden' => false, 'explanation' => 'nums[0] + nums[1] == 9, so return 0,1.'],
@@ -65,10 +64,9 @@ addChallenge($challenges, [
     ],
     'hints' => [
         "A brute-force search takes O(N^2) time. Can you do it in O(N)?",
-        "Consider using a Hash Map to store the elements you have seen and their indices.",
-        "For each element `num`, check if `target - num` already exists in your map."
+        "Consider using a Hash Map to store elements you have seen and their indices."
     ],
-    'explanation' => "By maintaining a hash map from value to index as we iterate through `nums`, we can find the complement in O(1) time, reducing the total time complexity to O(N) with O(N) space.",
+    'explanation' => "By maintaining a hash map from value to index as we iterate through nums, we can find the complement in O(1) time.",
     'reference_solution' => "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in seen:\n            return f\"{seen[comp]},{i}\"\n        seen[num] = i\n    return \"\"",
     'is_daily' => true,
     'daily_date' => date('Y-m-d'),
@@ -83,20 +81,15 @@ addChallenge($challenges, [
     'description' => "Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.\n\nInput format: A comma-separated list of integers.\nOutput format: `true` or `false`.",
     'tags' => ['array', 'hash-table'],
     'starter_code' => [
-        'python' => "import sys\n\ndef contains_duplicate(nums):\n    # Write your solution here\n    return len(nums) != len(set(nums))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print('true' if contains_duplicate(nums) else 'false')\n",
-        'javascript' => "const fs = require('fs');\n\nfunction containsDuplicate(nums) {\n    return new Set(nums).size !== nums.length;\n}\n\nconst line = fs.readFileSync(0, 'utf-8').trim();\nif (line) {\n    const nums = line.split(',').map(Number);\n    console.log(containsDuplicate(nums) ? 'true' : 'false');\n}\n",
+        'python' => "import sys\n\ndef contains_duplicate(nums):\n    return len(nums) != len(set(nums))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print('true' if contains_duplicate(nums) else 'false')\n",
     ],
     'test_cases' => [
         ['input' => "1,2,3,1", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => '1 appears twice.'],
         ['input' => "1,2,3,4", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'All elements are distinct.'],
         ['input' => "1,1,1,3,3,4,3,2,4,2", 'expected_output' => "true", 'is_hidden' => true, 'explanation' => null],
-        ['input' => "42", 'expected_output' => "false", 'is_hidden' => true, 'explanation' => null],
     ],
-    'hints' => [
-        "A Set data structure only stores unique elements.",
-        "Compare the length of the set to the length of the original array."
-    ],
-    'explanation' => "Inserting elements into a hash set takes O(N) time. If the size of the set is less than the array length, a duplicate exists.",
+    'hints' => ["Compare length of the set with original array."],
+    'explanation' => "Hash sets allow duplicate detection in O(N) time.",
 ]);
 
 addChallenge($challenges, [
@@ -106,22 +99,16 @@ addChallenge($challenges, [
     'difficulty' => 'Easy',
     'estimated_time_min' => 20,
     'description' => "You are given an array `prices` where `prices[i]` is the price of a given stock on the `i-th` day.\n\nYou want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.\n\nReturn the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.\n\nInput format: Comma-separated integers.\nOutput format: A single integer representing maximum profit.",
-    'tags' => ['array', 'greedy', 'dynamic-programming'],
+    'tags' => ['array', 'greedy'],
     'starter_code' => [
-        'python' => "import sys\n\ndef max_profit(prices):\n    min_price = float('inf')\n    max_prof = 0\n    for p in prices:\n        if p < min_price:\n            min_price = p\n        elif p - min_price > max_prof:\n            max_prof = p - min_price\n    return max_prof\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        prices = list(map(int, line.split(',')))\n        print(max_profit(prices))\n",
-        'javascript' => "const fs = require('fs');\n\nfunction maxProfit(prices) {\n    let minPrice = Infinity;\n    let maxProfit = 0;\n    for (const p of prices) {\n        if (p < minPrice) minPrice = p;\n        else if (p - minPrice > maxProfit) maxProfit = p - minPrice;\n    }\n    return maxProfit;\n}\n\nconst line = fs.readFileSync(0, 'utf-8').trim();\nif (line) {\n    const prices = line.split(',').map(Number);\n    console.log(maxProfit(prices));\n}\n",
+        'python' => "import sys\n\ndef max_profit(prices):\n    min_p, max_p = float('inf'), 0\n    for p in prices:\n        min_p = min(min_p, p)\n        max_p = max(max_p, p - min_p)\n    return max_p\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        prices = list(map(int, line.split(',')))\n        print(max_profit(prices))\n",
     ],
     'test_cases' => [
-        ['input' => "7,1,5,3,6,4", 'expected_output' => "5", 'is_hidden' => false, 'explanation' => 'Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.'],
-        ['input' => "7,6,4,3,1", 'expected_output' => "0", 'is_hidden' => false, 'explanation' => 'In this case, no transactions are done and max profit = 0.'],
-        ['input' => "2,4,1", 'expected_output' => "2", 'is_hidden' => true, 'explanation' => null],
-        ['input' => "3,2,6,5,0,3", 'expected_output' => "4", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "7,1,5,3,6,4", 'expected_output' => "5", 'is_hidden' => false, 'explanation' => 'Buy at 1, sell at 6 = profit 5.'],
+        ['input' => "7,6,4,3,1", 'expected_output' => "0", 'is_hidden' => false, 'explanation' => 'No profit possible.'],
     ],
-    'hints' => [
-        "Track the minimum price seen so far as you iterate through the list.",
-        "At each day, the potential profit is current price minus minimum price so far."
-    ],
-    'explanation' => "One pass through the array keeping track of minimum buying price gives O(N) time and O(1) space.",
+    'hints' => ["Maintain minimum price so far as you iterate."],
+    'explanation' => "Single pass greedy approach runs in O(N) time and O(1) space.",
 ]);
 
 addChallenge($challenges, [
@@ -130,21 +117,17 @@ addChallenge($challenges, [
     'category' => 'algorithms',
     'difficulty' => 'Medium',
     'estimated_time_min' => 25,
-    'description' => "Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.\n\nThe product of any prefix or suffix of `nums` is guaranteed to fit in a 32-bit integer.\n\nYou must write an algorithm that runs in `O(n)` time and without using the division operation.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers.",
+    'description' => "Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]` without using division.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers.",
     'tags' => ['array', 'prefix-sum'],
     'starter_code' => [
-        'python' => "import sys\n\ndef product_except_self(nums):\n    n = len(nums)\n    res = [1] * n\n    prefix = 1\n    for i in range(n):\n        res[i] = prefix\n        prefix *= nums[i]\n    suffix = 1\n    for i in range(n - 1, -1, -1):\n        res[i] *= suffix\n        suffix *= nums[i]\n    return ','.join(map(str, res))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(product_except_self(nums))\n",
+        'python' => "import sys\n\ndef product_except_self(nums):\n    n = len(nums)\n    res = [1] * n\n    pref = 1\n    for i in range(n):\n        res[i] = pref\n        pref *= nums[i]\n    suff = 1\n    for i in range(n-1, -1, -1):\n        res[i] *= suff\n        suff *= nums[i]\n    return ','.join(map(str, res))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(product_except_self(nums))\n",
     ],
     'test_cases' => [
-        ['input' => "1,2,3,4", 'expected_output' => "24,12,8,6", 'is_hidden' => false, 'explanation' => 'Products are [2*3*4, 1*3*4, 1*2*4, 1*2*3].'],
-        ['input' => "-1,1,0,-3,3", 'expected_output' => "0,0,9,0,0", 'is_hidden' => false, 'explanation' => 'Only index 2 has non-zero product because it excludes 0.'],
-        ['input' => "2,3", 'expected_output' => "3,2", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "1,2,3,4", 'expected_output' => "24,12,8,6", 'is_hidden' => false, 'explanation' => 'Product of array except self.'],
+        ['input' => "-1,1,0,-3,3", 'expected_output' => "0,0,9,0,0", 'is_hidden' => false, 'explanation' => 'Only index with 0 product is non-zero.'],
     ],
-    'hints' => [
-        "Think about prefix products and suffix products.",
-        "Can you compute the prefix products in one pass, then multiply by suffix products in a reverse pass?"
-    ],
-    'explanation' => "We calculate the running product from the left, then accumulate running product from the right. Total time is O(N) with O(1) auxiliary space.",
+    'hints' => ["Calculate prefix products and suffix products in two passes."],
+    'explanation' => "Prefix and suffix products run in O(N) time with O(1) auxiliary space.",
 ]);
 
 addChallenge($challenges, [
@@ -154,21 +137,16 @@ addChallenge($challenges, [
     'difficulty' => 'Medium',
     'estimated_time_min' => 20,
     'description' => "Given an integer array `nums`, find the subarray with the largest sum, and return its sum.\n\nInput format: Comma-separated integers.\nOutput format: Single integer.",
-    'tags' => ['array', 'dynamic-programming', 'divide-and-conquer'],
+    'tags' => ['array', 'dynamic-programming'],
     'starter_code' => [
-        'python' => "import sys\n\ndef max_sub_array(nums):\n    max_sum = current_sum = nums[0]\n    for x in nums[1:]:\n        current_sum = max(x, current_sum + x)\n        max_sum = max(max_sum, current_sum)\n    return max_sum\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(max_sub_array(nums))\n",
+        'python' => "import sys\n\ndef max_sub_array(nums):\n    max_sum = cur_sum = nums[0]\n    for x in nums[1:]:\n        cur_sum = max(x, cur_sum + x)\n        max_sum = max(max_sum, cur_sum)\n    return max_sum\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(max_sub_array(nums))\n",
     ],
     'test_cases' => [
-        ['input' => "-2,1,-3,4,-1,2,1,-5,4", 'expected_output' => "6", 'is_hidden' => false, 'explanation' => 'The subarray [4,-1,2,1] has the largest sum 6.'],
-        ['input' => "1", 'expected_output' => "1", 'is_hidden' => false, 'explanation' => 'Only one element.'],
-        ['input' => "5,4,-1,7,8", 'expected_output' => "23", 'is_hidden' => true, 'explanation' => null],
-        ['input' => "-1,-2,-3", 'expected_output' => "-1", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "-2,1,-3,4,-1,2,1,-5,4", 'expected_output' => "6", 'is_hidden' => false, 'explanation' => '[4,-1,2,1] has sum 6.'],
+        ['input' => "1", 'expected_output' => "1", 'is_hidden' => false, 'explanation' => 'Single item.'],
     ],
-    'hints' => [
-        "Kadane's algorithm: at each position, decide whether to extend the previous subarray or start fresh from current number.",
-        "`current_sum = max(x, current_sum + x)`"
-    ],
-    'explanation' => "Kadane's algorithm processes the array in linear time O(N) by maintaining the maximum sum ending at the current position.",
+    'hints' => ["Kadane's algorithm: cur_sum = max(x, cur_sum + x)."],
+    'explanation' => "Linear dynamic programming in O(N) time and O(1) space.",
 ]);
 
 addChallenge($challenges, [
@@ -177,21 +155,16 @@ addChallenge($challenges, [
     'category' => 'algorithms',
     'difficulty' => 'Beginner',
     'estimated_time_min' => 15,
-    'description' => "Given an integer array `nums`, move all `0`'s to the end of it while maintaining the relative order of the non-zero elements.\n\nNote that you must do this in-place without making a copy of the array.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers.",
+    'description' => "Given an integer array `nums`, move all `0`'s to the end of it while maintaining the relative order of the non-zero elements.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers.",
     'tags' => ['array', 'two-pointers'],
     'starter_code' => [
-        'python' => "import sys\n\ndef move_zeroes(nums):\n    insert_pos = 0\n    for num in nums:\n        if num != 0:\n            nums[insert_pos] = num\n            insert_pos += 1\n    while insert_pos < len(nums):\n        nums[insert_pos] = 0\n        insert_pos += 1\n    return ','.join(map(str, nums))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(move_zeroes(nums))\n",
+        'python' => "import sys\n\ndef move_zeroes(nums):\n    pos = 0\n    for n in nums:\n        if n != 0:\n            nums[pos] = n\n            pos += 1\n    while pos < len(nums):\n        nums[pos] = 0\n        pos += 1\n    return ','.join(map(str, nums))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(move_zeroes(nums))\n",
     ],
     'test_cases' => [
-        ['input' => "0,1,0,3,12", 'expected_output' => "1,3,12,0,0", 'is_hidden' => false, 'explanation' => 'Non-zeros preserve relative order, zeroes move to end.'],
-        ['input' => "0", 'expected_output' => "0", 'is_hidden' => false, 'explanation' => 'Single zero unchanged.'],
-        ['input' => "1,2,3,0,0,4", 'expected_output' => "1,2,3,4,0,0", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "0,1,0,3,12", 'expected_output' => "1,3,12,0,0", 'is_hidden' => false, 'explanation' => 'Zeroes shifted to end.'],
     ],
-    'hints' => [
-        "Use a pointer to keep track of the position where the next non-zero element should go.",
-        "After iterating through all elements, fill the remainder of the array with zeroes."
-    ],
-    'explanation' => "Two pointers approach allows in-place rearrangement in O(N) time and O(1) extra space.",
+    'hints' => ["Use a write pointer to compact non-zero elements."],
+    'explanation' => "Two pointer compaction in O(N) time.",
 ]);
 
 addChallenge($challenges, [
@@ -200,21 +173,17 @@ addChallenge($challenges, [
     'category' => 'algorithms',
     'difficulty' => 'Medium',
     'estimated_time_min' => 30,
-    'description' => "Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.\n\nNotice that the solution set must not contain duplicate triplets.\n\nOutput format: Triplets separated by semicolons, elements separated by commas, sorted ascendingly (e.g. `-1,-1,2;-1,0,1`). If none, return empty string.",
+    'description' => "Given an integer array nums, return all the unique triplets `[nums[i], nums[j], nums[k]]` such that they add up to 0.\n\nOutput format: Triplets separated by semicolons, elements separated by commas (e.g. `-1,-1,2;-1,0,1`).",
     'tags' => ['array', 'two-pointers', 'sorting'],
     'starter_code' => [
-        'python' => "import sys\n\ndef three_sum(nums):\n    nums.sort()\n    res = []\n    for i in range(len(nums) - 2):\n        if i > 0 and nums[i] == nums[i-1]:\n            continue\n        left, right = i + 1, len(nums) - 1\n        while left < right:\n            total = nums[i] + nums[left] + nums[right]\n            if total < 0:\n                left += 1\n            elif total > 0:\n                right -= 1\n            else:\n                res.append(f\"{nums[i]},{nums[left]},{nums[right]}\")\n                while left < right and nums[left] == nums[left + 1]:\n                    left += 1\n                while left < right and nums[right] == nums[right - 1]:\n                    right -= 1\n                left += 1\n                right -= 1\n    return ';'.join(res)\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(three_sum(nums))\n",
+        'python' => "import sys\n\ndef three_sum(nums):\n    nums.sort()\n    res = []\n    for i in range(len(nums) - 2):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            s = nums[i] + nums[l] + nums[r]\n            if s < 0: l += 1\n            elif s > 0: r -= 1\n            else:\n                res.append(f\"{nums[i]},{nums[l]},{nums[r]}\")\n                while l < r and nums[l] == nums[l+1]: l += 1\n                while l < r and nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n    return ';'.join(res)\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(three_sum(nums))\n",
     ],
     'test_cases' => [
-        ['input' => "-1,0,1,2,-1,-4", 'expected_output' => "-1,-1,2;-1,0,1", 'is_hidden' => false, 'explanation' => 'Distinct triplets summing to 0.'],
-        ['input' => "0,1,1", 'expected_output' => "", 'is_hidden' => false, 'explanation' => 'No triplet sums to 0.'],
-        ['input' => "0,0,0", 'expected_output' => "0,0,0", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "-1,0,1,2,-1,-4", 'expected_output' => "-1,-1,2;-1,0,1", 'is_hidden' => false, 'explanation' => 'Unique triplets summing to 0.'],
+        ['input' => "0,1,1", 'expected_output' => "", 'is_hidden' => false, 'explanation' => 'None.'],
     ],
-    'hints' => [
-        "Sort the array first. This lets you avoid duplicates and use two pointers.",
-        "For each element `nums[i]`, find two numbers in `nums[i+1:]` that sum to `-nums[i]`."
-    ],
-    'explanation' => "Sorting takes O(N log N). Finding pairs using two pointers takes O(N). Total time complexity is O(N^2).",
+    'hints' => ["Sort first and use two pointers for remaining sum."],
+    'explanation' => "Sorting + two pointers takes O(N^2) time.",
 ]);
 
 addChallenge($challenges, [
@@ -223,21 +192,17 @@ addChallenge($challenges, [
     'category' => 'algorithms',
     'difficulty' => 'Hard',
     'estimated_time_min' => 40,
-    'description' => "Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.\n\nInput format: Comma-separated integers representing bar heights.\nOutput format: Total units of trapped water as integer.",
-    'tags' => ['array', 'two-pointers', 'dynamic-programming', 'stack'],
+    'description' => "Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.\n\nInput format: Comma-separated integers.\nOutput format: Integer water units.",
+    'tags' => ['array', 'two-pointers', 'dynamic-programming'],
     'starter_code' => [
-        'python' => "import sys\n\ndef trap(height):\n    if not height: return 0\n    l, r = 0, len(height) - 1\n    left_max, right_max = height[l], height[r]\n    water = 0\n    while l < r:\n        if left_max < right_max:\n            l += 1\n            left_max = max(left_max, height[l])\n            water += left_max - height[l]\n        else:\n            r -= 1\n            right_max = max(right_max, height[r])\n            water += right_max - height[r]\n    return water\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        heights = list(map(int, line.split(',')))\n        print(trap(heights))\n",
+        'python' => "import sys\n\ndef trap(height):\n    if not height: return 0\n    l, r = 0, len(height) - 1\n    l_max, r_max = height[l], height[r]\n    water = 0\n    while l < r:\n        if l_max < r_max:\n            l += 1\n            l_max = max(l_max, height[l])\n            water += l_max - height[l]\n        else:\n            r -= 1\n            r_max = max(r_max, height[r])\n            water += r_max - height[r]\n    return water\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(trap(nums))\n",
     ],
     'test_cases' => [
-        ['input' => "0,1,0,2,1,0,1,3,2,1,2,1", 'expected_output' => "6", 'is_hidden' => false, 'explanation' => '6 units of rain water are trapped.'],
+        ['input' => "0,1,0,2,1,0,1,3,2,1,2,1", 'expected_output' => "6", 'is_hidden' => false, 'explanation' => '6 units trapped.'],
         ['input' => "4,2,0,3,2,5", 'expected_output' => "9", 'is_hidden' => false, 'explanation' => '9 units trapped.'],
-        ['input' => "2,0,2", 'expected_output' => "2", 'is_hidden' => true, 'explanation' => null],
     ],
-    'hints' => [
-        "Water trapped at index i is determined by `min(max_left, max_right) - height[i]`.",
-        "Can you use two pointers from left and right to maintain max_left and max_right?"
-    ],
-    'explanation' => "Using two pointers, we advance the side with the smaller maximum, guaranteeing that water capacity is determined by that side. O(N) time and O(1) space.",
+    'hints' => ["Advance the side with smaller maximum."],
+    'explanation' => "Two pointers achieves O(N) time and O(1) space.",
 ]);
 
 // ==========================================
@@ -251,21 +216,15 @@ addChallenge($challenges, [
     'difficulty' => 'Beginner',
     'estimated_time_min' => 10,
     'description' => "Write a function that reverses a string.\n\nInput format: A single string.\nOutput format: The reversed string.",
-    'tags' => ['string', 'two-pointers'],
+    'tags' => ['string'],
     'starter_code' => [
-        'python' => "import sys\n\ndef reverse_string(s):\n    return s[::-1]\n\nif __name__ == '__main__':\n    s = sys.stdin.read().strip()\n    print(reverse_string(s))\n",
-        'javascript' => "const fs = require('fs');\nconst s = fs.readFileSync(0, 'utf-8').trim();\nconsole.log(s.split('').reverse().join(''));\n",
+        'python' => "import sys\nprint(sys.stdin.read().strip()[::-1])\n",
     ],
     'test_cases' => [
-        ['input' => "hello", 'expected_output' => "olleh", 'is_hidden' => false, 'explanation' => 'Reversing hello gives olleh.'],
-        ['input' => "Hannah", 'expected_output' => "hannaH", 'is_hidden' => false, 'explanation' => 'Preserves casing.'],
-        ['input' => "CodeArena", 'expected_output' => "anerAedoC", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "hello", 'expected_output' => "olleh", 'is_hidden' => false, 'explanation' => 'hello reversed is olleh.'],
     ],
-    'hints' => [
-        "Use two pointers moving inward from both ends to swap characters.",
-        "Or use built-in reverse functions."
-    ],
-    'explanation' => "Two pointer swap reverses the string in O(N) time.",
+    'hints' => ["Reverse the characters."],
+    'explanation' => "O(N) time string reversal.",
 ]);
 
 addChallenge($challenges, [
@@ -274,21 +233,17 @@ addChallenge($challenges, [
     'category' => 'strings',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.\n\nAn Anagram is a word formed by rearranging the letters of a different word, typically using all the original letters exactly once.\n\nInput format: Two lines, first line is `s`, second line is `t`.\nOutput format: `true` or `false`.",
-    'tags' => ['string', 'hash-table', 'sorting'],
+    'description' => "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.",
+    'tags' => ['string', 'hash-table'],
     'starter_code' => [
-        'python' => "import sys\nfrom collections import Counter\n\ndef is_anagram(s, t):\n    return Counter(s) == Counter(t)\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().splitlines()\n    if len(lines) >= 2:\n        print('true' if is_anagram(lines[0], lines[1]) else 'false')\n",
+        'python' => "import sys\nfrom collections import Counter\nlines = sys.stdin.read().splitlines()\nif len(lines) >= 2:\n    print('true' if Counter(lines[0]) == Counter(lines[1]) else 'false')\n",
     ],
     'test_cases' => [
-        ['input' => "anagram\nnagaram", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'nagaram has identical letter frequencies to anagram.'],
-        ['input' => "rat\ncar", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Different characters.'],
-        ['input' => "listen\nsilent", 'expected_output' => "true", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "anagram\nnagaram", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Anagram check.'],
+        ['input' => "rat\ncar", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Not anagram.'],
     ],
-    'hints' => [
-        "Check character frequencies using a hash map or an array of size 26.",
-        "If lengths differ, they cannot be anagrams."
-    ],
-    'explanation' => "Count frequencies of letters in both strings. Matching frequencies confirms an anagram in O(N) time.",
+    'hints' => ["Count character frequencies."],
+    'explanation' => "Frequency counting in O(N) time.",
 ]);
 
 addChallenge($challenges, [
@@ -297,21 +252,16 @@ addChallenge($challenges, [
     'category' => 'strings',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.\n\nGiven a string `s`, return `true` if it is a palindrome, or `false` otherwise.",
+    'description' => "Given a string `s`, return `true` if it is a palindrome considering only alphanumeric characters and ignoring cases.",
     'tags' => ['string', 'two-pointers'],
     'starter_code' => [
-        'python' => "import sys, re\n\ndef is_palindrome(s):\n    cleaned = re.sub(r'[^a-zA-Z0-9]', '', s).lower()\n    return cleaned == cleaned[::-1]\n\nif __name__ == '__main__':\n    s = sys.stdin.read().strip()\n    print('true' if is_palindrome(s) else 'false')\n",
+        'python' => "import sys, re\ns = re.sub(r'[^a-zA-Z0-9]', '', sys.stdin.read()).lower()\nprint('true' if s == s[::-1] else 'false')\n",
     ],
     'test_cases' => [
-        ['input' => "A man, a plan, a canal: Panama", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'amanaplanacanalpanama is a palindrome.'],
-        ['input' => "race a car", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'raceacar is not a palindrome.'],
-        ['input' => " ", 'expected_output' => "true", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "A man, a plan, a canal: Panama", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Valid palindrome.'],
     ],
-    'hints' => [
-        "Filter out non-alphanumeric characters and normalize casing.",
-        "Use two pointers or reverse string comparison."
-    ],
-    'explanation' => "Filter and compare in O(N) time with O(N) space or two pointers with O(1) space.",
+    'hints' => ["Strip punctuation and compare lowercased."],
+    'explanation' => "Filtering and two-pointer check runs in O(N) time.",
 ]);
 
 addChallenge($challenges, [
@@ -320,20 +270,16 @@ addChallenge($challenges, [
     'category' => 'strings',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Write a function to find the longest common prefix string amongst an array of strings.\n\nIf there is no common prefix, return an empty string `\"\"`.\n\nInput format: Comma-separated strings.\nOutput format: Common prefix string.",
+    'description' => "Write a function to find the longest common prefix string amongst an array of strings.",
     'tags' => ['string'],
     'starter_code' => [
-        'python' => "import sys\n\ndef longest_common_prefix(strs):\n    if not strs: return \"\"\n    prefix = strs[0]\n    for s in strs[1:]:\n        while not s.startswith(prefix):\n            prefix = prefix[:-1]\n            if not prefix: return \"\"\n    return prefix\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        strs = line.split(',')\n        print(longest_common_prefix(strs))\n",
+        'python' => "import sys\nstrs = sys.stdin.read().strip().split(',')\nif not strs or not strs[0]: print(''); sys.exit()\nprefix = strs[0]\nfor s in strs[1:]:\n    while not s.startswith(prefix):\n        prefix = prefix[:-1]\nprint(prefix)\n",
     ],
     'test_cases' => [
-        ['input' => "flower,flow,flight", 'expected_output' => "fl", 'is_hidden' => false, 'explanation' => 'fl is the longest common prefix.'],
-        ['input' => "dog,racecar,car", 'expected_output' => "", 'is_hidden' => false, 'explanation' => 'No common prefix.'],
-        ['input' => "interspecies,interstellar,interstate", 'expected_output' => "inters", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "flower,flow,flight", 'expected_output' => "fl", 'is_hidden' => false, 'explanation' => 'fl prefix.'],
     ],
-    'hints' => [
-        "Start with the first word as prefix candidate and trim characters that do not match subsequent words."
-    ],
-    'explanation' => "Horizontal or vertical scanning in O(S) where S is the sum of characters across all strings.",
+    'hints' => ["Iteratively shorten the candidate prefix."],
+    'explanation' => "Horizontal scanning runs in O(S) time.",
 ]);
 
 addChallenge($challenges, [
@@ -342,22 +288,21 @@ addChallenge($challenges, [
     'category' => 'strings',
     'difficulty' => 'Medium',
     'estimated_time_min' => 25,
-    'description' => "Given a string `s`, find the length of the longest substring without repeating characters.\n\nInput format: A single string `s`.\nOutput format: An integer length.",
-    'tags' => ['string', 'sliding-window', 'hash-table'],
+    'description' => "Given a string `s`, find the length of the longest substring without repeating characters.",
+    'tags' => ['string', 'sliding-window'],
     'starter_code' => [
-        'python' => "import sys\n\ndef length_of_longest_substring(s):\n    seen = {}\n    max_len = 0\n    start = 0\n    for i, ch in enumerate(s):\n        if ch in seen and seen[ch] >= start:\n            start = seen[ch] + 1\n        seen[ch] = i\n        max_len = max(max_len, i - start + 1)\n    return max_len\n\nif __name__ == '__main__':\n    s = sys.stdin.read().strip()\n    print(length_of_longest_substring(s))\n",
+        'python' => "import sys\ns = sys.stdin.read().strip()\nseen, l, ans = {}, 0, 0\nfor r, c in enumerate(s):\n    if c in seen and seen[c] >= l: l = seen[c] + 1\n    seen[c] = r\n    ans = max(ans, r - l + 1)\nprint(ans)\n",
     ],
     'test_cases' => [
-        ['input' => "abcabcbb", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => 'The answer is abc, with the length of 3.'],
-        ['input' => "bbbbb", 'expected_output' => "1", 'is_hidden' => false, 'explanation' => 'The answer is b, with the length of 1.'],
-        ['input' => "pwwkew", 'expected_output' => "3", 'is_hidden' => true, 'explanation' => 'wke is length 3.'],
+        ['input' => "abcabcbb", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => 'abc has length 3.'],
     ],
-    'hints' => [
-        "Use sliding window technique with two pointers `start` and `i`.",
-        "Keep a dictionary mapping each character to its most recent index."
-    ],
-    'explanation' => "A sliding window maintaining the last seen index of each character achieves O(N) time.",
+    'hints' => ["Use sliding window hash table."],
+    'explanation' => "Sliding window in O(N) time.",
 ]);
+
+// ==========================================
+// 3. DATA STRUCTURES (Linked Lists & Stacks)
+// ==========================================
 
 addChallenge($challenges, [
     'slug' => 'valid-parentheses',
@@ -365,26 +310,96 @@ addChallenge($challenges, [
     'category' => 'data structures',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.\n\nOutput format: `true` or `false`.",
-    'tags' => ['stack', 'string'],
+    'description' => "Given a string `s` containing `(`, `)`, `{`, `}`, `[`, `]`, determine if the brackets are closed in valid order.",
+    'tags' => ['stack'],
     'starter_code' => [
-        'python' => "import sys\n\ndef is_valid(s):\n    stack = []\n    pairs = {')': '(', '}': '{', ']': '['}\n    for char in s:\n        if char in pairs:\n            if not stack or stack[-1] != pairs[char]:\n                return False\n            stack.pop()\n        else:\n            stack.append(char)\n    return len(stack) == 0\n\nif __name__ == '__main__':\n    s = sys.stdin.read().strip()\n    print('true' if is_valid(s) else 'false')\n",
+        'python' => "import sys\ns = sys.stdin.read().strip()\nstk = []\nm = {')':'(', '}':'{', ']':'['}\nvalid = True\nfor c in s:\n    if c in m:\n        if not stk or stk[-1] != m[c]: valid = False; break\n        stk.pop()\n    else: stk.append(c)\nprint('true' if valid and not stk else 'false')\n",
     ],
     'test_cases' => [
-        ['input' => "()", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Valid single pair.'],
-        ['input' => "()[]{}", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Valid multiple pairs.'],
-        ['input' => "(]", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Mismatched types.'],
-        ['input' => "([)]", 'expected_output' => "false", 'is_hidden' => true, 'explanation' => 'Mismatched nesting order.'],
+        ['input' => "()[]{}", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Valid brackets.'],
+        ['input' => "(]", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Mismatch.'],
     ],
-    'hints' => [
-        "A stack is ideal for matching nested structures (LIFO).",
-        "Push opening brackets to stack; for closing brackets, check if top matches."
+    'hints' => ["Use a stack to match brackets."],
+    'explanation' => "LIFO stack in O(N) time.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'reverse-linked-list',
+    'title' => 'Reverse Linked List',
+    'category' => 'data structures',
+    'difficulty' => 'Easy',
+    'estimated_time_min' => 15,
+    'description' => "Given the head of a singly linked list represented as comma-separated values, reverse the list and return the reversed values.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated reversed integers.",
+    'tags' => ['linked-list', 'two-pointers'],
+    'starter_code' => [
+        'python' => "import sys\nline = sys.stdin.read().strip()\nif line:\n    nums = line.split(',')\n    print(','.join(nums[::-1]))\nelse: print('')\n",
     ],
-    'explanation' => "Single scan using a stack runs in O(N) time and O(N) space.",
+    'test_cases' => [
+        ['input' => "1,2,3,4,5", 'expected_output' => "5,4,3,2,1", 'is_hidden' => false, 'explanation' => 'Reversed list.'],
+        ['input' => "1,2", 'expected_output' => "2,1", 'is_hidden' => false, 'explanation' => 'Reversed two nodes.'],
+    ],
+    'hints' => ["Track prev, current, and next pointers."],
+    'explanation' => "Iterative pointer reversal in O(N) time and O(1) space.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'merge-two-sorted-lists',
+    'title' => 'Merge Two Sorted Lists',
+    'category' => 'data structures',
+    'difficulty' => 'Easy',
+    'estimated_time_min' => 20,
+    'description' => "You are given two sorted lists of integers on separate lines. Merge the two lists into one sorted list.\n\nInput format: Line 1: comma-separated integers. Line 2: comma-separated integers.\nOutput format: Comma-separated merged sorted integers.",
+    'tags' => ['linked-list', 'two-pointers', 'sorting'],
+    'starter_code' => [
+        'python' => "import sys\nlines = sys.stdin.read().splitlines()\na = list(map(int, lines[0].split(','))) if len(lines) > 0 and lines[0] else []\nb = list(map(int, lines[1].split(','))) if len(lines) > 1 and lines[1] else []\nres = []\ni, j = 0, 0\nwhile i < len(a) and j < len(b):\n    if a[i] <= b[j]: res.append(a[i]); i += 1\n    else: res.append(b[j]); j += 1\nres.extend(a[i:]); res.extend(b[j:])\nprint(','.join(map(str, res)))\n",
+    ],
+    'test_cases' => [
+        ['input' => "1,2,4\n1,3,4", 'expected_output' => "1,1,2,3,4,4", 'is_hidden' => false, 'explanation' => 'Merged sorted list.'],
+    ],
+    'hints' => ["Compare heads of both lists and advance the smaller."],
+    'explanation' => "Linear merge in O(N + M) time.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'middle-of-linked-list',
+    'title' => 'Middle of the Linked List',
+    'category' => 'data structures',
+    'difficulty' => 'Beginner',
+    'estimated_time_min' => 15,
+    'description' => "Given the head of a singly linked list as comma-separated integers, return the values from the second middle node to the end if there are two middle nodes.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers from middle to end.",
+    'tags' => ['linked-list', 'two-pointers'],
+    'starter_code' => [
+        'python' => "import sys\nnums = sys.stdin.read().strip().split(',')\nif nums and nums[0]:\n    mid = len(nums) // 2\n    print(','.join(nums[mid:]))\n",
+    ],
+    'test_cases' => [
+        ['input' => "1,2,3,4,5", 'expected_output' => "3,4,5", 'is_hidden' => false, 'explanation' => 'Middle is node 3.'],
+        ['input' => "1,2,3,4,5,6", 'expected_output' => "4,5,6", 'is_hidden' => false, 'explanation' => 'Middle is node 4.'],
+    ],
+    'hints' => ["Tortoise and Hare: slow pointer moves 1 step, fast pointer moves 2 steps."],
+    'explanation' => "Fast and slow pointer reaches the middle in O(N) time and O(1) space.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'daily-temperatures',
+    'title' => 'Daily Temperatures',
+    'category' => 'data structures',
+    'difficulty' => 'Medium',
+    'estimated_time_min' => 25,
+    'description' => "Given an array of integers `temperatures` representing daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the `i-th` day to get a warmer temperature. If there is no future day for which this is possible, keep `answer[i] == 0`.\n\nInput format: Comma-separated integers.\nOutput format: Comma-separated integers.",
+    'tags' => ['stack', 'monotonic-stack'],
+    'starter_code' => [
+        'python' => "import sys\nnums = list(map(int, sys.stdin.read().strip().split(',')))\nres = [0] * len(nums)\nstk = []\nfor i, t in enumerate(nums):\n    while stk and nums[stk[-1]] < t:\n        prev = stk.pop()\n        res[prev] = i - prev\n    stk.append(i)\nprint(','.join(map(str, res)))\n",
+    ],
+    'test_cases' => [
+        ['input' => "73,74,75,71,69,72,76,73", 'expected_output' => "1,1,4,2,1,1,0,0", 'is_hidden' => false, 'explanation' => 'Days until warmer temperature.'],
+        ['input' => "30,40,50,60", 'expected_output' => "1,1,1,0", 'is_hidden' => false, 'explanation' => 'Warmer on next day.'],
+    ],
+    'hints' => ["Use a monotonic decreasing stack storing indices."],
+    'explanation' => "Monotonic stack resolves each element in amortized O(1), total O(N) time.",
 ]);
 
 // ==========================================
-// 3. MATHEMATICS & NUMBER THEORY
+// 4. MATHEMATICS & BIT MANIPULATION
 // ==========================================
 
 addChallenge($challenges, [
@@ -393,19 +408,17 @@ addChallenge($challenges, [
     'category' => 'mathematics',
     'difficulty' => 'Beginner',
     'estimated_time_min' => 10,
-    'description' => "Given an integer `x`, return `true` if `x` is a palindrome, and `false` otherwise.\n\nAn integer is a palindrome when it reads the same forward and backward. Negative numbers are never palindromes.",
+    'description' => "Given an integer `x`, return `true` if `x` is a palindrome, and `false` otherwise.",
     'tags' => ['math'],
     'starter_code' => [
-        'python' => "import sys\n\ndef is_palindrome(x):\n    if x < 0: return False\n    s = str(x)\n    return s == s[::-1]\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        print('true' if is_palindrome(int(line)) else 'false')\n",
+        'python' => "import sys\nx = sys.stdin.read().strip()\nif not x: sys.exit()\nprint('true' if int(x) >= 0 and x == x[::-1] else 'false')\n",
     ],
     'test_cases' => [
-        ['input' => "121", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => '121 reads 121 from both sides.'],
-        ['input' => "-121", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => '-121 reversed is 121-, not equal.'],
-        ['input' => "10", 'expected_output' => "false", 'is_hidden' => true, 'explanation' => null],
-        ['input' => "0", 'expected_output' => "true", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "121", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => 'Palindrome.'],
+        ['input' => "-121", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Negative number not palindrome.'],
     ],
-    'hints' => ["Negative numbers are never palindromes because of the minus sign."],
-    'explanation' => "Reversing half of the number or string representation gives O(log10(N)) time.",
+    'hints' => ["Negatives are not palindromes."],
+    'explanation' => "O(log10(N)) time check.",
 ]);
 
 addChallenge($challenges, [
@@ -414,22 +427,16 @@ addChallenge($challenges, [
     'category' => 'mathematics',
     'difficulty' => 'Medium',
     'estimated_time_min' => 25,
-    'description' => "Given an integer `n`, return the number of prime numbers that are strictly less than `n`.\n\nInput format: Single integer `n`.\nOutput format: Integer count of primes.",
+    'description' => "Given an integer `n`, return the number of prime numbers that are strictly less than `n`.",
     'tags' => ['math', 'number-theory'],
     'starter_code' => [
-        'python' => "import sys\n\ndef count_primes(n):\n    if n <= 2: return 0\n    is_prime = [True] * n\n    is_prime[0] = is_prime[1] = False\n    for p in range(2, int(n**0.5) + 1):\n        if is_prime[p]:\n            for multiple in range(p*p, n, p):\n                is_prime[multiple] = False\n    return sum(is_prime)\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        print(count_primes(int(line)))\n",
+        'python' => "import sys\nn = int(sys.stdin.read().strip())\nif n <= 2: print(0); sys.exit()\nprimes = [True] * n\nprimes[0] = primes[1] = False\nfor p in range(2, int(n**0.5) + 1):\n    if primes[p]:\n        for m in range(p*p, n, p): primes[m] = False\nprint(sum(primes))\n",
     ],
     'test_cases' => [
-        ['input' => "10", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => 'There are 4 prime numbers less than 10: 2, 3, 5, 7.'],
-        ['input' => "0", 'expected_output' => "0", 'is_hidden' => false, 'explanation' => 'No primes less than 0.'],
-        ['input' => "1", 'expected_output' => "0", 'is_hidden' => true, 'explanation' => null],
-        ['input' => "100", 'expected_output' => "25", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "10", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => '2, 3, 5, 7.'],
     ],
-    'hints' => [
-        "The Sieve of Eratosthenes is one of the most efficient ways to find all primes up to n.",
-        "You only need to cross off multiples starting from p*p up to sqrt(n)."
-    ],
-    'explanation' => "Sieve of Eratosthenes achieves O(N log log N) time complexity.",
+    'hints' => ["Sieve of Eratosthenes."],
+    'explanation' => "O(N log log N) sieve.",
 ]);
 
 addChallenge($challenges, [
@@ -438,26 +445,59 @@ addChallenge($challenges, [
     'category' => 'mathematics',
     'difficulty' => 'Beginner',
     'estimated_time_min' => 10,
-    'description' => "Given an integer `n`, return `true` if it is a power of two. Otherwise, return `false`.\n\nAn integer `n` is a power of two, if there exists an integer `x` such that `n == 2^x`.",
+    'description' => "Given an integer `n`, return `true` if it is a power of two. Otherwise, return `false`.",
     'tags' => ['math', 'bit-manipulation'],
     'starter_code' => [
-        'python' => "import sys\n\ndef is_power_of_two(n):\n    return n > 0 and (n & (n - 1)) == 0\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        print('true' if is_power_of_two(int(line)) else 'false')\n",
+        'python' => "import sys\nn = int(sys.stdin.read().strip())\nprint('true' if n > 0 and (n & (n - 1)) == 0 else 'false')\n",
     ],
     'test_cases' => [
-        ['input' => "1", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => '2^0 = 1.'],
         ['input' => "16", 'expected_output' => "true", 'is_hidden' => false, 'explanation' => '2^4 = 16.'],
-        ['input' => "3", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Not a power of two.'],
-        ['input' => "0", 'expected_output' => "false", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "3", 'expected_output' => "false", 'is_hidden' => false, 'explanation' => 'Not power of two.'],
     ],
-    'hints' => [
-        "A power of two in binary representation has exactly one bit set to 1.",
-        "Bitwise trick: `n & (n - 1)` clears the lowest set bit."
+    'hints' => ["Bitwise trick: n & (n - 1) == 0."],
+    'explanation' => "O(1) bitwise verification.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'single-number',
+    'title' => 'Single Number (XOR)',
+    'category' => 'mathematics',
+    'difficulty' => 'Easy',
+    'estimated_time_min' => 15,
+    'description' => "Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one.\n\nYou must implement a solution with linear runtime complexity and use only constant extra space.\n\nInput format: Comma-separated integers.\nOutput format: The single unique integer.",
+    'tags' => ['bit-manipulation'],
+    'starter_code' => [
+        'python' => "import sys\nfrom functools import reduce\nnums = list(map(int, sys.stdin.read().strip().split(',')))\nprint(reduce(lambda x, y: x ^ y, nums))\n",
     ],
-    'explanation' => "O(1) time bitwise check: `n > 0 and (n & (n - 1)) == 0`.",
+    'test_cases' => [
+        ['input' => "2,2,1", 'expected_output' => "1", 'is_hidden' => false, 'explanation' => '1 appears once.'],
+        ['input' => "4,1,2,1,2", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => '4 appears once.'],
+    ],
+    'hints' => ["XORing any number with itself results in 0 (a ^ a = 0)."],
+    'explanation' => "XORing all numbers cancels pairs and leaves the unique number in O(N) time and O(1) space.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'greatest-common-divisor',
+    'title' => 'Greatest Common Divisor (GCD)',
+    'category' => 'mathematics',
+    'difficulty' => 'Beginner',
+    'estimated_time_min' => 10,
+    'description' => "Compute the Greatest Common Divisor of two non-negative integers `a` and `b`.\n\nInput format: Two comma-separated integers `a,b`.\nOutput format: Integer GCD.",
+    'tags' => ['math', 'number-theory'],
+    'starter_code' => [
+        'python' => "import sys, math\na, b = map(int, sys.stdin.read().strip().split(','))\nprint(math.gcd(a, b))\n",
+    ],
+    'test_cases' => [
+        ['input' => "48,18", 'expected_output' => "6", 'is_hidden' => false, 'explanation' => 'GCD of 48 and 18 is 6.'],
+        ['input' => "101,10", 'expected_output' => "1", 'is_hidden' => false, 'explanation' => 'Coprime numbers.'],
+    ],
+    'hints' => ["Euclidean algorithm: gcd(a, b) = gcd(b, a % b)."],
+    'explanation' => "Euclidean algorithm computes GCD in O(log(min(a,b))) steps.",
 ]);
 
 // ==========================================
-// 4. SEARCHING & SORTING
+// 5. SEARCHING & SORTING
 // ==========================================
 
 addChallenge($challenges, [
@@ -466,21 +506,17 @@ addChallenge($challenges, [
     'category' => 'searching',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, then return its index. Otherwise, return `-1`.\n\nYou must write an algorithm with `O(log n)` runtime complexity.\n\nInput format: Line 1: comma-separated sorted integers. Line 2: target integer.\nOutput format: Integer index.",
-    'tags' => ['binary-search', 'array'],
+    'description' => "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, return the index of `target`, or `-1` if not found.",
+    'tags' => ['binary-search'],
     'starter_code' => [
-        'python' => "import sys\n\ndef search(nums, target):\n    l, r = 0, len(nums) - 1\n    while l <= r:\n        mid = (l + r) // 2\n        if nums[mid] == target: return mid\n        elif nums[mid] < target: l = mid + 1\n        else: r = mid - 1\n    return -1\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().splitlines()\n    if len(lines) >= 2:\n        nums = list(map(int, lines[0].split(',')))\n        target = int(lines[1])\n        print(search(nums, target))\n",
+        'python' => "import sys\nlines = sys.stdin.read().splitlines()\nif len(lines) >= 2:\n    nums = list(map(int, lines[0].split(',')))\n    t = int(lines[1])\n    l, r = 0, len(nums)-1\n    idx = -1\n    while l <= r:\n        m = (l+r)//2\n        if nums[m] == t: idx = m; break\n        elif nums[m] < t: l = m + 1\n        else: r = m - 1\n    print(idx)\n",
     ],
     'test_cases' => [
-        ['input' => "-1,0,3,5,9,12\n9", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => '9 exists in nums and its index is 4.'],
-        ['input' => "-1,0,3,5,9,12\n2", 'expected_output' => "-1", 'is_hidden' => false, 'explanation' => '2 does not exist in nums so return -1.'],
-        ['input' => "5\n5", 'expected_output' => "0", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "-1,0,3,5,9,12\n9", 'expected_output' => "4", 'is_hidden' => false, 'explanation' => 'Index 4.'],
+        ['input' => "-1,0,3,5,9,12\n2", 'expected_output' => "-1", 'is_hidden' => false, 'explanation' => 'Not found.'],
     ],
-    'hints' => [
-        "Calculate `mid = (left + right) // 2` and compare `nums[mid]` with `target`.",
-        "Adjust bounds: `left = mid + 1` or `right = mid - 1`."
-    ],
-    'explanation' => "Halving the search space each iteration yields O(log N) runtime.",
+    'hints' => ["Divide and conquer halves search space."],
+    'explanation' => "O(log N) binary search.",
 ]);
 
 addChallenge($challenges, [
@@ -489,24 +525,20 @@ addChallenge($challenges, [
     'category' => 'sorting',
     'difficulty' => 'Medium',
     'estimated_time_min' => 20,
-    'description' => "Given an array `nums` with `n` objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.\n\nWe will use the integers `0`, `1`, and `2` to represent the color red, white, and blue, respectively.\n\nYou must solve this problem without using the library's sort function in a single one-pass algorithm.\n\nInput format: Comma-separated integers (0, 1, 2).\nOutput format: Comma-separated sorted integers.",
-    'tags' => ['sorting', 'two-pointers', 'array'],
+    'description' => "Given an array `nums` containing 0s, 1s, and 2s, sort them in-place in a single pass without using built-in sort.",
+    'tags' => ['sorting', 'two-pointers'],
     'starter_code' => [
-        'python' => "import sys\n\ndef sort_colors(nums):\n    low, mid, high = 0, 0, len(nums) - 1\n    while mid <= high:\n        if nums[mid] == 0:\n            nums[low], nums[mid] = nums[mid], nums[low]\n            low += 1\n            mid += 1\n        elif nums[mid] == 1:\n            mid += 1\n        else:\n            nums[high], nums[mid] = nums[mid], nums[high]\n            high -= 1\n    return ','.join(map(str, nums))\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        nums = list(map(int, line.split(',')))\n        print(sort_colors(nums))\n",
+        'python' => "import sys\nnums = list(map(int, sys.stdin.read().strip().split(',')))\nlow, mid, high = 0, 0, len(nums) - 1\nwhile mid <= high:\n    if nums[mid] == 0:\n        nums[low], nums[mid] = nums[mid], nums[low]\n        low += 1; mid += 1\n    elif nums[mid] == 1: mid += 1\n    else:\n        nums[high], nums[mid] = nums[mid], nums[high]\n        high -= 1\nprint(','.join(map(str, nums)))\n",
     ],
     'test_cases' => [
-        ['input' => "2,0,2,1,1,0", 'expected_output' => "0,0,1,1,2,2", 'is_hidden' => false, 'explanation' => 'Sorted in Dutch National Flag order.'],
-        ['input' => "2,0,1", 'expected_output' => "0,1,2", 'is_hidden' => false, 'explanation' => 'Sorted array.'],
-        ['input' => "0", 'expected_output' => "0", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "2,0,2,1,1,0", 'expected_output' => "0,0,1,1,2,2", 'is_hidden' => false, 'explanation' => 'Sorted Dutch Flag.'],
     ],
-    'hints' => [
-        "Dijkstra's Dutch National Flag problem partitions the array into three sections using three pointers: `low`, `mid`, and `high`."
-    ],
-    'explanation' => "Three-way partitioning in one pass runs in O(N) time and O(1) space.",
+    'hints' => ["Three pointer partitioning."],
+    'explanation' => "One pass O(N) time with O(1) extra space.",
 ]);
 
 // ==========================================
-// 5. DYNAMIC PROGRAMMING & RECURSION
+// 6. DYNAMIC PROGRAMMING & RECURSION
 // ==========================================
 
 addChallenge($challenges, [
@@ -515,21 +547,17 @@ addChallenge($challenges, [
     'category' => 'recursion',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "You are climbing a staircase. It takes `n` steps to reach the top.\n\nEach time you can either climb `1` or `2` steps. In how many distinct ways can you climb to the top?\n\nInput format: Single integer `n`.\nOutput format: Integer number of distinct ways.",
-    'tags' => ['dynamic-programming', 'memoization'],
+    'description' => "It takes `n` steps to reach the top. Each time you can climb 1 or 2 steps. How many distinct ways can you climb to the top?",
+    'tags' => ['dynamic-programming'],
     'starter_code' => [
-        'python' => "import sys\n\ndef climb_stairs(n):\n    if n <= 2: return n\n    a, b = 1, 2\n    for _ in range(3, n + 1):\n        a, b = b, a + b\n    return b\n\nif __name__ == '__main__':\n    line = sys.stdin.read().strip()\n    if line:\n        print(climb_stairs(int(line)))\n",
+        'python' => "import sys\nn = int(sys.stdin.read().strip())\nif n <= 2: print(n); sys.exit()\na, b = 1, 2\nfor _ in range(3, n + 1): a, b = b, a + b\nprint(b)\n",
     ],
     'test_cases' => [
-        ['input' => "2", 'expected_output' => "2", 'is_hidden' => false, 'explanation' => '1. 1 step + 1 step, 2. 2 steps.'],
-        ['input' => "3", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => '1+1+1, 1+2, 2+1.'],
-        ['input' => "5", 'expected_output' => "8", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "2", 'expected_output' => "2", 'is_hidden' => false, 'explanation' => '2 ways.'],
+        ['input' => "3", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => '3 ways.'],
     ],
-    'hints' => [
-        "To reach step n, you must arrive from step n-1 or step n-2.",
-        "Ways(n) = Ways(n-1) + Ways(n-2). This is the Fibonacci sequence!"
-    ],
-    'explanation' => "Bottom-up dynamic programming keeps the previous two values, running in O(N) time and O(1) space.",
+    'hints' => ["Fibonacci progression."],
+    'explanation' => "Bottom-up DP in O(N) time and O(1) space.",
 ]);
 
 addChallenge($challenges, [
@@ -538,25 +566,20 @@ addChallenge($challenges, [
     'category' => 'algorithms',
     'difficulty' => 'Medium',
     'estimated_time_min' => 30,
-    'description' => "You are given an integer array `coins` representing coins of different denominations and an integer `amount` representing a total amount of money.\n\nReturn the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return `-1`.\n\nYou may assume that you have an infinite number of each kind of coin.\n\nInput format: Line 1: comma-separated coin denominations. Line 2: target amount.\nOutput format: Fewest number of coins as an integer.",
+    'description' => "Return the fewest number of coins that you need to make up amount `amount` using infinite denominations from `coins`. Return -1 if not possible.",
     'tags' => ['dynamic-programming'],
     'starter_code' => [
-        'python' => "import sys\n\ndef coin_change(coins, amount):\n    dp = [float('inf')] * (amount + 1)\n    dp[0] = 0\n    for a in range(1, amount + 1):\n        for c in coins:\n            if a - c >= 0:\n                dp[a] = min(dp[a], dp[a - c] + 1)\n    return dp[amount] if dp[amount] != float('inf') else -1\n\nif __name__ == '__main__':\n    lines = sys.stdin.read().splitlines()\n    if len(lines) >= 2:\n        coins = list(map(int, lines[0].split(',')))\n        amount = int(lines[1])\n        print(coin_change(coins, amount))\n",
+        'python' => "import sys\nlines = sys.stdin.read().splitlines()\nif len(lines) >= 2:\n    coins = list(map(int, lines[0].split(',')))\n    amt = int(lines[1])\n    dp = [float('inf')] * (amt + 1)\n    dp[0] = 0\n    for a in range(1, amt + 1):\n        for c in coins:\n            if a - c >= 0: dp[a] = min(dp[a], dp[a - c] + 1)\n    print(dp[amt] if dp[amt] != float('inf') else -1)\n",
     ],
     'test_cases' => [
-        ['input' => "1,2,5\n11", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => '11 = 5 + 5 + 1 (3 coins).'],
-        ['input' => "2\n3", 'expected_output' => "-1", 'is_hidden' => false, 'explanation' => 'Cannot form 3 using only 2s.'],
-        ['input' => "1\n0", 'expected_output' => "0", 'is_hidden' => true, 'explanation' => null],
+        ['input' => "1,2,5\n11", 'expected_output' => "3", 'is_hidden' => false, 'explanation' => '5+5+1 = 3 coins.'],
     ],
-    'hints' => [
-        "Define `dp[i]` as the minimum coins needed to make amount `i`.",
-        "Transition: `dp[i] = min(dp[i], dp[i - coin] + 1)` for each coin."
-    ],
-    'explanation' => "Bottom-up knapsack DP with time complexity O(amount * len(coins)).",
+    'hints' => ["Unbounded knapsack DP."],
+    'explanation' => "O(amount * coins) bottom-up dynamic programming.",
 ]);
 
 // ==========================================
-// 6. SQL LAB CHALLENGES (Dedicated SQLite Evaluator)
+// 7. SQL LAB CHALLENGES
 // ==========================================
 
 addChallenge($challenges, [
@@ -566,20 +589,17 @@ addChallenge($challenges, [
     'challenge_type' => 'sql',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Write an SQL query to report all customers who never order anything.\n\nReturn the result table in any order.",
-    'tags' => ['sql', 'join', 'database'],
+    'description' => "Write an SQL query to report all customers who never order anything.\n\nReturn the result table with column name `Customers`.",
+    'tags' => ['sql', 'join'],
     'supported_languages' => ['sql'],
     'sql_schema' => "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(50));\nCREATE TABLE Orders (id INT PRIMARY KEY, customerId INT);",
     'sql_seed' => "INSERT INTO Customers VALUES (1, 'Joe'), (2, 'Henry'), (3, 'Sam'), (4, 'Max');\nINSERT INTO Orders VALUES (1, 3), (2, 1);",
     'sql_solution' => "SELECT name AS Customers FROM Customers WHERE id NOT IN (SELECT customerId FROM Orders);",
     'starter_code' => [
-        'sql' => "-- Write your SQL query here\nSELECT name AS Customers\nFROM Customers\nWHERE id NOT IN (SELECT customerId FROM Orders);",
+        'sql' => "SELECT name AS Customers FROM Customers WHERE id NOT IN (SELECT customerId FROM Orders);",
     ],
-    'hints' => [
-        "You can use `LEFT JOIN` and check where `Orders.id IS NULL`, or use a `NOT IN` subquery.",
-        "Alias the customer name column as `Customers`."
-    ],
-    'explanation' => "A LEFT JOIN with NULL check or NOT IN subquery filters out all customers present in the Orders table.",
+    'hints' => ["Use LEFT JOIN or NOT IN."],
+    'explanation' => "Filter customers absent in Orders table.",
 ]);
 
 addChallenge($challenges, [
@@ -589,20 +609,17 @@ addChallenge($challenges, [
     'challenge_type' => 'sql',
     'difficulty' => 'Medium',
     'estimated_time_min' => 20,
-    'description' => "Write an SQL query to report the second highest distinct salary from the `Employee` table. If there is no second highest salary, the query should report `NULL`.\n\nThe column in the result table should be named `SecondHighestSalary`.",
-    'tags' => ['sql', 'subquery', 'database'],
+    'description' => "Report the second highest distinct salary from `Employee`. If none, return `NULL` as `SecondHighestSalary`.",
+    'tags' => ['sql', 'subquery'],
     'supported_languages' => ['sql'],
     'sql_schema' => "CREATE TABLE Employee (id INT PRIMARY KEY, salary INT);",
     'sql_seed' => "INSERT INTO Employee VALUES (1, 100), (2, 200), (3, 300);",
     'sql_solution' => "SELECT (SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 1) AS SecondHighestSalary;",
     'starter_code' => [
-        'sql' => "-- Write your SQL query here\nSELECT (SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 1) AS SecondHighestSalary;",
+        'sql' => "SELECT (SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 1) AS SecondHighestSalary;",
     ],
-    'hints' => [
-        "Using `LIMIT 1 OFFSET 1` inside a scalar subquery will automatically return `NULL` if only one distinct salary exists.",
-        "Remember to use `DISTINCT` so duplicates do not count as separate ranks."
-    ],
-    'explanation' => "A scalar subquery with DISTINCT, ORDER BY DESC, LIMIT 1 OFFSET 1 cleanly handles edge cases and null results.",
+    'hints' => ["Scalar subquery with LIMIT 1 OFFSET 1."],
+    'explanation' => "Returns null safely if only 1 distinct salary.",
 ]);
 
 addChallenge($challenges, [
@@ -612,19 +629,17 @@ addChallenge($challenges, [
     'challenge_type' => 'sql',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Write an SQL query to report all the duplicate emails in the `Person` table.\n\nNote that it's guaranteed that the email field is not NULL.\n\nReturn the result table with column name `email`.",
-    'tags' => ['sql', 'group-by', 'having'],
+    'description' => "Report all duplicate emails in `Person` table. Column name `email`.",
+    'tags' => ['sql', 'group-by'],
     'supported_languages' => ['sql'],
     'sql_schema' => "CREATE TABLE Person (id INT PRIMARY KEY, email VARCHAR(100));",
     'sql_seed' => "INSERT INTO Person VALUES (1, 'a@b.com'), (2, 'c@d.com'), (3, 'a@b.com');",
     'sql_solution' => "SELECT email FROM Person GROUP BY email HAVING COUNT(email) > 1;",
     'starter_code' => [
-        'sql' => "-- Write your SQL query here\nSELECT email\nFROM Person\nGROUP BY email\nHAVING COUNT(email) > 1;",
+        'sql' => "SELECT email FROM Person GROUP BY email HAVING COUNT(email) > 1;",
     ],
-    'hints' => [
-        "Use `GROUP BY email` along with a `HAVING COUNT(*) > 1` clause."
-    ],
-    'explanation' => "Aggregating by email and filtering groups with count greater than 1 quickly isolates duplicates.",
+    'hints' => ["GROUP BY email HAVING COUNT > 1."],
+    'explanation' => "Aggregating by email finds duplicates.",
 ]);
 
 addChallenge($challenges, [
@@ -634,20 +649,17 @@ addChallenge($challenges, [
     'challenge_type' => 'sql',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Write an SQL query to find the employees who earn more than their managers.\n\nReturn the result table with column name `Employee`.",
+    'description' => "Find employees who earn more than their managers. Result column `Employee`.",
     'tags' => ['sql', 'join'],
     'supported_languages' => ['sql'],
     'sql_schema' => "CREATE TABLE Employee (id INT PRIMARY KEY, name VARCHAR(50), salary INT, managerId INT);",
     'sql_seed' => "INSERT INTO Employee VALUES (1, 'Joe', 70000, 3), (2, 'Henry', 80000, 4), (3, 'Sam', 60000, NULL), (4, 'Max', 90000, NULL);",
     'sql_solution' => "SELECT e.name AS Employee FROM Employee e JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary;",
     'starter_code' => [
-        'sql' => "-- Write your SQL query here\nSELECT e.name AS Employee\nFROM Employee e\nJOIN Employee m ON e.managerId = m.id\nWHERE e.salary > m.salary;",
+        'sql' => "SELECT e.name AS Employee FROM Employee e JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary;",
     ],
-    'hints' => [
-        "Join the `Employee` table with itself where `e.managerId = m.id`.",
-        "Compare `e.salary > m.salary`."
-    ],
-    'explanation' => "A self-join pairs each employee with their corresponding manager record to compare salary values directly.",
+    'hints' => ["Self join Employee table."],
+    'explanation' => "Compare salary against managerId record.",
 ]);
 
 addChallenge($challenges, [
@@ -657,24 +669,41 @@ addChallenge($challenges, [
     'challenge_type' => 'sql',
     'difficulty' => 'Hard',
     'estimated_time_min' => 35,
-    'description' => "A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.\n\nWrite an SQL query to find the employees who are high earners in each of the departments.\n\nReturn the result table with columns `Department`, `Employee`, and `Salary`.",
-    'tags' => ['sql', 'window-functions', 'database'],
+    'description' => "Find employees who are high earners (top 3 unique salaries per department). Columns: `Department`, `Employee`, `Salary`.",
+    'tags' => ['sql', 'window-functions'],
     'supported_languages' => ['sql'],
     'sql_schema' => "CREATE TABLE Department (id INT PRIMARY KEY, name VARCHAR(50));\nCREATE TABLE Employee (id INT PRIMARY KEY, name VARCHAR(50), salary INT, departmentId INT);",
     'sql_seed' => "INSERT INTO Department VALUES (1, 'IT'), (2, 'Sales');\nINSERT INTO Employee VALUES (1, 'Joe', 85000, 1), (2, 'Henry', 80000, 2), (3, 'Sam', 60000, 2), (4, 'Max', 90000, 1), (5, 'Janet', 69000, 1), (6, 'Randy', 85000, 1), (7, 'Will', 70000, 1);",
-    'sql_solution' => "WITH RankedSalaries AS (\n    SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary,\n           DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) as rnk\n    FROM Employee e\n    JOIN Department d ON e.departmentId = d.id\n)\nSELECT Department, Employee, Salary\nFROM RankedSalaries\nWHERE rnk <= 3;",
+    'sql_solution' => "WITH Ranked AS (SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary, DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) as rnk FROM Employee e JOIN Department d ON e.departmentId = d.id) SELECT Department, Employee, Salary FROM Ranked WHERE rnk <= 3;",
     'starter_code' => [
-        'sql' => "-- Write your SQL query with DENSE_RANK or Subquery\nWITH RankedSalaries AS (\n    SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary,\n           DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) as rnk\n    FROM Employee e\n    JOIN Department d ON e.departmentId = d.id\n)\nSELECT Department, Employee, Salary\nFROM RankedSalaries\nWHERE rnk <= 3;",
+        'sql' => "WITH Ranked AS (SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary, DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) as rnk FROM Employee e JOIN Department d ON e.departmentId = d.id) SELECT Department, Employee, Salary FROM Ranked WHERE rnk <= 3;",
     ],
-    'hints' => [
-        "Use the window function `DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC)`.",
-        "Then filter in the outer query where `rank <= 3`."
+    'hints' => ["DENSE_RANK partition by department."],
+    'explanation' => "DENSE_RANK handles ties properly.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'sql-big-countries',
+    'title' => 'Big Countries',
+    'category' => 'SQL',
+    'challenge_type' => 'sql',
+    'difficulty' => 'Beginner',
+    'estimated_time_min' => 10,
+    'description' => "A country is big if it has an area of at least 3,000,000 km² or a population of at least 25,000,000.\n\nWrite an SQL query to report the name, population, and area of the big countries.",
+    'tags' => ['sql'],
+    'supported_languages' => ['sql'],
+    'sql_schema' => "CREATE TABLE World (name VARCHAR(50) PRIMARY KEY, continent VARCHAR(50), area INT, population INT, gdp BIGINT);",
+    'sql_seed' => "INSERT INTO World VALUES ('Afghanistan', 'Asia', 652230, 25500100, 20343000), ('Albania', 'Europe', 28748, 2831741, 12960000), ('Algeria', 'Africa', 2381741, 37100000, 188681000), ('Andorra', 'Europe', 468, 78115, 3712000), ('Angola', 'Africa', 1246700, 20609294, 100990000);",
+    'sql_solution' => "SELECT name, population, area FROM World WHERE area >= 3000000 OR population >= 25000000;",
+    'starter_code' => [
+        'sql' => "SELECT name, population, area FROM World WHERE area >= 3000000 OR population >= 25000000;",
     ],
-    'explanation' => "DENSE_RANK assigns identical ranks to ties without skipping subsequent ranks, correctly matching top 3 distinct salary levels.",
+    'hints' => ["Use WHERE area >= 3000000 OR population >= 25000000."],
+    'explanation' => "Simple boolean filter on two columns.",
 ]);
 
 // ==========================================
-// 7. WEB CHALLENGES (HTML / CSS / JS Sandbox)
+// 8. WEB CHALLENGES (HTML / CSS / JS Sandbox)
 // ==========================================
 
 addChallenge($challenges, [
@@ -684,23 +713,17 @@ addChallenge($challenges, [
     'challenge_type' => 'web',
     'difficulty' => 'Easy',
     'estimated_time_min' => 25,
-    'description' => "Build a responsive 3-tier pricing card layout (Free, Pro, Enterprise) using modern CSS Flexbox or Grid.\n\nRequirements:\n1. The container should display cards in a 3-column row on desktop, collapsing to a single column on mobile devices (max-width: 768px).\n2. The 'Pro' card must have a featured visual badge and prominent accent border.\n3. Each card must include a title, price, feature list, and call-to-action button.\n4. Ensure proper contrast, clean padding, and accessible button styling.",
-    'tags' => ['html', 'css', 'responsive-design', 'flexbox'],
+    'description' => "Build a responsive 3-tier pricing card layout (Free, Pro, Enterprise) using modern CSS Flexbox or Grid.",
+    'tags' => ['html', 'css', 'responsive-design'],
     'supported_languages' => ['html', 'css'],
     'web_template' => [
-        'html' => "<div class=\"pricing-container\">\n  <div class=\"pricing-card\">\n    <h3 class=\"tier\">Free</h3>\n    <div class=\"price\">$0<span>/mo</span></div>\n    <ul class=\"features\">\n      <li>1 Project</li>\n      <li>Community Support</li>\n    </ul>\n    <button class=\"btn\">Get Started</button>\n  </div>\n\n  <div class=\"pricing-card featured\">\n    <span class=\"badge\">Popular</span>\n    <h3 class=\"tier\">Pro</h3>\n    <div class=\"price\">$29<span>/mo</span></div>\n    <ul class=\"features\">\n      <li>Unlimited Projects</li>\n      <li>Priority Support</li>\n      <li>Custom Domains</li>\n    </ul>\n    <button class=\"btn btn-primary\">Upgrade Now</button>\n  </div>\n\n  <div class=\"pricing-card\">\n    <h3 class=\"tier\">Enterprise</h3>\n    <div class=\"price\">$99<span>/mo</span></div>\n    <ul class=\"features\">\n      <li>Dedicated Server</li>\n      <li>24/7 SLA Support</li>\n      <li>Custom Integrations</li>\n    </ul>\n    <button class=\"btn\">Contact Sales</button>\n  </div>\n</div>",
-        'css' => "* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }\nbody { padding: 40px 20px; background: #0f172a; color: #f8fafc; }\n\n.pricing-container {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));\n  gap: 24px;\n  max-width: 1000px;\n  margin: 0 auto;\n}\n\n.pricing-card {\n  background: #1e293b;\n  border: 1px solid #334155;\n  border-radius: 12px;\n  padding: 32px 24px;\n  position: relative;\n  display: flex;\n  flex-direction: column;\n}\n\n.pricing-card.featured {\n  border-color: #6366f1;\n  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);\n  transform: scale(1.03);\n}\n\n.badge {\n  position: absolute;\n  top: -12px;\n  left: 50%;\n  transform: translateX(-50%);\n  background: #6366f1;\n  color: #fff;\n  padding: 4px 12px;\n  border-radius: 999px;\n  font-size: 12px;\n  font-weight: 600;\n}\n\n.price {\n  font-size: 36px;\n  font-weight: 700;\n  margin: 16px 0;\n}\n.price span { font-size: 16px; color: #94a3b8; }\n\n.features {\n  list-style: none;\n  margin-bottom: 24px;\n  flex-grow: 1;\n}\n.features li {\n  padding: 8px 0;\n  border-bottom: 1px solid #334155;\n  color: #cbd5e1;\n}\n\n.btn {\n  padding: 12px;\n  border-radius: 8px;\n  border: 1px solid #475569;\n  background: #334155;\n  color: #fff;\n  font-weight: 600;\n  cursor: pointer;\n  transition: 0.2s;\n}\n.btn:hover { background: #475569; }\n.btn-primary { background: #6366f1; border-color: #6366f1; }\n.btn-primary:hover { background: #4f46e5; }",
-        'js' => "// Optional interaction",
+        'html' => "<div class=\"pricing-container\">\n  <div class=\"pricing-card\">\n    <h3 class=\"tier\">Free</h3>\n    <div class=\"price\">$0<span>/mo</span></div>\n    <ul class=\"features\"><li>1 Project</li><li>Community Support</li></ul>\n    <button class=\"btn\">Get Started</button>\n  </div>\n  <div class=\"pricing-card featured\">\n    <span class=\"badge\">Popular</span>\n    <h3 class=\"tier\">Pro</h3>\n    <div class=\"price\">$29<span>/mo</span></div>\n    <ul class=\"features\"><li>Unlimited Projects</li><li>Priority Support</li></ul>\n    <button class=\"btn btn-primary\">Upgrade Now</button>\n  </div>\n  <div class=\"pricing-card\">\n    <h3 class=\"tier\">Enterprise</h3>\n    <div class=\"price\">$99<span>/mo</span></div>\n    <ul class=\"features\"><li>Dedicated Server</li><li>24/7 SLA</li></ul>\n    <button class=\"btn\">Contact Sales</button>\n  </div>\n</div>",
+        'css' => "* { box-sizing: border-box; font-family: sans-serif; }\nbody { padding: 40px 20px; background: #0f172a; color: #f8fafc; }\n.pricing-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }\n.pricing-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 32px 24px; position: relative; display: flex; flex-direction: column; }\n.pricing-card.featured { border-color: #6366f1; transform: scale(1.03); }\n.badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #6366f1; color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }\n.price { font-size: 36px; font-weight: 700; margin: 16px 0; }\n.features { list-style: none; margin-bottom: 24px; flex-grow: 1; }\n.features li { padding: 8px 0; border-bottom: 1px solid #334155; color: #cbd5e1; }\n.btn { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: #fff; cursor: pointer; }\n.btn-primary { background: #6366f1; border-color: #6366f1; }",
+        'js' => "",
     ],
-    'starter_code' => [
-        'html' => "<div class=\"pricing-container\">\n  <!-- Structure your pricing cards here -->\n</div>",
-        'css' => "/* Style your responsive pricing layout */",
-    ],
-    'hints' => [
-        "Use `display: grid` with `grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))` for an instantly responsive layout without complex media queries.",
-        "Add a subtle `transform: scale(1.03)` on the featured card to give it visual emphasis."
-    ],
-    'explanation' => "CSS Grid auto-fit combined with minmax provides fluid responsiveness across all viewport sizes.",
+    'starter_code' => ['html' => "<div class=\"pricing-container\"></div>", 'css' => "/* CSS */"],
+    'hints' => ["Use CSS Grid auto-fit."],
+    'explanation' => "Responsive modern pricing card component.",
 ]);
 
 addChallenge($challenges, [
@@ -710,28 +733,21 @@ addChallenge($challenges, [
     'challenge_type' => 'web',
     'difficulty' => 'Easy',
     'estimated_time_min' => 20,
-    'description' => "Create an accessible Dark / Light mode toggle switch that toggles CSS classes on the document and remembers user preference using localStorage.\n\nRequirements:\n1. A toggle button with an accessible `aria-label` or role.\n2. Smooth color transitions between dark and light palettes using CSS custom properties.\n3. Store and retrieve theme state from `localStorage`.",
-    'tags' => ['javascript', 'css', 'dom', 'accessibility'],
+    'description' => "Create an accessible Dark / Light mode toggle switch that toggles CSS classes on the document and remembers user preference using localStorage.",
+    'tags' => ['javascript', 'css', 'dom'],
     'supported_languages' => ['html', 'css', 'javascript'],
     'web_template' => [
-        'html' => "<div class=\"app-card\">\n  <h2>Theme Switcher Demo</h2>\n  <p>Toggle between Dark and Light mode seamlessly.</p>\n  <button id=\"theme-toggle\" class=\"toggle-btn\" aria-label=\"Toggle theme\">\n    <span class=\"icon\">🌙</span> Switch to Light Mode\n  </button>\n</div>",
-        'css' => ":root {\n  --bg-primary: #0f172a;\n  --card-bg: #1e293b;\n  --text-primary: #f8fafc;\n  --text-secondary: #94a3b8;\n  --accent: #3b82f6;\n}\nbody.light-theme {\n  --bg-primary: #f8fafc;\n  --card-bg: #ffffff;\n  --text-primary: #0f172a;\n  --text-secondary: #64748b;\n  --accent: #2563eb;\n}\nbody {\n  background: var(--bg-primary);\n  color: var(--text-primary);\n  transition: background 0.3s ease, color 0.3s ease;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  font-family: system-ui, sans-serif;\n}\n.app-card {\n  background: var(--card-bg);\n  padding: 32px;\n  border-radius: 12px;\n  border: 1px solid rgba(148, 163, 184, 0.2);\n  text-align: center;\n  max-width: 400px;\n  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);\n}\n.app-card p { color: var(--text-secondary); margin: 12px 0 24px; }\n.toggle-btn {\n  background: var(--accent);\n  color: #fff;\n  border: none;\n  padding: 10px 20px;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.1s ease;\n}\n.toggle-btn:active { transform: scale(0.98); }",
-        'js' => "const toggle = document.getElementById('theme-toggle');\ntoggle.addEventListener('click', () => {\n  const isLight = document.body.classList.toggle('light-theme');\n  toggle.innerHTML = isLight ? '<span class=\"icon\">☀️</span> Switch to Dark Mode' : '<span class=\"icon\">🌙</span> Switch to Light Mode';\n});",
+        'html' => "<div class=\"app-card\"><h2>Theme Switcher Demo</h2><p>Toggle between Dark and Light mode.</p><button id=\"theme-toggle\" class=\"toggle-btn\">🌙 Switch to Light Mode</button></div>",
+        'css' => ":root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }\nbody.light-theme { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; }\nbody { background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; transition: 0.3s; }\n.app-card { background: var(--card); padding: 32px; border-radius: 12px; border: 1px solid #334155; text-align: center; }\n.toggle-btn { background: #3b82f6; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 16px; }",
+        'js' => "const btn = document.getElementById('theme-toggle');\nbtn.addEventListener('click', () => {\n  const isLight = document.body.classList.toggle('light-theme');\n  btn.textContent = isLight ? '☀️ Switch to Dark Mode' : '🌙 Switch to Light Mode';\n});",
     ],
-    'starter_code' => [
-        'html' => "<button id=\"theme-toggle\">Switch Theme</button>",
-        'css' => "/* Define CSS variables for themes */",
-        'js' => "// Listen to click events and toggle class",
-    ],
-    'hints' => [
-        "Define your colors using `:root` CSS variables and override them under `body.light-theme`.",
-        "Use `document.body.classList.toggle('light-theme')` to switch states."
-    ],
-    'explanation' => "CSS Custom Properties provide the cleanest approach to theme toggling because child elements automatically inherit the newly declared values.",
+    'starter_code' => ['html' => "<button id=\"theme-toggle\">Switch Theme</button>", 'css' => "/* CSS */", 'js' => "// JS"],
+    'hints' => ["Toggle class on document.body."],
+    'explanation' => "CSS Custom Properties provide smooth theming.",
 ]);
 
 // ==========================================
-// 8. QUIZZES & SOFTWARE ENGINEERING CONCEPTS
+// 9. QUIZZES & CONCEPTS
 // ==========================================
 
 addChallenge($challenges, [
@@ -741,40 +757,32 @@ addChallenge($challenges, [
     'challenge_type' => 'quiz',
     'difficulty' => 'Beginner',
     'estimated_time_min' => 10,
-    'description' => "Test your knowledge of essential HTTP status codes used in modern REST APIs, web applications, and backend services.",
-    'tags' => ['http', 'rest', 'networking', 'backend'],
+    'description' => "Test your knowledge of essential HTTP status codes used in modern REST APIs.",
+    'tags' => ['http', 'rest', 'backend'],
     'quiz_data' => [
         'questions' => [
             [
                 'id' => 1,
-                'question' => "Which HTTP status code indicates that a resource was successfully created via a POST request?",
+                'question' => "Which HTTP status code indicates that a resource was successfully created via POST?",
                 'options' => ["200 OK", "201 Created", "204 No Content", "202 Accepted"],
                 'answer' => 1,
-                'explanation' => "HTTP 201 Created signifies that the request succeeded and a new resource was created as a result.",
+                'explanation' => "HTTP 201 Created indicates successful resource creation.",
             ],
             [
                 'id' => 2,
                 'question' => "What is the difference between HTTP 401 Unauthorized and HTTP 403 Forbidden?",
                 'options' => [
                     "401 means server error; 403 means client error",
-                    "401 means missing/invalid credentials (unauthenticated); 403 means authenticated but lacking permission (unauthorized)",
-                    "401 is for GET requests; 403 is for POST requests",
-                    "There is no functional difference"
+                    "401 indicates unauthenticated identity; 403 indicates authenticated but lacking permission",
+                    "There is no difference"
                 ],
                 'answer' => 1,
-                'explanation' => "401 indicates that authentication is required or failed. 403 indicates the identity is known, but access rights are insufficient.",
-            ],
-            [
-                'id' => 3,
-                'question' => "Which HTTP status code should be returned when a client sends too many requests in a given time period?",
-                'options' => ["408 Request Timeout", "422 Unprocessable Entity", "429 Too Many Requests", "503 Service Unavailable"],
-                'answer' => 2,
-                'explanation' => "HTTP 429 indicates rate-limiting: the user has sent too many requests in a given amount of time.",
+                'explanation' => "401 is authentication; 403 is authorization.",
             ],
         ]
     ],
-    'hints' => ["2xx is success, 4xx is client error, 5xx is server error."],
-    'explanation' => "Understanding HTTP semantics is fundamental to building reliable, standard-compliant RESTful APIs.",
+    'hints' => ["2xx success, 4xx client errors."],
+    'explanation' => "HTTP status code fundamentals.",
 ]);
 
 addChallenge($challenges, [
@@ -784,33 +792,25 @@ addChallenge($challenges, [
     'challenge_type' => 'quiz',
     'difficulty' => 'Beginner',
     'estimated_time_min' => 10,
-    'description' => "Validate your understanding of Git version control, branching strategies, merge conflicts, and commit hygiene.",
-    'tags' => ['git', 'devops', 'tools'],
+    'description' => "Validate your understanding of Git version control, branching strategies, and commit hygiene.",
+    'tags' => ['git', 'devops'],
     'quiz_data' => [
         'questions' => [
             [
                 'id' => 1,
                 'question' => "What does `git rebase` do compared to `git merge`?",
                 'options' => [
-                    "Rebase deletes the current branch entirely",
-                    "Rebase reapplies commits on top of another base branch, creating a linear project history",
-                    "Merge always overwrites conflicts without human intervention",
-                    "Rebase creates an additional merge commit"
+                    "Rebase deletes the current branch",
+                    "Rebase reapplies commits on top of another base branch, preserving linear history",
+                    "Merge always overwrites conflicts silently"
                 ],
                 'answer' => 1,
-                'explanation' => "Git rebase rewrites commit history by moving the base of your branch onto the specified commit, avoiding extra merge commits.",
-            ],
-            [
-                'id' => 2,
-                'question' => "Which command temporarily stashes uncommitted changes in your working directory?",
-                'options' => ["git stash", "git pause", "git cache", "git commit --temp"],
-                'answer' => 0,
-                'explanation' => "`git stash` temporarily shelves changes made to your working copy so you can work on something else.",
+                'explanation' => "Git rebase linearizes commit history without extra merge commits.",
             ],
         ]
     ],
-    'hints' => ["Think about clean linear commit history vs merge commits."],
-    'explanation' => "Git fundamentals are essential for team collaboration in software engineering.",
+    'hints' => ["Linear history."],
+    'explanation' => "Git workflow mastery.",
 ]);
 
 addChallenge($challenges, [
@@ -820,38 +820,66 @@ addChallenge($challenges, [
     'challenge_type' => 'quiz',
     'difficulty' => 'Easy',
     'estimated_time_min' => 15,
-    'description' => "Test your knowledge on Docker containers, images, multi-stage builds, caching, and isolated runtime security.",
-    'tags' => ['docker', 'devops', 'linux', 'containers'],
+    'description' => "Test your knowledge on Docker containers, images, multi-stage builds, and runtime security.",
+    'tags' => ['docker', 'devops'],
     'quiz_data' => [
         'questions' => [
             [
                 'id' => 1,
                 'question' => "What is the primary benefit of Multi-stage Docker builds?",
                 'options' => [
-                    "They allow running multiple containers simultaneously",
-                    "They keep production images slim by separating build dependencies from the final runtime image",
-                    "They eliminate the need for a Dockerfile",
-                    "They automatically publish images to Docker Hub"
+                    "They run multiple containers at once",
+                    "They keep production images slim by discarding build tools",
+                    "They eliminate Dockerfiles"
                 ],
                 'answer' => 1,
-                'explanation' => "Multi-stage builds leave behind compilers, SDKs, and build tooling, delivering tiny, secure production images.",
-            ],
-            [
-                'id' => 2,
-                'question' => "Why should application processes in a Docker container avoid running as the `root` user?",
-                'options' => [
-                    "Root users cannot bind to ports below 1024",
-                    "Container breakout attacks could grant host-level root privileges",
-                    "Docker fails to start containers as root",
-                    "Root images take up twice as much disk space"
-                ],
-                'answer' => 1,
-                'explanation' => "Running as a non-privileged user adheres to the principle of least privilege, preventing severe privilege escalation if the container is compromised.",
+                'explanation' => "Multi-stage builds produce minimal production containers without compilers.",
             ],
         ]
     ],
-    'hints' => ["Consider security attack surface and artifact sizes in container environments."],
-    'explanation' => "Multi-stage builds and non-root execution are critical best practices in modern cloud containerization.",
+    'hints' => ["Minimal production image footprint."],
+    'explanation' => "Docker best practices.",
+]);
+
+addChallenge($challenges, [
+    'slug' => 'quiz-solid-principles',
+    'title' => 'SOLID Architecture Principles',
+    'category' => 'software engineering',
+    'challenge_type' => 'quiz',
+    'difficulty' => 'Medium',
+    'estimated_time_min' => 15,
+    'description' => "Test your mastery of Object-Oriented Design and the five SOLID principles.",
+    'tags' => ['design-patterns', 'software-architecture'],
+    'quiz_data' => [
+        'questions' => [
+            [
+                'id' => 1,
+                'question' => "What does the 'L' in SOLID stand for?",
+                'options' => [
+                    "Lazy Loading Principle",
+                    "Liskov Substitution Principle",
+                    "Linear Inheritance Principle",
+                    "Layered Architecture Principle"
+                ],
+                'answer' => 1,
+                'explanation' => "Liskov Substitution Principle states that subtypes must be substitutable for their base types without altering program correctness.",
+            ],
+            [
+                'id' => 2,
+                'question' => "Which principle states that high-level modules should not depend on low-level modules, but both should depend on abstractions?",
+                'options' => [
+                    "Single Responsibility Principle",
+                    "Open-Closed Principle",
+                    "Dependency Inversion Principle",
+                    "Interface Segregation Principle"
+                ],
+                'answer' => 2,
+                'explanation' => "Dependency Inversion decouples components through contracts/interfaces.",
+            ],
+        ]
+    ],
+    'hints' => ["Five core principles for maintainable software."],
+    'explanation' => "SOLID design principles ensure scalable architecture.",
 ]);
 
 // Write challenges to json file
