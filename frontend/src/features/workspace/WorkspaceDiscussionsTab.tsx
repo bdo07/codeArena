@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, ThumbsUp, Send, Pin, User as UserIcon, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { Challenge, DiscussionTopic } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { Avatar } from '@/components/ui/Avatar';
 
 interface WorkspaceDiscussionsTabProps {
   challenge: Challenge;
