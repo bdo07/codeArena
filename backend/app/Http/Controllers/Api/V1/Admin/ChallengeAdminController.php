@@ -156,4 +156,56 @@ class ChallengeAdminController extends Controller
             'message' => 'Challenge deleted successfully.',
         ]);
     }
+
+    /**
+     * Import challenges via JSON or CSV with duplicate detection.
+     */
+    public function import(Request $request): JsonResponse
+    {
+        $service = app(\App\Services\ChallengeImportExportService::class);
+        $overwrite = (bool) $request->input('overwrite_duplicates', false);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = strtolower($file->getClientOriginalExtension());
+            $content = file_get_contents($file->getRealPath());
+
+            if ($extension === 'csv') {
+                $result = $service->importCsv($content, $overwrite);
+            } else {
+                $result = $service->importJson($content, $overwrite);
+            }
+        } elseif ($request->has('json_data')) {
+            $result = $service->importJson($request->input('json_data'), $overwrite);
+        } elseif ($request->has('csv_data')) {
+            $result = $service->importCsv($request->input('csv_data'), $overwrite);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please provide a file, json_data, or csv_data.',
+            ], 422);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * Export all challenges as JSON or CSV.
+     */
+    public function export(Request $request)
+    {
+        $service = app(\App\Services\ChallengeImportExportService::class);
+        $format = strtolower($request->input('format', 'json'));
+
+        if ($format === 'csv') {
+            $csv = $service->exportCsv();
+            return response($csv, 200, [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="codearena-challenges.csv"',
+            ]);
+        }
+
+        $json = $service->exportJson();
+        return response()->json(['challenges' => $json]);
+    }
 }
