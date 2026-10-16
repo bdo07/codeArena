@@ -126,4 +126,21 @@ class Challenge extends Model
     {
         return (int) $this->testCases()->sum('points');
     }
+
+    public function getSupportedLanguagesAttribute(): array
+    {
+        if ($this->challenge_type === 'sql') {
+            return ['sql'];
+        }
+        if ($this->challenge_type === 'web') {
+            return ['html', 'css', 'javascript'];
+        }
+        if ($this->challenge_type === 'quiz') {
+            return [];
+        }
+        if (is_array($this->starter_code)) {
+            return array_keys($this->starter_code);
+        }
+        return ['python', 'javascript', 'cpp'];
+    }
 }
