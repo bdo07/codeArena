@@ -20,6 +20,7 @@ import { RoadmapDetailPage } from './pages/RoadmapDetailPage';
 import { ContestsPage } from './pages/ContestsPage';
 import { ContestDetailPage } from './pages/ContestDetailPage';
 import { ContestLeaderboardPage } from './pages/ContestLeaderboardPage';
+import { QuestPage } from './pages/QuestPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -45,6 +46,8 @@ export const App: React.FC = () => {
                 <Route path="challenges/:slug" element={<WorkspacePage />} />
                 <Route path="roadmaps" element={<RoadmapsPage />} />
                 <Route path="roadmaps/:slug" element={<RoadmapDetailPage />} />
+                <Route path="quest" element={<QuestPage />} />
+                <Route path="quest/:slug" element={<QuestPage />} />
                 <Route path="contests" element={<ContestsPage />} />
                 <Route path="contests/:slug" element={<ContestDetailPage />} />
                 <Route path="contests/:slug/leaderboard" element={<ContestLeaderboardPage />} />
