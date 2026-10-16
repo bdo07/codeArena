@@ -3,12 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   Compass,
-  Trophy,
   CheckCircle2,
   Lock,
   Play,
   Sparkles,
-  Flame,
   ArrowRight,
   Clock,
   Target,
@@ -25,7 +23,6 @@ import {
   Cpu,
   Terminal,
   Zap,
-  HelpCircle,
   AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -89,7 +86,6 @@ export const QuestPage: React.FC = () => {
   const [dailyMissions, setDailyMissions] = useState<DailyMissionItem[]>([]);
   const [progression, setProgression] = useState<ProgressionDashboardData | null>(null);
 
-  const [isLoadingPaths, setIsLoadingPaths] = useState(true);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
   const [selectedStage, setSelectedStage] = useState<QuestStageDetail | null>(null);
@@ -98,28 +94,25 @@ export const QuestPage: React.FC = () => {
   const [claimToast, setClaimToast] = useState<{ title: string; message: string } | null>(null);
 
   // Load paths index, daily missions, progression
-  const loadIndexData = async () => {
+  const loadIndexData = React.useCallback(async () => {
     try {
-      setIsLoadingPaths(true);
       const data = await questApi.getQuestsIndex();
       setPaths(data.paths);
       setDailyMissions(data.daily_missions);
       setProgression(data.progression);
 
       // If no route slug specified, pick the first path slug
-      if (!routeSlug && data.paths.length > 0 && !selectedPathSlug) {
-        setSelectedPathSlug(data.paths[0].slug);
+      if (!routeSlug && data.paths.length > 0) {
+        setSelectedPathSlug((prev) => prev || data.paths[0].slug);
       }
     } catch (err) {
       console.error('Failed to load quest paths:', err);
-    } finally {
-      setIsLoadingPaths(false);
     }
-  };
+  }, [routeSlug]);
 
   useEffect(() => {
     loadIndexData();
-  }, [user]);
+  }, [user, loadIndexData]);
 
   // Load active path detail
   const loadActivePath = React.useCallback(async (slug: string) => {
@@ -779,7 +772,6 @@ export const QuestPage: React.FC = () => {
                   const isCompleted = stage.status === 'completed';
                   const isAvailable = stage.status === 'available';
                   const isInProgress = stage.status === 'in_progress';
-                  const isLocked = stage.status === 'locked';
 
                   return (
                     <div
