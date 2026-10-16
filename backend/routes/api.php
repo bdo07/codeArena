@@ -91,8 +91,19 @@ Route::prefix('v1')->group(function () {
     Route::get('/users/{username}', [ProfileController::class, 'show']);
     Route::get('/profile/{username}', [ProfileController::class, 'show']);
 
+    // 10. CodeArena Quest (Public map exploration & progression)
+    Route::get('/quests', [QuestController::class, 'index']);
+    Route::get('/quests/progression', [QuestController::class, 'progression']);
+    Route::get('/quests/{slug}', [QuestController::class, 'show']);
+
     // Authenticated Endpoints
     Route::middleware('auth:sanctum')->group(function () {
+
+        // Quest Rewards & Progress
+        Route::post('/quests/stages/{id}/claim', [QuestController::class, 'claimStageReward'])
+            ->middleware('throttle:30,1');
+        Route::post('/quests/daily-missions/{id}/claim', [QuestController::class, 'claimDailyMission'])
+            ->middleware('throttle:30,1');
 
         // Profile Management (Self)
         Route::put('/profile', [ProfileController::class, 'update']);
