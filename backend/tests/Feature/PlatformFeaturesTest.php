@@ -231,4 +231,29 @@ class PlatformFeaturesTest extends TestCase
                 'evaluator_health'
             ]);
     }
+
+    /**
+     * Test local execution engine for arbitrary problems like count-primes.
+     */
+    public function test_local_code_execution_for_count_primes(): void
+    {
+        $executor = app(\App\Services\CodeExecutionService::class);
+        $code = "import sys\nn = int(sys.stdin.read().strip())\nif n <= 2: print(0); sys.exit()\nprimes = [True] * n\nprimes[0] = primes[1] = False\nfor p in range(2, int(n**0.5) + 1):\n    if primes[p]:\n        for m in range(p*p, n, p): primes[m] = False\nprint(sum(primes))\n";
+
+        // Correct input 10 -> 4 primes (2, 3, 5, 7)
+        $res = $executor->execute('python', $code, '10', '4');
+        $this->assertEquals('Accepted', $res['status']);
+        $this->assertTrue($res['passed']);
+        $this->assertEquals('4', $res['stdout']);
+
+        // Wrong output test
+        $resWrong = $executor->execute('python', 'print(99)', '10', '4');
+        $this->assertEquals('Wrong Answer', $resWrong['status']);
+        $this->assertFalse($resWrong['passed']);
+
+        // Timeout test
+        $resTimeout = $executor->execute('python', 'while True: pass', '10', '4', 400);
+        $this->assertEquals('Time Limit Exceeded', $resTimeout['status']);
+        $this->assertFalse($resTimeout['passed']);
+    }
 }
