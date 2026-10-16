@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\CollectionController;
 use App\Http\Controllers\Api\V1\ContestController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DiscussionController;
+use App\Http\Controllers\Api\V1\GitPlaygroundController;
 use App\Http\Controllers\Api\V1\LanguageController;
 use App\Http\Controllers\Api\V1\LeaderboardController;
 use App\Http\Controllers\Api\V1\NoteController;
@@ -96,8 +97,15 @@ Route::prefix('v1')->group(function () {
     Route::get('/quests/progression', [QuestController::class, 'progression']);
     Route::get('/quests/{slug}', [QuestController::class, 'show']);
 
+    // 11. Git Playground
+    Route::get('/git-playground/progress', [GitPlaygroundController::class, 'progress']);
+
     // Authenticated Endpoints
     Route::middleware('auth:sanctum')->group(function () {
+
+        // Git Playground Progress & XP
+        Route::post('/git-playground/scenarios/{id}/complete', [GitPlaygroundController::class, 'complete'])
+            ->middleware('throttle:30,1');
 
         // Quest Rewards & Progress
         Route::post('/quests/stages/{id}/claim', [QuestController::class, 'claimStageReward'])

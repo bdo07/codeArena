@@ -144,6 +144,16 @@ class User extends Authenticatable
         return $this->hasMany(UserDailyMissionProgress::class);
     }
 
+    public function gitPlaygroundProgress(): HasMany
+    {
+        return $this->hasMany(UserGitPlaygroundProgress::class);
+    }
+
+    public function interviewSessions(): HasMany
+    {
+        return $this->hasMany(InterviewSession::class)->latest();
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
