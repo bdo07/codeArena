@@ -20,18 +20,37 @@ class Challenge extends Model
         'output_description',
         'constraints',
         'difficulty',
+        'category',
+        'challenge_type',
+        'estimated_time_min',
         'starter_code',
+        'hints',
+        'explanation',
+        'reference_solution',
+        'sql_schema',
+        'sql_seed',
+        'sql_solution',
+        'web_template',
+        'quiz_data',
         'time_limit_ms',
         'memory_limit_mb',
         'is_published',
+        'is_daily',
+        'daily_date',
         'created_by',
     ];
 
     protected $casts = [
         'starter_code' => 'array',
+        'hints' => 'array',
+        'web_template' => 'array',
+        'quiz_data' => 'array',
         'time_limit_ms' => 'integer',
         'memory_limit_mb' => 'integer',
+        'estimated_time_min' => 'integer',
         'is_published' => 'boolean',
+        'is_daily' => 'boolean',
+        'daily_date' => 'date',
     ];
 
     public function author(): BelongsTo
@@ -71,6 +90,23 @@ class Challenge extends Model
     public function progress(): HasMany
     {
         return $this->hasMany(UserChallengeProgress::class);
+    }
+
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class)->orderByDesc('is_pinned')->orderByDesc('upvotes_count');
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(ChallengeNote::class);
+    }
+
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class, 'collection_challenges')
+            ->withPivot('position')
+            ->withTimestamps();
     }
 
     public function getStarterCodeForLanguage(string $language): ?string
