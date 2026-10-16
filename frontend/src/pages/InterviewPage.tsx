@@ -281,7 +281,10 @@ export const InterviewPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-  handleFinalSubmitRef.current = handleFinalSubmit;
+
+  useEffect(() => {
+    handleFinalSubmitRef.current = handleFinalSubmit;
+  });
 
   // Current active question
   const currentQ = activeSession?.questions[currentQuestionIndex];
