@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Terminal, Trophy, Code2, LayoutDashboard, Shield, LogOut, User as UserIcon, Menu, X, Sparkles, Compass, Flame } from 'lucide-react';
+import {
+  Terminal,
+  Trophy,
+  Code2,
+  LayoutDashboard,
+  Shield,
+  LogOut,
+  User as UserIcon,
+  Menu,
+  X,
+  Sparkles,
+  Compass,
+  Flame,
+  Edit3,
+  Settings,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationBell } from '@/components/NotificationBell';
+import { Avatar } from '@/components/ui/Avatar';
+import { EditProfileModal } from '@/components/profile/EditProfileModal';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -14,6 +31,7 @@ export const Navbar: React.FC = () => {
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
