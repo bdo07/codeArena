@@ -47,9 +47,11 @@ class CollectionSeeder extends Seeder
             $collection = Collection::updateOrCreate(
                 [
                     'user_id' => $admin->id,
-                    'name' => $cData['name'],
+                    'slug' => \Illuminate\Support\Str::slug($cData['name']),
                 ],
-                $cData
+                array_merge($cData, [
+                    'slug' => \Illuminate\Support\Str::slug($cData['name']),
+                ])
             );
 
             $challengeIds = Challenge::whereIn('slug', $challengeSlugs)->pluck('id')->toArray();
