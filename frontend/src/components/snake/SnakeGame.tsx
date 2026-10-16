@@ -862,7 +862,7 @@ export const SnakeGame: React.FC = () => {
                 variant="primary"
                 size="sm"
                 className="flex-1"
-                onClick={startGame}
+                onClick={() => startGame()}
                 leftIcon={status === 'game_over' ? <RotateCcw className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
               >
                 {status === 'game_over'
@@ -877,7 +877,7 @@ export const SnakeGame: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={startGame}
+                onClick={() => startGame()}
                 aria-label="Restart Game"
                 title={t('snake.restart', 'Restart')}
               >
