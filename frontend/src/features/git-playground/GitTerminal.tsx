@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
 import { Terminal as TerminalIcon, CornerDownLeft, Sparkles } from 'lucide-react';
-import { GitRepoState, getCurrentBranchName } from './gitEngine';
+import { getCurrentBranchName } from './gitEngine';
+import { GitRepoState } from './types';
 
 interface GitTerminalProps {
   onExecuteCommand: (cmd: string) => void;

@@ -1,15 +1,14 @@
-import React from 'react';
 import {
   GitBranch,
   GitCommit as GitCommitIcon,
-  Layers,
   FileCode,
   AlertTriangle,
   Archive,
   CheckCircle2,
   FolderTree,
 } from 'lucide-react';
-import { GitRepoState, getCurrentCommitHash, getCurrentBranchName } from './gitEngine';
+import { getCurrentCommitHash, getCurrentBranchName } from './gitEngine';
+import { GitRepoState, GitCommit } from './types';
 
 interface GitVisualizerProps {
   state: GitRepoState;
@@ -20,7 +19,7 @@ export const GitVisualizer: React.FC<GitVisualizerProps> = ({ state }) => {
   const currentBranch = getCurrentBranchName(state);
 
   // Collect and sort commits chronologically
-  const commitsList = Object.values(state.commits);
+  const commitsList: GitCommit[] = Object.values(state.commits);
   const commitsCount = commitsList.length;
 
   // Staged and working files
