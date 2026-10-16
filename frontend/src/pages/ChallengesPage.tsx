@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, CheckCircle2, Circle, ArrowUpDown, ChevronLeft, ChevronRight, X, Code2 } from 'lucide-react';
+import {
+  Search,
+  CheckCircle2,
+  Circle,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Code2,
+  Table,
+  Layout,
+  HelpCircle,
+  Flame,
+  Bookmark,
+  Sparkles,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
-import { Challenge, Tag, UserProgressItem, PaginationMeta } from '@/types';
+import { Challenge, Tag, UserProgressItem, PaginationMeta, Difficulty, ChallengeType } from '@/types';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
@@ -20,6 +35,16 @@ interface ChallengesApiResponse {
   meta: PaginationMeta;
   tags: Tag[];
   user_progress: Record<number, UserProgressItem>;
+  bookmarked_ids?: number[];
+}
+
+interface DailyChallengeResponse {
+  challenge: Challenge | null;
+  is_completed_today: boolean;
+  streak: {
+    current_streak: number;
+    longest_streak: number;
+  };
 }
 
 export const ChallengesPage: React.FC = () => {
@@ -29,6 +54,8 @@ export const ChallengesPage: React.FC = () => {
 
   const search = searchParams.get('search') || '';
   const difficulty = searchParams.get('difficulty') || '';
+  const category = searchParams.get('category') || '';
+  const challengeType = searchParams.get('challenge_type') || '';
   const tag = searchParams.get('tag') || '';
   const status = searchParams.get('status') || '';
   const sort = searchParams.get('sort') || 'newest';
@@ -36,11 +63,21 @@ export const ChallengesPage: React.FC = () => {
 
   const [searchInput, setSearchInput] = useState(search);
 
+  // Fetch Daily Challenge
+  const { data: dailyData } = useQuery<DailyChallengeResponse>({
+    queryKey: ['daily-challenge'],
+    queryFn: async () => {
+      const res = await api.get('/daily-challenge');
+      return res.data;
+    },
+  });
+
+  // Fetch Challenges
   const { data, isLoading, isError, refetch } = useQuery<ChallengesApiResponse>({
-    queryKey: ['challenges', { search, difficulty, tag, status, sort, page }],
+    queryKey: ['challenges', { search, difficulty, category, challengeType, tag, status, sort, page }],
     queryFn: async () => {
       const res = await api.get('/challenges', {
-        params: { search, difficulty, tag, status, sort, page, per_page: 10 },
+        params: { search, difficulty, category, challenge_type: challengeType, tag, status, sort, page, per_page: 12 },
       });
       return res.data;
     },
@@ -53,7 +90,7 @@ export const ChallengesPage: React.FC = () => {
     } else {
       next.delete(key);
     }
-    next.set('page', '1'); // Reset to page 1 on filter changes
+    next.set('page', '1');
     setSearchParams(next);
   };
 
@@ -67,16 +104,88 @@ export const ChallengesPage: React.FC = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  const hasActiveFilters = Boolean(search || difficulty || tag || status);
+  const hasActiveFilters = Boolean(search || difficulty || category || challengeType || tag || status);
+
+  const getTypeIcon = (type: ChallengeType) => {
+    switch (type) {
+      case 'sql':
+        return <Table className="w-3.5 h-3.5 text-emerald-400" title="SQL Lab" />;
+      case 'web':
+        return <Layout className="w-3.5 h-3.5 text-blue-400" title="Web Sandbox" />;
+      case 'quiz':
+        return <HelpCircle className="w-3.5 h-3.5 text-indigo-400" title="Concept Quiz" />;
+      default:
+        return <Code2 className="w-3.5 h-3.5 text-violet-400" title="Code Problem" />;
+    }
+  };
+
+  const categories = [
+    { label: 'All', value: '' },
+    { label: 'Algorithms', value: 'algorithms' },
+    { label: 'SQL Lab', value: 'SQL' },
+    { label: 'Data Structures', value: 'data structures' },
+    { label: 'Strings', value: 'strings' },
+    { label: 'Mathematics', value: 'mathematics' },
+    { label: 'Web Dev', value: 'web' },
+    { label: 'DevOps & Git', value: 'Git' },
+  ];
+
+  const difficulties: Array<'All' | Difficulty> = ['All', 'Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-left">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-left space-y-6">
+      {/* Daily Challenge Banner */}
+      {dailyData?.challenge && (
+        <div className="p-5 rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-zinc-900/40 dark:to-zinc-900/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+              <Flame className="w-5 h-5 fill-current" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Daily Challenge
+                </span>
+                {dailyData.streak && dailyData.streak.current_streak > 0 && (
+                  <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 font-bold">
+                    🔥 {dailyData.streak.current_streak} Day Streak
+                  </span>
+                )}
+                {dailyData.is_completed_today && (
+                  <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Solved Today (+50 XP)
+                  </span>
+                )}
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100 mt-0.5">
+                {dailyData.challenge.title}
+              </h3>
+            </div>
+          </div>
+
+          <Link to={`/challenges/${dailyData.challenge.slug}`}>
+            <Button
+              size="sm"
+              className="bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs whitespace-nowrap"
+            >
+              Solve Daily Challenge
+              <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Header & Search */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200 dark:border-zinc-800/80">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-2.5">
             <Code2 className="w-6 h-6 text-violet-600 dark:text-violet-400" />
             {t('challenges.arenaTitle')}
+            {data?.meta?.total !== undefined && (
+              <span className="text-xs font-mono font-normal text-zinc-500">
+                ({data.meta.total} challenges)
+              </span>
+            )}
           </h1>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             {t('challenges.arenaSubtitle')}
@@ -108,35 +217,79 @@ export const ChallengesPage: React.FC = () => {
         </form>
       </div>
 
-      {/* Filters & Sorting Bar */}
-      <div className="py-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+      {/* Category Tabs */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+        {categories.map((cat) => {
+          const isSelected = (!category && cat.value === '') || category === cat.value;
+          const count = cat.value ? data?.meta?.category_counts?.[cat.value] : null;
+
+          return (
+            <button
+              key={cat.label}
+              onClick={() => updateParam('category', cat.value || null)}
+              className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1.5 ${
+                isSelected
+                  ? 'bg-violet-600 text-white font-semibold shadow-xs'
+                  : 'bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200/80'
+              }`}
+            >
+              <span>{cat.label}</span>
+              {count !== undefined && count !== null && (
+                <span className={`text-[10px] px-1.5 rounded-full ${isSelected ? 'bg-violet-700 text-violet-200' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500'}`}>
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Secondary Filters Bar */}
+      <div className="py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-2">
           {/* Difficulty filter buttons */}
           <div className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/60 p-0.5">
-            {['All', 'Easy', 'Medium', 'Hard'].map((diff) => {
+            {difficulties.map((diff) => {
               const active = diff === 'All' ? !difficulty : difficulty === diff;
-              const displayLabel = diff === 'All' ? t('difficulty.all') : getDifficultyLabel(diff, t);
+              const count = diff !== 'All' ? data?.meta?.difficulty_counts?.[diff] : null;
+
               return (
                 <button
                   key={diff}
                   onClick={() => updateParam('difficulty', diff === 'All' ? null : diff)}
-                  className={`px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer flex items-center gap-1 ${
                     active
                       ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-2xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
                   }`}
                 >
-                  {displayLabel}
+                  <span>{diff}</span>
+                  {count !== undefined && count !== null && (
+                    <span className="text-[10px] text-zinc-500 font-mono">({count})</span>
+                  )}
                 </button>
               );
             })}
           </div>
 
+          {/* Challenge Type Dropdown */}
+          <select
+            value={challengeType}
+            onChange={(e) => updateParam('challenge_type', e.target.value || null)}
+            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-hidden focus:border-violet-500 cursor-pointer"
+          >
+            <option value="">All Challenge Types</option>
+            <option value="code">Standard Code</option>
+            <option value="sql">SQL Lab</option>
+            <option value="web">Web Sandbox</option>
+            <option value="quiz">Concept Quiz</option>
+          </select>
+
           {/* Tags Dropdown */}
           <select
             value={tag}
             onChange={(e) => updateParam('tag', e.target.value || null)}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-none focus:border-violet-500 cursor-pointer"
+            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-hidden focus:border-violet-500 cursor-pointer"
           >
             <option value="">{t('challenges.allTopics')}</option>
             {data?.tags?.map((tItem) => (
@@ -151,12 +304,13 @@ export const ChallengesPage: React.FC = () => {
             <select
               value={status}
               onChange={(e) => updateParam('status', e.target.value || null)}
-              className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-none focus:border-violet-500 cursor-pointer"
+              className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-hidden focus:border-violet-500 cursor-pointer"
             >
               <option value="">{t('challenges.allStatuses')}</option>
               <option value="solved">{t('common.solved')}</option>
               <option value="attempted">{t('common.attempted')}</option>
               <option value="unsolved">{t('common.unsolved')}</option>
+              <option value="bookmarked">Bookmarked Favorites</option>
             </select>
           )}
 
@@ -179,7 +333,7 @@ export const ChallengesPage: React.FC = () => {
           <select
             value={sort}
             onChange={(e) => updateParam('sort', e.target.value)}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-none focus:border-violet-500 cursor-pointer"
+            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-700 dark:text-zinc-300 text-xs focus:outline-hidden focus:border-violet-500 cursor-pointer"
           >
             <option value="newest">{t('challenges.sortNewest')}</option>
             <option value="difficulty_asc">{t('challenges.sortDiffAsc')}</option>
@@ -190,7 +344,7 @@ export const ChallengesPage: React.FC = () => {
       </div>
 
       {/* Challenges Table */}
-      <div className="mt-2 border border-zinc-200/90 dark:border-zinc-800/80 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/30 shadow-xs">
+      <div className="border border-zinc-200/90 dark:border-zinc-800/80 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/30 shadow-xs">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/90 dark:bg-zinc-900/80 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
@@ -198,7 +352,7 @@ export const ChallengesPage: React.FC = () => {
               <th className="py-3 px-4">{t('challenges.table.title')}</th>
               <th className="py-3 px-4 w-28">{t('challenges.table.difficulty')}</th>
               <th className="py-3 px-4 hidden md:table-cell">{t('challenges.table.topics')}</th>
-              <th className="py-3 px-4 w-24 text-right">{t('challenges.table.tests')}</th>
+              <th className="py-3 px-4 w-24 text-right">Estimate</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200/70 dark:divide-zinc-800/60 text-sm">
@@ -238,72 +392,80 @@ export const ChallengesPage: React.FC = () => {
               <tr>
                 <td colSpan={user ? 5 : 4} className="py-16 text-center text-zinc-500">
                   <p className="text-zinc-800 dark:text-zinc-300 font-medium text-sm">{t('challenges.noChallengesFound')}</p>
-                  <p className="text-xs text-zinc-500 mt-1">
-                    {t('challenges.noChallengesAdjust')}
-                  </p>
-                  {hasActiveFilters && (
-                    <Button variant="outline" size="sm" className="mt-4" onClick={clearAllFilters}>
-                      {t('challenges.clearFilters')}
-                    </Button>
-                  )}
+                  <p className="text-xs text-zinc-500 mt-1">{t('challenges.adjustFilters')}</p>
+                  <Button variant="secondary" size="sm" className="mt-4" onClick={clearAllFilters}>
+                    {t('challenges.clearAllFilters')}
+                  </Button>
                 </td>
               </tr>
             ) : (
-              data?.data?.map((challengeRaw) => {
-                const challenge = getTranslatedChallenge(challengeRaw, i18n.language);
-                const userProg = data.user_progress?.[challenge.id];
-                const isSolved = userProg?.solved;
+              data?.data?.map((rawItem) => {
+                const item = getTranslatedChallenge(rawItem, i18n.language);
+                const progress = data.user_progress?.[item.id];
+                const isSolved = progress?.solved;
+                const isAttempted = progress && !progress.solved && progress.attempts_count > 0;
+                const isBookmarked = data.bookmarked_ids?.includes(item.id);
 
                 return (
                   <tr
-                    key={challenge.id}
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer"
+                    key={item.id}
+                    className="hover:bg-zinc-50/80 dark:hover:bg-zinc-800/30 transition-colors group"
                   >
                     {user && (
                       <td className="py-3.5 px-4 text-center">
                         {isSolved ? (
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400 mx-auto" />
-                        ) : userProg ? (
-                          <span className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400 inline-block mx-auto" title={t('common.attempted')} />
+                        ) : isAttempted ? (
+                          <div
+                            className="w-2.5 h-2.5 rounded-full bg-amber-500 mx-auto"
+                            title={t('common.attempted')}
+                          />
                         ) : (
                           <Circle className="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-700 mx-auto" />
                         )}
                       </td>
                     )}
-
                     <td className="py-3.5 px-4">
-                      <Link
-                        to={`/challenges/${challenge.slug}`}
-                        className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors block"
-                      >
-                        {challenge.title}
-                      </Link>
-                      <p className="text-xs text-zinc-500 line-clamp-1 mt-0.5">
-                        {challenge.description.slice(0, 100)}...
+                      <div className="flex items-center gap-2">
+                        {getTypeIcon(item.challenge_type)}
+                        <Link
+                          to={`/challenges/${item.slug}`}
+                          className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+                        >
+                          {item.title}
+                        </Link>
+                        {item.is_daily && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-500 font-bold">
+                            DAILY
+                          </span>
+                        )}
+                        {isBookmarked && (
+                          <Bookmark className="w-3 h-3 text-amber-500 fill-current" />
+                        )}
+                      </div>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5 font-normal">
+                        {item.description}
                       </p>
                     </td>
-
                     <td className="py-3.5 px-4">
-                      <Badge variant={challenge.difficulty} size="sm">
-                        {getDifficultyLabel(challenge.difficulty, t)}
+                      <Badge variant={item.difficulty as any} size="sm">
+                        {getDifficultyLabel(item.difficulty, t)}
                       </Badge>
                     </td>
-
                     <td className="py-3.5 px-4 hidden md:table-cell">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {challenge.tags.map((tItem) => (
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {item.tags?.slice(0, 3).map((tagItem) => (
                           <span
-                            key={tItem.id}
-                            className="text-[11px] text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 px-2 py-0.5 rounded"
+                            key={tagItem.id}
+                            className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono"
                           >
-                            {getTranslatedTagName(tItem.slug, tItem.name, i18n.language)}
+                            #{getTranslatedTagName(tagItem.slug, tagItem.name, i18n.language)}
                           </span>
                         ))}
                       </div>
                     </td>
-
-                    <td className="py-3.5 px-4 text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                      {challenge.total_test_cases_count}
+                    <td className="py-3.5 px-4 text-right font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                      ~{item.estimated_time_min || 20}m
                     </td>
                   </tr>
                 );
@@ -313,38 +475,32 @@ export const ChallengesPage: React.FC = () => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
-      {data?.meta && data.meta.last_page > 1 && (
-        <div className="mt-6 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+      {/* Pagination */}
+      {data && data.meta.total > 0 && (
+        <div className="flex items-center justify-between pt-4 text-xs text-zinc-500 dark:text-zinc-400">
           <div>
-            {t('challenges.pagination', {
-              start: (page - 1) * 10 + 1,
-              end: Math.min(page * 10, data.meta.total),
-              total: data.meta.total,
-            })}
+            Showing {(data.meta.current_page - 1) * data.meta.per_page + 1} to{' '}
+            {Math.min(data.meta.current_page * data.meta.per_page, data.meta.total)} of {data.meta.total} challenges
           </div>
-
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
-              disabled={page <= 1}
-              onClick={() => updateParam('page', (page - 1).toString())}
-              leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
+              disabled={data.meta.current_page <= 1}
+              onClick={() => updateParam('page', (data.meta.current_page - 1).toString())}
             >
-              {t('common.previous')}
+              <ChevronLeft className="w-4 h-4 mr-1" /> Previous
             </Button>
-            <span className="px-2 font-mono text-zinc-700 dark:text-zinc-300">
-              {page} / {data.meta.last_page}
+            <span className="font-mono px-2">
+              Page {data.meta.current_page} of {data.meta.last_page}
             </span>
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
-              disabled={page >= data.meta.last_page}
-              onClick={() => updateParam('page', (page + 1).toString())}
-              rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
+              disabled={data.meta.current_page >= data.meta.last_page}
+              onClick={() => updateParam('page', (data.meta.current_page + 1).toString())}
             >
-              {t('common.next')}
+              Next <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
         </div>
