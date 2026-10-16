@@ -35,7 +35,10 @@ class LearningReportTest extends TestCase
             'last_activity_date' => now()->toDateString(),
         ]);
 
-        $challenge = Challenge::factory()->create([
+        $challenge = Challenge::create([
+            'slug' => 'sample-algo-test',
+            'title' => 'Sample Algorithm Challenge',
+            'description' => 'Test description for algorithms challenge',
             'category' => 'algorithms',
             'difficulty' => 'Medium',
             'is_published' => true,
