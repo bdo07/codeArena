@@ -178,7 +178,7 @@ class PlatformFeaturesTest extends TestCase
                 'passed' => true,
                 'correct_count' => 1,
                 'total_questions' => 1,
-                'score_percent' => 100,
+                'score' => 100,
             ]);
     }
 
