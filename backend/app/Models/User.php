@@ -114,6 +114,11 @@ class User extends Authenticatable
         return $this->hasMany(ContestParticipant::class);
     }
 
+    public function snakeGames(): HasMany
+    {
+        return $this->hasMany(SnakeGame::class);
+    }
+
     public function roadmapProgress(): HasMany
     {
         return $this->hasMany(UserRoadmapProgress::class);
