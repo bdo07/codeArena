@@ -184,7 +184,7 @@ export const InterviewPage: React.FC = () => {
         if (prev <= 1) {
           clearInterval(timer);
           // Auto submit when time expires
-          handleFinalSubmit(true);
+          handleFinalSubmitRef.current(true);
           return 0;
         }
         return prev - 1;
@@ -284,6 +284,7 @@ export const InterviewPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+  handleFinalSubmitRef.current = handleFinalSubmit;
 
   // Current active question
   const currentQ = activeSession?.questions[currentQuestionIndex];
