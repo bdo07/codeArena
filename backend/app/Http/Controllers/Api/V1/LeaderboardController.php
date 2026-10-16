@@ -35,6 +35,7 @@ class LeaderboardController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'username' => $user->username,
+                'avatar_url' => $user->avatar_url,
                 'xp' => $user->xp,
                 'level' => $user->calculateLevel(),
                 'solved_count' => $user->solved_count,
