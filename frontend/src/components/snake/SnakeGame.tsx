@@ -28,7 +28,6 @@ import { SnakePersonalStats } from '@/types';
 import {
   Direction,
   Position,
-  DIR_OFFSETS,
   isOppositeDirection,
   getNextHead,
   checkWallCollision,
