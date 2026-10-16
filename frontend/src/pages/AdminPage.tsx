@@ -691,12 +691,12 @@ export const AdminPage: React.FC = () => {
                   </div>
 
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                    analytics.evaluator_health?.available
+                    analytics.evaluator_health?.online
                       ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40'
                       : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40'
                   }`}>
-                    <span className={`w-2 h-2 rounded-full ${analytics.evaluator_health?.available ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                    {analytics.evaluator_health?.available
+                    <span className={`w-2 h-2 rounded-full ${analytics.evaluator_health?.online ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                    {analytics.evaluator_health?.online
                       ? t('admin.analytics.judge0Online', 'Judge0 Online & Healthy')
                       : t('admin.analytics.judge0Offline', 'Safe In-Memory Fallback Active')}
                   </span>
@@ -704,15 +704,15 @@ export const AdminPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
                   <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
-                    <span className="text-zinc-500">Latency:</span>{' '}
+                    <span className="text-zinc-500">Judge0 Version:</span>{' '}
                     <span className="font-mono font-medium text-zinc-900 dark:text-zinc-100">
-                      {analytics.evaluator_health?.latency_ms ? `${analytics.evaluator_health.latency_ms} ms` : 'N/A'}
+                      {analytics.evaluator_health?.version || 'N/A'}
                     </span>
                   </div>
                   <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
                     <span className="text-zinc-500">Judge0 Languages:</span>{' '}
                     <span className="font-mono font-medium text-zinc-900 dark:text-zinc-100">
-                      {analytics.evaluator_health?.language_count ?? 0}
+                      {analytics.evaluator_health?.supported_languages_count ?? 0}
                     </span>
                   </div>
                   <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
