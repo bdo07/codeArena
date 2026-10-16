@@ -60,6 +60,28 @@ export const Navbar: React.FC = () => {
                 <Trophy className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                 {t('nav.leaderboard')}
               </Link>
+              <Link
+                to="/roadmaps"
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                  isActive('/roadmaps')
+                    ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                }`}
+              >
+                <Compass className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                Roadmaps
+              </Link>
+              <Link
+                to="/contests"
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                  isActive('/contests')
+                    ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                }`}
+              >
+                <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                Contests
+              </Link>
               {user && (
                 <Link
                   to="/dashboard"
@@ -96,6 +118,9 @@ export const Navbar: React.FC = () => {
 
             {/* Theme Toggle */}
             <ThemeToggle />
+
+            {/* Notification Bell (if authenticated) */}
+            {user && <NotificationBell />}
 
             <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
 
