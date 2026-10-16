@@ -88,7 +88,6 @@ class ChallengeImportExportService
                         'sql_solution' => $item['sql_solution'] ?? null,
                         'web_template' => $item['web_template'] ?? null,
                         'quiz_data' => $item['quiz_data'] ?? null,
-                        'supported_languages' => $item['supported_languages'] ?? ['javascript', 'python', 'cpp'],
                         'is_daily' => (bool) ($item['is_daily'] ?? false),
                         'daily_date' => $item['daily_date'] ?? null,
                     ];
@@ -120,11 +119,15 @@ class ChallengeImportExportService
                     if (!empty($item['test_cases']) && is_array($item['test_cases'])) {
                         $challenge->testCases()->delete();
                         foreach ($item['test_cases'] as $pos => $tc) {
+                            $isSample = isset($tc['is_sample'])
+                                ? (bool) $tc['is_sample']
+                                : !((bool) ($tc['is_hidden'] ?? false));
+
                             $challenge->testCases()->create([
-                                'input' => (string) ($tc['input'] ?? ''),
+                                'input_data' => (string) ($tc['input'] ?? $tc['input_data'] ?? ''),
                                 'expected_output' => (string) ($tc['expected_output'] ?? ''),
-                                'is_hidden' => (bool) ($tc['is_hidden'] ?? false),
-                                'explanation' => $tc['explanation'] ?? null,
+                                'is_sample' => $isSample,
+                                'points' => (int) ($tc['points'] ?? 25),
                                 'position' => (int) ($tc['position'] ?? $pos + 1),
                             ]);
                         }
