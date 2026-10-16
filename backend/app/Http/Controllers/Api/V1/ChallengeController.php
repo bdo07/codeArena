@@ -333,6 +333,8 @@ class ChallengeController extends Controller
 
         $request->validate([
             'answers' => 'required|array',
+        ], [
+            'answers.required' => 'The answers field is required. Please provide answers to the quiz questions.',
         ]);
 
         $userAnswers = $request->input('answers');
@@ -346,13 +348,17 @@ class ChallengeController extends Controller
         }
 
         $total = count($questions);
+        if ($total === 0) {
+            return response()->json(['message' => 'No questions found for this quiz challenge.'], 400);
+        }
+
         $correct = 0;
         $review = [];
 
         foreach ($questions as $index => $q) {
             $qId = $q['id'] ?? (string)$index;
             $correctAns = $q['correct_index'] ?? $q['answer'] ?? 0;
-            $userAns = $userAnswers[$qId] ?? null;
+            $userAns = $userAnswers[$qId] ?? ($userAnswers[(string)$index] ?? ($userAnswers[$index] ?? null));
             $isCorrect = ($userAns !== null && (int)$userAns === (int)$correctAns);
 
             if ($isCorrect) {

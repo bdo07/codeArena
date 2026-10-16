@@ -31,15 +31,39 @@ class ChallengeResource extends JsonResource
             'sql_schema' => $this->sql_schema,
             'sql_seed' => $this->sql_seed,
             'web_template' => $this->web_template,
-            'quiz_data' => $this->quiz_data ? [
-                'questions' => array_map(function ($q) {
-                    return [
-                        'id' => $q['id'],
-                        'question' => $q['question'],
-                        'options' => $q['options'],
-                    ];
-                }, $this->quiz_data['questions'] ?? [])
-            ] : null,
+            'quiz_data' => (function () {
+                $rawQuiz = $this->quiz_data;
+                if (! $rawQuiz) {
+                    return null;
+                }
+                $questions = [];
+                if (is_array($rawQuiz)) {
+                    $questions = isset($rawQuiz['questions']) && is_array($rawQuiz['questions'])
+                        ? $rawQuiz['questions']
+                        : $rawQuiz;
+                } elseif (is_string($rawQuiz)) {
+                    $decoded = json_decode($rawQuiz, true);
+                    if (is_array($decoded)) {
+                        $questions = isset($decoded['questions']) && is_array($decoded['questions'])
+                            ? $decoded['questions']
+                            : $decoded;
+                    }
+                }
+
+                if (empty($questions) || ! is_array($questions)) {
+                    return null;
+                }
+
+                return [
+                    'questions' => array_values(array_map(function ($q, $index) {
+                        return [
+                            'id' => $q['id'] ?? (string) $index,
+                            'question' => $q['question'] ?? '',
+                            'options' => $q['options'] ?? [],
+                        ];
+                    }, $questions, array_keys($questions))),
+                ];
+            })(),
             'is_daily' => (bool) $this->is_daily,
             'daily_date' => $this->daily_date?->toDateString(),
             'supported_languages' => $this->supported_languages,
