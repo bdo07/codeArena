@@ -312,7 +312,7 @@ export const SnakeGame: React.FC = () => {
   }, [status, applesEaten, gameTick]);
 
   // Render canvas frame
-  useEffect(() => {
+  const drawGame = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -367,6 +367,7 @@ export const SnakeGame: React.FC = () => {
 
     // Draw Snake
     const snake = snakeRef.current;
+    const currentDir = dirRef.current;
     snake.forEach((seg, idx) => {
       const isHead = idx === 0;
       const x = seg.x * cellSize;
@@ -402,13 +403,13 @@ export const SnakeGame: React.FC = () => {
         let eye1: Position;
         let eye2: Position;
 
-        if (dirRef.current === 'RIGHT') {
+        if (currentDir === 'RIGHT') {
           eye1 = { x: x + cellSize - eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + cellSize - eyeOffset, y: y + cellSize - eyeOffset };
-        } else if (dirRef.current === 'LEFT') {
+        } else if (currentDir === 'LEFT') {
           eye1 = { x: x + eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + eyeOffset, y: y + cellSize - eyeOffset };
-        } else if (dirRef.current === 'UP') {
+        } else if (currentDir === 'UP') {
           eye1 = { x: x + eyeOffset, y: y + eyeOffset };
           eye2 = { x: x + cellSize - eyeOffset, y: y + eyeOffset };
         } else {
@@ -429,7 +430,22 @@ export const SnakeGame: React.FC = () => {
         ctx.fill();
       }
     });
-  }, [status, score, applesEaten]);
+  }, []);
+
+  // Redraw canvas on mount, status change, or theme toggle
+  useEffect(() => {
+    drawGame();
+
+    const observer = new MutationObserver(() => {
+      drawGame();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, [drawGame, status]);
 
   // Keyboard navigation & controls
   useEffect(() => {
