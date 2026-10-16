@@ -486,3 +486,134 @@ export interface AdminAnalytics {
     error?: string;
   };
 }
+
+// -------------------------------------------------------------
+// CodeArena Quest Types
+// -------------------------------------------------------------
+
+export type QuestStageStatus = 'locked' | 'available' | 'in_progress' | 'completed';
+
+export interface QuestPathItem {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+  difficulty: Difficulty;
+  estimated_hours: number;
+  position: number;
+  reward_xp: number;
+  reward_badge?: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    icon: string;
+  } | null;
+  total_stages: number;
+  completed_stages: number;
+  total_challenges: number;
+  completed_challenges: number;
+  progress_percentage: number;
+  is_completed: boolean;
+  is_reward_claimed: boolean;
+}
+
+export interface QuestChallengeNode {
+  id: number;
+  title: string;
+  slug: string;
+  category: string;
+  difficulty: Difficulty;
+  type?: string;
+  is_solved: boolean;
+}
+
+export interface QuestStageDetail {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  position: number;
+  reward_xp: number;
+  reward_badge?: {
+    id: number;
+    name: string;
+    slug: string;
+    icon: string;
+  } | null;
+  status: QuestStageStatus;
+  prerequisite?: {
+    id: number;
+    slug: string;
+    title: string;
+    is_met: boolean;
+  } | null;
+  total_challenges: number;
+  solved_challenges: number;
+  is_completed: boolean;
+  reward_claimed: boolean;
+  can_claim_reward: boolean;
+  challenges: QuestChallengeNode[];
+}
+
+export interface QuestPathDetail {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+  difficulty: Difficulty;
+  estimated_hours: number;
+  position: number;
+  reward_xp: number;
+  reward_badge?: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    icon: string;
+  } | null;
+  stages: QuestStageDetail[];
+  is_all_completed: boolean;
+  is_reward_claimed: boolean;
+  can_claim_path_reward: boolean;
+}
+
+export interface DailyMissionItem {
+  id: number | null;
+  mission_type: string;
+  title: string;
+  description: string;
+  target_count: number;
+  current_count: number;
+  reward_xp: number;
+  is_completed: boolean;
+  reward_claimed: boolean;
+  can_claim: boolean;
+}
+
+export interface ProgressionDashboardData {
+  total_paths: number;
+  completed_paths: number;
+  total_stages: number;
+  completed_stages: number;
+  skills_practiced: Array<{
+    skill: string;
+    count: number;
+  }>;
+  next_recommended_challenge: {
+    id: number;
+    title: string;
+    slug: string;
+    category: string;
+    difficulty: Difficulty;
+    type?: string;
+    reason: string;
+    path_title?: string;
+    stage_title?: string;
+  } | null;
+}
+
