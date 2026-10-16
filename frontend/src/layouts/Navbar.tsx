@@ -161,11 +161,14 @@ export const Navbar: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center gap-2 p-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
+                    className="flex items-center gap-2 p-1 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
                   >
-                    <div className="w-7 h-7 rounded-full bg-violet-100 dark:bg-violet-950/60 border border-violet-300 dark:border-violet-700/40 text-violet-700 dark:text-violet-300 flex items-center justify-center font-medium text-xs">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
+                    <Avatar
+                      src={user.avatar_url}
+                      name={user.name}
+                      size="sm"
+                      className="ring-1 ring-violet-500/30"
+                    />
                     <span className="text-xs font-medium max-w-[100px] truncate">
                       {user.username}
                     </span>
@@ -173,12 +176,17 @@ export const Navbar: React.FC = () => {
 
                   {isProfileOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-xl py-1 z-50 text-left"
+                      className="absolute right-0 mt-2 w-52 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-xl py-1 z-50 text-left"
                       onMouseLeave={() => setIsProfileOpen(false)}
                     >
-                      <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800/80">
-                        <p className="text-xs font-medium text-zinc-900 dark:text-zinc-200 truncate">{user.name}</p>
-                        <p className="text-[11px] text-zinc-500 truncate">@{user.username}</p>
+                      <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800/80 flex items-center gap-2.5">
+                        <Avatar src={user.avatar_url} name={user.name} size="sm" />
+                        <div className="truncate">
+                          <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 truncate">
+                            {user.name}
+                          </p>
+                          <p className="text-[11px] text-zinc-500 truncate">@{user.username}</p>
+                        </div>
                       </div>
 
                       <Link
@@ -187,8 +195,30 @@ export const Navbar: React.FC = () => {
                         className="flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
                       >
                         <UserIcon className="w-3.5 h-3.5" />
-                        {t('nav.myProfile')}
+                        {t('nav.myProfile', 'My Profile')}
                       </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-left cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        {t('profile.editProfile', 'Edit Profile')}
+                      </button>
+
+                      <Link
+                        to={`/profile/${user.username}?edit=true`}
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
+                      >
+                        <Settings className="w-3.5 h-3.5" />
+                        {t('nav.settings', 'Settings')}
+                      </Link>
+
                       <Link
                         to="/dashboard"
                         onClick={() => setIsProfileOpen(false)}
@@ -197,6 +227,7 @@ export const Navbar: React.FC = () => {
                         <LayoutDashboard className="w-3.5 h-3.5" />
                         {t('nav.dashboard')}
                       </Link>
+
                       {user.role === 'admin' && (
                         <Link
                           to="/admin"
