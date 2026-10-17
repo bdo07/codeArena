@@ -158,7 +158,7 @@ export const WeaknessDetectorView: React.FC<WeaknessDetectorViewProps> = () => {
         <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60">
           <div className="text-zinc-500 dark:text-zinc-400 font-medium">{t('weakness.overallAccuracy', 'Overall Accuracy')}</div>
           <div className="mt-1 text-2xl font-extrabold font-mono text-zinc-900 dark:text-zinc-100">
-            {data.summary.overallAccuracy ?? data.summary.overall_accuracy}%
+            {data.summary.overall_accuracy}%
           </div>
           <div className="mt-1 text-[11px] text-zinc-400">
             {data.summary.total_submissions} {t('weakness.totalSubmissions', 'total attempts')}

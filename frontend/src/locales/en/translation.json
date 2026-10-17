@@ -735,7 +735,8 @@
     "strongestTopics": "Strongest Technical Domains",
     "needingPractice": "Recommended Practice Focus",
     "recommendedNext": "Targeted Challenges for Improvement",
-    "methodologyTitle": "Metrics Calculation & Data Governance"
+    "methodologyTitle": "Metrics Calculation & Data Governance",
+    "tabOverview": "Performance Overview"
   },
   "shareCard": {
     "openModalButton": "Share Progress Card",
@@ -822,5 +823,38 @@
     "viewAll": "View all results",
     "viewAllChallenges": "View all challenges",
     "challengesCount": "challenges"
+  },
+  "weakness": {
+    "title": "Smart Weakness Detector",
+    "subtitle": "Statistical diagnosis based on actual submission outcomes and execution errors. Distinguishes verified struggle areas from insufficient data.",
+    "tabTitle": "Smart Weakness Detector",
+    "refresh": "Recalculate Diagnosis",
+    "errorLoading": "Failed to load skill weakness insights.",
+    "onboardingTitle": "Calibration Phase: In Progress",
+    "calibrationProgress": "Calibration Progress",
+    "overallAccuracy": "Overall Accuracy",
+    "totalSubmissions": "total attempts",
+    "weaknessesIdentified": "Weaknesses",
+    "needFocus": "Requires targeted practice",
+    "strengthsIdentified": "Mastered Strengths",
+    "consistentSolveRate": "success rate",
+    "underEvaluation": "Under Evaluation",
+    "attemptsRecorded": "attempts (insufficient data)",
+    "verifiedWeaknessesTitle": "Priority Growth Areas",
+    "highPriority": "High Priority",
+    "moderatePriority": "Moderate Priority",
+    "passRate": "Pass Rate",
+    "dominantPitfall": "Primary Pitfall",
+    "trendImproving": "Improving trend",
+    "trendDeclining": "Declining trend",
+    "trendSteady": "Steady",
+    "viewPracticeProblems": "Browse unsolved problems in",
+    "targetedRecommendations": "Recommended Next Challenges",
+    "targetedRecommendationsDesc": "Tailored problems selected to systematically reinforce your weak areas and eliminate recurring mistakes.",
+    "whyRecommended": "Why recommended",
+    "practiceNow": "Practice Now",
+    "strengthsTitle": "Demonstrated Strengths",
+    "insufficientDataTitle": "Topics Under Calibration (<3 Attempts)",
+    "insufficientDataDesc": "These topics do not have enough attempts yet for statistical confidence. CodeArena will evaluate them once at least 3 attempts are recorded."
   }
 }

@@ -735,7 +735,8 @@
     "strongestTopics": "Domaines Techniques les Plus Forts",
     "needingPractice": "Axes d'Entraînement Recommandés",
     "recommendedNext": "Défis Ciblés pour Progresser",
-    "methodologyTitle": "Calcul des Métriques & Gouvernance des Données"
+    "methodologyTitle": "Calcul des Métriques & Gouvernance des Données",
+    "tabOverview": "Aperçu des Performances"
   },
   "shareCard": {
     "openModalButton": "Partager la Carte de Progression",
@@ -822,5 +823,38 @@
     "viewAll": "Voir tous les résultats",
     "viewAllChallenges": "Voir tous les défis",
     "challengesCount": "défis"
+  },
+  "weakness": {
+    "title": "Détecteur de Faiblesses",
+    "subtitle": "Diagnostic statistique basé sur les résultats réels de soumission et les erreurs d'exécution. Distingue les difficultés avérées du manque de données.",
+    "tabTitle": "Détecteur de Faiblesses",
+    "refresh": "Recalculer le Diagnostic",
+    "errorLoading": "Impossible de charger les diagnostics de compétences.",
+    "onboardingTitle": "Phase d'Étalonnage en Cours",
+    "calibrationProgress": "Progression de l'Étalonnage",
+    "overallAccuracy": "Précision Globale",
+    "totalSubmissions": "tentatives au total",
+    "weaknessesIdentified": "Faiblesses",
+    "needFocus": "Nécessite un entraînement ciblé",
+    "strengthsIdentified": "Points Forts Confirmés",
+    "consistentSolveRate": "taux de réussite",
+    "underEvaluation": "En Cours d'Évaluation",
+    "attemptsRecorded": "tentatives (données insuffisantes)",
+    "verifiedWeaknessesTitle": "Axes d'Amélioration Prioritaires",
+    "highPriority": "Priorité Haute",
+    "moderatePriority": "Priorité Modérée",
+    "passRate": "Taux de Réussite",
+    "dominantPitfall": "Obstacle Principal",
+    "trendImproving": "Tendance en hausse",
+    "trendDeclining": "Tendance en baisse",
+    "trendSteady": "Régulier",
+    "viewPracticeProblems": "Explorer les défis non résolus en",
+    "targetedRecommendations": "Défis Ciblés Recommandés",
+    "targetedRecommendationsDesc": "Problèmes sélectionnés sur mesure pour renforcer méthodiquement vos lacunes et corriger les erreurs récurrentes.",
+    "whyRecommended": "Pourquoi ce défi",
+    "practiceNow": "S'entraîner",
+    "strengthsTitle": "Points Forts Démontrés",
+    "insufficientDataTitle": "Sujets en Étalonnage (<3 Tentatives)",
+    "insufficientDataDesc": "Ces sujets n'ont pas encore assez de tentatives pour une certitude statistique. CodeArena les diagnostiquera dès que 3 tentatives seront enregistrées."
   }
 }

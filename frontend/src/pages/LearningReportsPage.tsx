@@ -43,6 +43,18 @@ export const LearningReportsPage: React.FC = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') === 'weaknesses' ? 'weaknesses' : 'report';
+
+  const setActiveTab = (tab: 'report' | 'weaknesses') => {
+    const next = new URLSearchParams(searchParams);
+    if (tab === 'weaknesses') {
+      next.set('tab', 'weaknesses');
+    } else {
+      next.delete('tab');
+    }
+    setSearchParams(next);
+  };
 
   const [range, setRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
   const [report, setReport] = useState<LearningReportData | null>(null);
@@ -173,10 +185,46 @@ export const LearningReportsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* View Switcher Tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-2 flex items-center gap-3 print:hidden">
+        <button
+          type="button"
+          onClick={() => setActiveTab('report')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            activeTab === 'report'
+              ? 'bg-emerald-600 text-white shadow-xs'
+              : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+          }`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          <span>{t('reports.tabOverview', 'Performance Overview')}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('weaknesses')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            activeTab === 'weaknesses'
+              ? 'bg-rose-600 text-white shadow-xs'
+              : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+          }`}
+        >
+          <ShieldAlert className="w-4 h-4" />
+          <span>{t('weakness.tabTitle', 'Smart Weakness Detector')}</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 font-mono">
+            AI-Free
+          </span>
+        </button>
+      </div>
+
       {/* Main Report Container */}
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 print:p-0 print:space-y-6">
-        {/* Printable Official Header */}
-        <div className="hidden print:flex items-center justify-between border-b pb-4 mb-6">
+        {activeTab === 'weaknesses' ? (
+          <WeaknessDetectorView />
+        ) : (
+          <>
+            {/* Printable Official Header */}
+            <div className="hidden print:flex items-center justify-between border-b pb-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold">CodeArena Learning Report</h1>
             <p className="text-xs text-zinc-500">
@@ -649,6 +697,8 @@ export const LearningReportsPage: React.FC = () => {
             </div>
           </>
         ) : null}
+          </>
+        )}
       </div>
 
       {/* Share Progress Card Modal */}
