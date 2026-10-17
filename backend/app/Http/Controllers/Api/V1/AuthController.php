@@ -66,6 +66,26 @@ class AuthController extends Controller
             $request->session()->regenerate();
         }
         $user = Auth::user();
+
+        if ($user->trashed()) {
+            Auth::guard('web')->logout();
+            return response()->json([
+                'message' => 'This account has been deleted.',
+                'account_status' => 'deleted',
+            ], 403);
+        }
+
+        if ($user->isBanned()) {
+            Auth::guard('web')->logout();
+            return response()->json([
+                'message' => 'Your account has been permanently banned from CodeArena.',
+                'account_status' => 'banned',
+                'reason' => $user->ban_reason,
+                'banned_at' => $user->banned_at?->toIso8601String(),
+                'can_appeal' => true,
+            ], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
