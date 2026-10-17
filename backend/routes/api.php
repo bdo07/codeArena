@@ -147,6 +147,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/submissions/{submission}', [SubmissionController::class, 'show']);
         Route::get('/reports/learning', [LearningReportController::class, 'show']);
         Route::get('/reports/learning/{userId}', [LearningReportController::class, 'show']);
+        Route::get('/insights/weaknesses', [WeaknessController::class, 'index']);
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
         Route::get('/interviews/history', [InterviewController::class, 'history']);
         Route::get('/snake/stats', [SnakeGameController::class, 'stats']);
