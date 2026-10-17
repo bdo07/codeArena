@@ -767,5 +767,27 @@
     "revokeToken": "Regenerate link to revoke old URL",
     "privateTitle": "Private or Expired Card",
     "privateOrNotFound": "This achievement card is private or does not exist."
+  },
+  "moderation": {
+    "accountSuspendedBanner": "Account Access Restricted",
+    "defaultSuspensionReason": "Violations of CodeArena Community Guidelines.",
+    "indefinite": "Indefinite",
+    "suspendedUntil": "Until {{date}}",
+    "submitAppealBtn": "Appeal Account Action",
+    "appealTitle": "Account Moderation & Appeal",
+    "appealSubtitle": "Submit a formal review request to the moderation team.",
+    "restrictionDetails": "Account Restriction Details",
+    "reasonLabel": "Reason",
+    "expiresLabel": "Expires",
+    "durationLabel": "Duration",
+    "appealStatusLabel": "Appeal Status",
+    "appealPendingDesc": "Your appeal has been received and is currently under review by our administrators.",
+    "appealApprovedDesc": "Your appeal was approved and restrictions have been lifted.",
+    "appealRejectedDesc": "Your appeal was reviewed and rejected.",
+    "appealExplanation": "Why should this decision be reviewed?",
+    "appealPlaceholder": "Please provide details or context regarding the action, account ownership, or clarification...",
+    "contactEmailLabel": "Contact Email for Resolution Updates (Optional)",
+    "appealSubmittedSuccess": "Your appeal has been submitted successfully and is in the review queue.",
+    "appealSubmitError": "Failed to submit appeal. Please try again later."
   }
 }
