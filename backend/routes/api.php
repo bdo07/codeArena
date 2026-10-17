@@ -112,6 +112,10 @@ Route::prefix('v1')->group(function () {
         ->middleware('throttle:30,1');
     Route::get('/interviews/{token}/result', [InterviewController::class, 'result']);
 
+    // 13. Public Shareable Progress Card
+    Route::get('/share-card/public/{token}', [ShareableCardController::class, 'showPublic'])
+        ->middleware('throttle:60,1');
+
     // Authenticated Endpoints
     Route::middleware('auth:sanctum')->group(function () {
 
