@@ -9,13 +9,10 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  Cpu,
   History,
-  FileCode,
   Info,
   ChevronRight,
   AlertTriangle,
-  Award,
   Sparkles,
   Bookmark,
   Lightbulb,
@@ -23,6 +20,7 @@ import {
   MessageSquare,
   AlertCircle,
 } from 'lucide-react';
+import { MonacoLoadingSkeleton } from '@/components/ui/MonacoLoadingSkeleton';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
 import { Challenge, RunResult, SubmitResult, Submission, LanguageCatalogItem } from '@/types';
@@ -593,6 +591,7 @@ export const WorkspacePage: React.FC = () => {
               <div className="flex-1 min-h-[300px] border-b border-zinc-200 dark:border-zinc-800/80 relative">
                 <Editor
                   height="100%"
+                  loading={<MonacoLoadingSkeleton />}
                   theme={theme === 'dark' ? 'vs-dark' : 'light'}
                   language={currentLangMeta?.monaco_mode || language}
                   value={code}
