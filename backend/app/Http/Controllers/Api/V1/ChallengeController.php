@@ -19,6 +19,7 @@ use App\Services\SubmissionService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ChallengeController extends Controller
 {
@@ -139,21 +140,27 @@ class ChallengeController extends Controller
             }
         }
 
-        // Real counts for filter chips
-        $categoryCounts = Challenge::where('is_published', true)
-            ->selectRaw('category, count(*) as count')
-            ->groupBy('category')
-            ->pluck('count', 'category');
+        // Cached real counts for filter chips (2-minute TTL)
+        $filterCounts = Cache::remember('published_challenges_filter_counts', 120, function () {
+            return [
+                'categories' => Challenge::where('is_published', true)
+                    ->selectRaw('category, count(*) as count')
+                    ->groupBy('category')
+                    ->pluck('count', 'category'),
+                'difficulties' => Challenge::where('is_published', true)
+                    ->selectRaw('difficulty, count(*) as count')
+                    ->groupBy('difficulty')
+                    ->pluck('count', 'difficulty'),
+                'types' => Challenge::where('is_published', true)
+                    ->selectRaw('challenge_type, count(*) as count')
+                    ->groupBy('challenge_type')
+                    ->pluck('count', 'challenge_type'),
+            ];
+        });
 
-        $difficultyCounts = Challenge::where('is_published', true)
-            ->selectRaw('difficulty, count(*) as count')
-            ->groupBy('difficulty')
-            ->pluck('count', 'difficulty');
-
-        $typeCounts = Challenge::where('is_published', true)
-            ->selectRaw('challenge_type, count(*) as count')
-            ->groupBy('challenge_type')
-            ->pluck('count', 'challenge_type');
+        $categoryCounts = $filterCounts['categories'];
+        $difficultyCounts = $filterCounts['difficulties'];
+        $typeCounts = $filterCounts['types'];
 
         return response()->json([
             'data' => ChallengeResource::collection($challenges),
