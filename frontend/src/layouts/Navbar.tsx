@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Terminal,
@@ -17,6 +17,7 @@ import {
   Settings,
   Layers,
   TrendingUp,
+  Search,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -26,6 +27,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationBell } from '@/components/NotificationBell';
 import { Avatar } from '@/components/ui/Avatar';
 import { EditProfileModal } from '@/components/profile/EditProfileModal';
+import { GlobalSearchModal } from '@/components/search/GlobalSearchModal';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -34,6 +36,19 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Global Cmd+K / Ctrl+K shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -166,6 +181,20 @@ export const Navbar: React.FC = () => {
 
           {/* Right controls: Theme, Language, and Profile / Auth */}
           <div className="hidden md:flex items-center gap-2.5">
+            {/* Smart Search Trigger */}
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-violet-500/50 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors cursor-pointer group"
+              title={t('search.title', 'Smart Search (⌘K)')}
+            >
+              <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-violet-500" />
+              <span className="hidden xl:inline">{t('nav.search', 'Search...')}</span>
+              <kbd className="hidden sm:inline-block text-[10px] font-mono px-1 py-0.2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded text-zinc-400">
+                ⌘K
+              </kbd>
+            </button>
+
             {/* Language Selector */}
             <LanguageSelector />
 
