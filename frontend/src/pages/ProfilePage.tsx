@@ -32,6 +32,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/ui/Avatar';
 import { EditProfileModal } from '@/components/profile/EditProfileModal';
+import { ShareCardModal } from '@/components/share-card/ShareCardModal';
 import {
   getDifficultyLabel,
   getTranslatedBadge,
@@ -45,6 +46,7 @@ export const ProfilePage: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<'solved' | 'badges' | 'activity'>('solved');
 
