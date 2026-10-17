@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Admin\AnalyticsAdminController;
+use App\Http\Controllers\Api\V1\Admin\AppealAdminController;
+use App\Http\Controllers\Api\V1\Admin\AuditLogAdminController;
 use App\Http\Controllers\Api\V1\Admin\ChallengeAdminController;
+use App\Http\Controllers\Api\V1\Admin\UserAdminController;
+use App\Http\Controllers\Api\V1\AppealController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ChallengeController;
 use App\Http\Controllers\Api\V1\CollectionController;
@@ -21,6 +25,7 @@ use App\Http\Controllers\Api\V1\RoadmapController;
 use App\Http\Controllers\Api\V1\ShareableCardController;
 use App\Http\Controllers\Api\V1\SnakeGameController;
 use App\Http\Controllers\Api\V1\SubmissionController;
+use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -116,85 +121,90 @@ Route::prefix('v1')->group(function () {
     Route::get('/share-card/public/{token}', [ShareableCardController::class, 'showPublic'])
         ->middleware('throttle:60,1');
 
+    // 14. Account Appeals (Submission for suspended/banned users)
+    Route::post('/appeals', [AppealController::class, 'store'])
+        ->middleware('throttle:10,1');
+
     // Authenticated Endpoints
     Route::middleware('auth:sanctum')->group(function () {
 
-        // Interview History
-        Route::get('/interviews/history', [InterviewController::class, 'history']);
-
-        // Git Playground Progress & XP
-        Route::post('/git-playground/scenarios/{id}/complete', [GitPlaygroundController::class, 'complete'])
-            ->middleware('throttle:30,1');
-
-        // Quest Rewards & Progress
-        Route::post('/quests/stages/{id}/claim', [QuestController::class, 'claimStageReward'])
-            ->middleware('throttle:30,1');
-        Route::post('/quests/daily-missions/{id}/claim', [QuestController::class, 'claimDailyMission'])
-            ->middleware('throttle:30,1');
-
-        // Profile Management (Self)
-        Route::put('/profile', [ProfileController::class, 'update']);
-        Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
-        Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
-
-        // Snake Arcade Game Endpoints
-        Route::post('/snake/start', [SnakeGameController::class, 'start'])
-            ->middleware('throttle:60,1');
-        Route::post('/snake/finish', [SnakeGameController::class, 'finish'])
-            ->middleware('throttle:60,1');
-        Route::get('/snake/stats', [SnakeGameController::class, 'stats']);
-        Route::post('/snake/import-guest-score', [SnakeGameController::class, 'importGuestScore'])
-            ->middleware('throttle:15,1');
-
-        // Challenge Submissions (Grading & XP)
-        Route::post('/challenges/{challenge}/submit', [ChallengeController::class, 'submit'])
-            ->middleware('throttle:15,1');
-        Route::post('/challenges/{challenge}/submit-sql', [ChallengeController::class, 'submitSql'])
-            ->middleware('throttle:15,1');
-        Route::post('/challenges/{challenge}/submit-quiz', [ChallengeController::class, 'submitQuiz'])
-            ->middleware('throttle:15,1');
-        Route::post('/challenges/{challenge}/quiz/submit', [ChallengeController::class, 'submitQuiz'])
-            ->middleware('throttle:15,1');
-        Route::post('/challenges/{challenge}/bookmark', [ChallengeController::class, 'toggleBookmark']);
-
-        // Private Notes
-        Route::get('/challenges/{challenge}/note', [NoteController::class, 'show']);
-        Route::post('/challenges/{challenge}/note', [NoteController::class, 'store']);
-
-        // Discussion Actions
-        Route::post('/challenges/{challenge}/discussions', [DiscussionController::class, 'store']);
-        Route::post('/discussions/{id}/replies', [DiscussionController::class, 'reply']);
-        Route::post('/discussions/{id}/like', [DiscussionController::class, 'toggleLikeDiscussion']);
-        Route::post('/discussion-replies/{id}/like', [DiscussionController::class, 'toggleLikeReply']);
-
-        // Collection Management
-        Route::post('/collections', [CollectionController::class, 'store']);
-        Route::post('/collections/{id}/challenges', [CollectionController::class, 'addChallenge']);
-        Route::delete('/collections/{id}/challenges/{challengeId}', [CollectionController::class, 'removeChallenge']);
-
-        // Contest Registration
-        Route::post('/contests/{slug}/register', [ContestController::class, 'register']);
+        // Appeals status check
+        Route::get('/appeals/my-appeal', [AppealController::class, 'myAppeal']);
 
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index']);
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
-        // User Submissions History
+        // User Submissions History & Reports (Read)
         Route::get('/submissions', [SubmissionController::class, 'index']);
         Route::get('/submissions/{submission}', [SubmissionController::class, 'show']);
-
-        // Dashboard Stats
-        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
-
-        // Personal Learning Reports
         Route::get('/reports/learning', [LearningReportController::class, 'show']);
         Route::get('/reports/learning/{userId}', [LearningReportController::class, 'show']);
-
-        // Shareable Achievement Cards
+        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+        Route::get('/interviews/history', [InterviewController::class, 'history']);
+        Route::get('/snake/stats', [SnakeGameController::class, 'stats']);
+        Route::get('/challenges/{challenge}/note', [NoteController::class, 'show']);
         Route::get('/share-card/settings', [ShareableCardController::class, 'getSettings']);
-        Route::put('/share-card/settings', [ShareableCardController::class, 'updateSettings']);
-        Route::post('/share-card/regenerate-token', [ShareableCardController::class, 'regenerateToken']);
+
+        // State-Modifying Actions Guarded by EnsureAccountActive
+        Route::middleware(EnsureAccountActive::class)->group(function () {
+
+            // Git Playground Progress & XP
+            Route::post('/git-playground/scenarios/{id}/complete', [GitPlaygroundController::class, 'complete'])
+                ->middleware('throttle:30,1');
+
+            // Quest Rewards & Progress
+            Route::post('/quests/stages/{id}/claim', [QuestController::class, 'claimStageReward'])
+                ->middleware('throttle:30,1');
+            Route::post('/quests/daily-missions/{id}/claim', [QuestController::class, 'claimDailyMission'])
+                ->middleware('throttle:30,1');
+
+            // Profile Management (Self)
+            Route::put('/profile', [ProfileController::class, 'update']);
+            Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
+            Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
+
+            // Snake Arcade Game Endpoints
+            Route::post('/snake/start', [SnakeGameController::class, 'start'])
+                ->middleware('throttle:60,1');
+            Route::post('/snake/finish', [SnakeGameController::class, 'finish'])
+                ->middleware('throttle:60,1');
+            Route::post('/snake/import-guest-score', [SnakeGameController::class, 'importGuestScore'])
+                ->middleware('throttle:15,1');
+
+            // Challenge Submissions (Grading & XP)
+            Route::post('/challenges/{challenge}/submit', [ChallengeController::class, 'submit'])
+                ->middleware('throttle:15,1');
+            Route::post('/challenges/{challenge}/submit-sql', [ChallengeController::class, 'submitSql'])
+                ->middleware('throttle:15,1');
+            Route::post('/challenges/{challenge}/submit-quiz', [ChallengeController::class, 'submitQuiz'])
+                ->middleware('throttle:15,1');
+            Route::post('/challenges/{challenge}/quiz/submit', [ChallengeController::class, 'submitQuiz'])
+                ->middleware('throttle:15,1');
+            Route::post('/challenges/{challenge}/bookmark', [ChallengeController::class, 'toggleBookmark']);
+
+            // Private Notes
+            Route::post('/challenges/{challenge}/note', [NoteController::class, 'store']);
+
+            // Discussion Actions
+            Route::post('/challenges/{challenge}/discussions', [DiscussionController::class, 'store']);
+            Route::post('/discussions/{id}/replies', [DiscussionController::class, 'reply']);
+            Route::post('/discussions/{id}/like', [DiscussionController::class, 'toggleLikeDiscussion']);
+            Route::post('/discussion-replies/{id}/like', [DiscussionController::class, 'toggleLikeReply']);
+
+            // Collection Management
+            Route::post('/collections', [CollectionController::class, 'store']);
+            Route::post('/collections/{id}/challenges', [CollectionController::class, 'addChallenge']);
+            Route::delete('/collections/{id}/challenges/{challengeId}', [CollectionController::class, 'removeChallenge']);
+
+            // Contest Registration
+            Route::post('/contests/{slug}/register', [ContestController::class, 'register']);
+
+            // Shareable Achievement Cards
+            Route::put('/share-card/settings', [ShareableCardController::class, 'updateSettings']);
+            Route::post('/share-card/regenerate-token', [ShareableCardController::class, 'regenerateToken']);
+        });
     });
 
     // Admin Protected Endpoints
@@ -203,5 +213,26 @@ Route::prefix('v1')->group(function () {
         Route::post('/challenges/import', [ChallengeAdminController::class, 'import']);
         Route::get('/challenges/export', [ChallengeAdminController::class, 'export']);
         Route::apiResource('challenges', ChallengeAdminController::class);
+
+        // User Management & Moderation
+        Route::get('/users', [UserAdminController::class, 'index']);
+        Route::get('/users/{id}', [UserAdminController::class, 'show']);
+        Route::post('/users/{id}/warn', [UserAdminController::class, 'warn']);
+        Route::post('/users/{id}/suspend', [UserAdminController::class, 'suspend']);
+        Route::post('/users/{id}/unsuspend', [UserAdminController::class, 'unsuspend']);
+        Route::post('/users/{id}/ban', [UserAdminController::class, 'ban']);
+        Route::post('/users/{id}/unban', [UserAdminController::class, 'unban']);
+        Route::put('/users/{id}/role', [UserAdminController::class, 'updateRole']);
+        Route::delete('/users/{id}', [UserAdminController::class, 'destroy']);
+        Route::post('/users/{id}/restore', [UserAdminController::class, 'restore']);
+        Route::delete('/users/{id}/force', [UserAdminController::class, 'forceDelete']);
+
+        // Moderation Audit Logs (Append-only)
+        Route::get('/audit-logs', [AuditLogAdminController::class, 'index']);
+        Route::get('/audit-logs/{id}', [AuditLogAdminController::class, 'show']);
+
+        // Appeals Review
+        Route::get('/appeals', [AppealAdminController::class, 'index']);
+        Route::post('/appeals/{id}/review', [AppealAdminController::class, 'review']);
     });
 });
