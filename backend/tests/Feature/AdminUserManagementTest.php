@@ -102,7 +102,15 @@ class AdminUserManagementTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $targetUser = User::factory()->create(['role' => 'user']);
-        $challenge = Challenge::factory()->create();
+        $challenge = Challenge::create([
+            'slug' => 'test-submission-prob',
+            'title' => 'Test Prob',
+            'description' => 'Test Desc',
+            'difficulty' => 'Easy',
+            'time_limit_ms' => 2000,
+            'memory_limit_mb' => 128,
+            'is_published' => true,
+        ]);
 
         // 1. Admin suspends user for 7 days
         $suspendRes = $this->actingAs($admin, 'sanctum')->postJson("/api/v1/admin/users/{$targetUser->id}/suspend", [
