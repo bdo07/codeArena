@@ -190,6 +190,11 @@ Route::prefix('v1')->group(function () {
         // Personal Learning Reports
         Route::get('/reports/learning', [LearningReportController::class, 'show']);
         Route::get('/reports/learning/{userId}', [LearningReportController::class, 'show']);
+
+        // Shareable Achievement Cards
+        Route::get('/share-card/settings', [ShareableCardController::class, 'getSettings']);
+        Route::put('/share-card/settings', [ShareableCardController::class, 'updateSettings']);
+        Route::post('/share-card/regenerate-token', [ShareableCardController::class, 'regenerateToken']);
     });
 
     // Admin Protected Endpoints
