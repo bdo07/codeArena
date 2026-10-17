@@ -252,14 +252,25 @@ export const ProfilePage: React.FC = () => {
           {/* Action Buttons: Edit & Share */}
           <div className="flex flex-row sm:flex-col items-center justify-center sm:items-end gap-2 shrink-0">
             {isOwner && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setIsEditModalOpen(true)}
-                leftIcon={<Edit3 className="w-3.5 h-3.5" />}
-              >
-                {t('profile.editProfile', 'Edit Profile')}
-              </Button>
+              <>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setIsEditModalOpen(true)}
+                  leftIcon={<Edit3 className="w-3.5 h-3.5" />}
+                >
+                  {t('profile.editProfile', 'Edit Profile')}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsShareCardModalOpen(true)}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-violet-500" />}
+                >
+                  {t('shareCard.openModalButton', 'Share Progress Card')}
+                </Button>
+              </>
             )}
 
             <Button
@@ -619,15 +630,30 @@ export const ProfilePage: React.FC = () => {
         )}
       </div>
 
-      {/* Edit Profile Modal */}
+      {/* Edit Profile Modal & Share Card Modal */}
       {isOwner && (
-        <EditProfileModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSaved={() => {
-            refetch();
-          }}
-        />
+        <>
+          <EditProfileModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onSaved={() => {
+              refetch();
+            }}
+          />
+
+          <ShareCardModal
+            isOpen={isShareCardModalOpen}
+            onClose={() => setIsShareCardModalOpen(false)}
+            user={{
+              id: profile.id,
+              name: profile.name,
+              username: profile.username,
+              avatar_url: profile.avatar_url,
+              xp: profile.xp,
+              level: profile.level,
+            }}
+          />
+        </>
       )}
     </div>
   );

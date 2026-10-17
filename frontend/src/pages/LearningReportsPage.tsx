@@ -26,6 +26,7 @@ import {
   Compass,
   AlertCircle,
   Code2,
+  Share2,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -33,6 +34,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { reportApi, LearningReportData } from '@/services/reportApi';
+import { ShareCardModal } from '@/components/share-card/ShareCardModal';
 
 export const LearningReportsPage: React.FC = () => {
   const { user } = useAuth();
@@ -43,6 +45,7 @@ export const LearningReportsPage: React.FC = () => {
   const [range, setRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
   const [report, setReport] = useState<LearningReportData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchReport = useCallback(async (selectedRange: string) => {
@@ -152,6 +155,17 @@ export const LearningReportsPage: React.FC = () => {
             >
               <Printer className="w-3.5 h-3.5" />
               <span>{t('reports.exportPdf', 'Export / Print')}</span>
+            </Button>
+
+            {/* Share Achievement Card Button */}
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsShareCardModalOpen(true)}
+              className="flex items-center gap-1.5 text-xs shadow-2xs bg-violet-600 hover:bg-violet-500 text-white"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>{t('shareCard.openModalButton', 'Share Card')}</span>
             </Button>
           </div>
         </div>
@@ -634,6 +648,22 @@ export const LearningReportsPage: React.FC = () => {
           </>
         ) : null}
       </div>
+
+      {/* Share Progress Card Modal */}
+      {user && (
+        <ShareCardModal
+          isOpen={isShareCardModalOpen}
+          onClose={() => setIsShareCardModalOpen(false)}
+          user={{
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            avatar_url: user.avatar_url,
+            xp: user.xp,
+            level: user.level || 1,
+          }}
+        />
+      )}
     </div>
   );
 };
