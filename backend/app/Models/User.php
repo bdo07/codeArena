@@ -154,6 +154,11 @@ class User extends Authenticatable
         return $this->hasMany(InterviewSession::class)->latest();
     }
 
+    public function shareableCard(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserShareableCard::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
