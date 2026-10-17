@@ -22,7 +22,7 @@ export interface ProgressCardPreviewProps {
   user: {
     name: string;
     username: string;
-    avatar_url: string | null;
+    avatar_url?: string | null;
     xp: number;
     level: number;
   };
