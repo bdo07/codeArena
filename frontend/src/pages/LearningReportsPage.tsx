@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   AreaChart,
   Area,
@@ -27,6 +27,7 @@ import {
   AlertCircle,
   Code2,
   Share2,
+  ShieldAlert,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -35,6 +36,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { reportApi, LearningReportData } from '@/services/reportApi';
 import { ShareCardModal } from '@/components/share-card/ShareCardModal';
+import { WeaknessDetectorView } from '@/components/insights/WeaknessDetectorView';
 
 export const LearningReportsPage: React.FC = () => {
   const { user } = useAuth();
