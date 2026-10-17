@@ -24,7 +24,9 @@
     "unsolved": "Unsolved",
     "all": "All",
     "lvl": "Lvl",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "search": "Search",
+    "showing": "Showing"
   },
   "nav": {
     "brand": "CodeArena",
@@ -50,7 +52,8 @@
     "interview": "Interview",
     "reports": "Learning Reports",
     "notifications": "Notifications",
-    "settings": "Settings"
+    "settings": "Settings",
+    "search": "Search"
   },
   "difficulty": {
     "all": "All",
@@ -789,5 +792,35 @@
     "contactEmailLabel": "Contact Email for Resolution Updates (Optional)",
     "appealSubmittedSuccess": "Your appeal has been submitted successfully and is in the review queue.",
     "appealSubmitError": "Failed to submit appeal. Please try again later."
+  },
+  "search": {
+    "title": "Smart Search",
+    "subtitle": "Search challenges, programming languages, topics, and developers across CodeArena.",
+    "placeholder": "Search challenges, languages, topics, or developers...",
+    "inputPlaceholder": "Search by keyword, topic, language, difficulty...",
+    "challenges": "Challenges",
+    "languages": "Languages",
+    "topics": "Skills & Topics",
+    "users": "Developers",
+    "filters": "Filters",
+    "filterResults": "Filter Results",
+    "resetFilters": "Reset all filters",
+    "clearFilters": "Clear all filters",
+    "sortRelevance": "Relevance",
+    "sortNewest": "Newest",
+    "sortDiffAsc": "Difficulty: Low to High",
+    "sortDiffDesc": "Difficulty: High to Low",
+    "sortXp": "XP Reward",
+    "errorLoading": "Failed to load search results.",
+    "noResultsTitle": "No results found",
+    "noResultsQuery": "No matches were found for your search term. Try adjusting keywords or filters.",
+    "noResultsEmpty": "No items matched your active filter selections.",
+    "noSuggestions": "No suggestions found for",
+    "tryFullSearch": "Press Enter to perform a full system search",
+    "navigate": "Navigate",
+    "select": "Select",
+    "viewAll": "View all results",
+    "viewAllChallenges": "View all challenges",
+    "challengesCount": "challenges"
   }
 }

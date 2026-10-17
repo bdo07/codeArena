@@ -347,6 +347,14 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile controls & hamburger button */}
           <div className="md:hidden flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
             <LanguageSelector />
             <ThemeToggle />
             <button
@@ -363,6 +371,14 @@ export const Navbar: React.FC = () => {
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 pt-2 pb-4 space-y-2 text-left shadow-lg">
+          <Link
+            to="/search"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-violet-600 dark:text-violet-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            <Search className="w-4 h-4" />
+            {t('nav.search', 'Search')}
+          </Link>
           <Link
             to="/challenges"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -497,6 +513,12 @@ export const Navbar: React.FC = () => {
           onClose={() => setIsEditModalOpen(false)}
         />
       )}
+
+      {/* Global Command Palette / Search Modal */}
+      <GlobalSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </nav>
   );
 };

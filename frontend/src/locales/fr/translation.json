@@ -24,7 +24,9 @@
     "unsolved": "Non résolu",
     "all": "Tous",
     "lvl": "Niv.",
-    "dismiss": "Ignorer"
+    "dismiss": "Ignorer",
+    "search": "Rechercher",
+    "showing": "Affichage de"
   },
   "nav": {
     "brand": "CodeArena",
@@ -50,7 +52,8 @@
     "interview": "Entretien",
     "reports": "Rapports d'Apprentissage",
     "notifications": "Notifications",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "search": "Recherche"
   },
   "difficulty": {
     "all": "Tous",
@@ -789,5 +792,35 @@
     "contactEmailLabel": "Email de contact pour le suivi de la décision (Optionnel)",
     "appealSubmittedSuccess": "Votre recours a été soumis avec succès.",
     "appealSubmitError": "Échec de la soumission du recours. Veuillez réessayer ultérieurement."
+  },
+  "search": {
+    "title": "Recherche Intelligente",
+    "subtitle": "Recherchez des défis, langages de programmation, compétences et développeurs sur CodeArena.",
+    "placeholder": "Rechercher des défis, langages, sujets ou développeurs...",
+    "inputPlaceholder": "Rechercher par mot-clé, sujet, langage, difficulté...",
+    "challenges": "Défis",
+    "languages": "Langages",
+    "topics": "Compétences & Sujets",
+    "users": "Développeurs",
+    "filters": "Filtres",
+    "filterResults": "Filtrer les résultats",
+    "resetFilters": "Réinitialiser tous les filtres",
+    "clearFilters": "Effacer tous les filtres",
+    "sortRelevance": "Pertinence",
+    "sortNewest": "Plus récent",
+    "sortDiffAsc": "Difficulté : Croissante",
+    "sortDiffDesc": "Difficulté : Décroissante",
+    "sortXp": "Récompense XP",
+    "errorLoading": "Échec du chargement des résultats de recherche.",
+    "noResultsTitle": "Aucun résultat trouvé",
+    "noResultsQuery": "Aucun résultat ne correspond à votre recherche. Ajustez vos filtres ou mots-clés.",
+    "noResultsEmpty": "Aucun élément ne correspond à vos filtres sélectionnés.",
+    "noSuggestions": "Aucune suggestion pour",
+    "tryFullSearch": "Appuyez sur Entrée pour effectuer une recherche complète",
+    "navigate": "Naviguer",
+    "select": "Sélectionner",
+    "viewAll": "Voir tous les résultats",
+    "viewAllChallenges": "Voir tous les défis",
+    "challengesCount": "défis"
   }
 }
