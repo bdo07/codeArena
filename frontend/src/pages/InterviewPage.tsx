@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Editor from '@monaco-editor/react';
+import { MonacoLoadingSkeleton } from '@/components/ui/MonacoLoadingSkeleton';
 import {
   Clock,
   CheckCircle2,
@@ -834,6 +835,7 @@ export const InterviewPage: React.FC = () => {
                   ) : (
                     <Editor
                       height="100%"
+                      loading={<MonacoLoadingSkeleton />}
                       theme={theme === 'dark' ? 'vs-dark' : 'light'}
                       language={currentQ.language === 'sql' ? 'sql' : 'python'}
                       value={userAnswers[currentQ.id] ?? currentQ.starter_code ?? ''}

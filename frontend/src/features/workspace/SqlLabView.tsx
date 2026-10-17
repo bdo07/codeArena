@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
+import { MonacoLoadingSkeleton } from '@/components/ui/MonacoLoadingSkeleton';
 import { Play, Send, Database, Table, CheckCircle2, XCircle, Clock, AlertCircle, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
