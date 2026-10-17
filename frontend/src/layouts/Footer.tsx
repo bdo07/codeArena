@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
           <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] text-zinc-600 dark:text-zinc-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
             {t('footer.judge0Ready')}
-            <span className="text-zinc-300 dark:text-zinc-700">v/1.1.1</span>
+            <span className="text-zinc-300 dark:text-zinc-700">v/1.2.2</span>
 
           </span>
         </div>
