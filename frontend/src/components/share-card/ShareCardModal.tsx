@@ -288,7 +288,7 @@ export const ShareCardModal: React.FC<ShareCardModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={t('shareCard.modalTitle', 'Shareable Developer Progress Card')}
-      className="max-w-4xl w-full"
+      maxWidth="4xl"
     >
       <div className="space-y-6">
         {statusMessage && (
