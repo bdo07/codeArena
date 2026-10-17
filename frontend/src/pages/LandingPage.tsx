@@ -69,7 +69,7 @@ export const LandingPage: React.FC = () => {
             <div className="text-xs text-zinc-500 mt-1">{t('landing.statSandbox')}</div>
           </div>
           <div className="bg-white/90 dark:bg-zinc-950/80 p-5 text-center">
-            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">15+</div>
+            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">40+</div>
             <div className="text-xs text-zinc-500 mt-1">{t('landing.statLanguages')}</div>
           </div>
           <div className="bg-white/90 dark:bg-zinc-950/80 p-5 text-center">
