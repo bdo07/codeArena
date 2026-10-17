@@ -70,6 +70,13 @@ class GamificationService
                 $streakInfo = $this->getUserStreakInfo($user);
             }
 
+            // Invalidate cached weakness insights on new submission attempt
+            try {
+                app(\App\Services\WeaknessDetectorService::class)->clearCache($user->id);
+            } catch (\Throwable) {
+                // Ignore if service not bound
+            }
+
             return [
                 'is_first_solve' => $isFirstSolve,
                 'xp_awarded' => $xpAwarded,
