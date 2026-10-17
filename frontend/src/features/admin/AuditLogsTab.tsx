@@ -272,7 +272,7 @@ export const AuditLogsTab: React.FC = () => {
                 variant="outline"
                 size="sm"
                 disabled={page >= pagination.last_page}
-                onClick={() => setPage((p) => p + 1))}
+                onClick={() => setPage((p) => p + 1)}
                 className="h-7 px-2"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
