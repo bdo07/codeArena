@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\QuestController;
 use App\Http\Controllers\Api\V1\RoadmapController;
+use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\ShareableCardController;
 use App\Http\Controllers\Api\V1\SnakeGameController;
 use App\Http\Controllers\Api\V1\SubmissionController;
@@ -64,6 +65,10 @@ Route::prefix('v1')->group(function () {
 
     // Current user alias (/api/v1/user)
     Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'me']);
+
+    // Global Smart Search
+    Route::get('/search', [SearchController::class, 'index'])->middleware('throttle:60,1');
+    Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->middleware('throttle:60,1');
 
     // 2. Languages & Technologies Catalog
     Route::get('/languages', [LanguageController::class, 'index']);
