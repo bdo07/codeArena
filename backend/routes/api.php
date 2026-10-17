@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\ShareableCardController;
 use App\Http\Controllers\Api\V1\SnakeGameController;
 use App\Http\Controllers\Api\V1\SubmissionController;
+use App\Http\Controllers\Api\V1\WeaknessController;
 use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
