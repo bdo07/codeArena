@@ -6,27 +6,27 @@ import { AuthProvider } from './features/auth/AuthContext';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import { AppLayout } from './layouts/AppLayout';
 
-import { LandingPage } from './pages/LandingPage';
-import { ChallengesPage } from './pages/ChallengesPage';
-import { WorkspacePage } from './pages/WorkspacePage';
-import { LeaderboardPage } from './pages/LeaderboardPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { DashboardPage } from './pages/DashboardPage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { AdminPage } from './pages/AdminPage';
-import { RoadmapsPage } from './pages/RoadmapsPage';
-import { RoadmapDetailPage } from './pages/RoadmapDetailPage';
-import { ContestsPage } from './pages/ContestsPage';
-import { ContestDetailPage } from './pages/ContestDetailPage';
-import { ContestLeaderboardPage } from './pages/ContestLeaderboardPage';
-import { QuestPage } from './pages/QuestPage';
-import { GitPlaygroundPage } from './pages/GitPlaygroundPage';
-import { InterviewPage } from './pages/InterviewPage';
-import { LearningReportsPage } from './pages/LearningReportsPage';
-import { PublicShareCardPage } from './pages/PublicShareCardPage';
-import { SearchPage } from './pages/SearchPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+const LandingPage = React.lazy(() => import('./pages/LandingPage').then((m) => ({ default: m.LandingPage })));
+const ChallengesPage = React.lazy(() => import('./pages/ChallengesPage').then((m) => ({ default: m.ChallengesPage })));
+const WorkspacePage = React.lazy(() => import('./pages/WorkspacePage').then((m) => ({ default: m.WorkspacePage })));
+const LeaderboardPage = React.lazy(() => import('./pages/LeaderboardPage').then((m) => ({ default: m.LeaderboardPage })));
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })));
+const LoginPage = React.lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const RegisterPage = React.lazy(() => import('./pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
+const AdminPage = React.lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
+const RoadmapsPage = React.lazy(() => import('./pages/RoadmapsPage').then((m) => ({ default: m.RoadmapsPage })));
+const RoadmapDetailPage = React.lazy(() => import('./pages/RoadmapDetailPage').then((m) => ({ default: m.RoadmapDetailPage })));
+const ContestsPage = React.lazy(() => import('./pages/ContestsPage').then((m) => ({ default: m.ContestsPage })));
+const ContestDetailPage = React.lazy(() => import('./pages/ContestDetailPage').then((m) => ({ default: m.ContestDetailPage })));
+const ContestLeaderboardPage = React.lazy(() => import('./pages/ContestLeaderboardPage').then((m) => ({ default: m.ContestLeaderboardPage })));
+const QuestPage = React.lazy(() => import('./pages/QuestPage').then((m) => ({ default: m.QuestPage })));
+const GitPlaygroundPage = React.lazy(() => import('./pages/GitPlaygroundPage').then((m) => ({ default: m.GitPlaygroundPage })));
+const InterviewPage = React.lazy(() => import('./pages/InterviewPage').then((m) => ({ default: m.InterviewPage })));
+const LearningReportsPage = React.lazy(() => import('./pages/LearningReportsPage').then((m) => ({ default: m.LearningReportsPage })));
+const PublicShareCardPage = React.lazy(() => import('./pages/PublicShareCardPage').then((m) => ({ default: m.PublicShareCardPage })));
+const SearchPage = React.lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
