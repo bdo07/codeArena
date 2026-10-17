@@ -19,6 +19,8 @@ import {
   FileText,
   Clock,
   Sparkles,
+  Users,
+  History,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
@@ -29,6 +31,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { getDifficultyLabel } from '@/locales/challengeTranslations';
+import { UserManagementTab } from '@/features/admin/UserManagementTab';
+import { AppealsQueueTab } from '@/features/admin/AppealsQueueTab';
+import { AuditLogsTab } from '@/features/admin/AuditLogsTab';
 
 interface AdminChallengePayload {
   title: string;
@@ -56,7 +61,9 @@ export const AdminPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   // Tab State
-  const [activeTab, setActiveTab] = useState<'challenges' | 'import_export' | 'analytics'>('challenges');
+  const [activeTab, setActiveTab] = useState<
+    'users' | 'appeals' | 'audit_logs' | 'challenges' | 'import_export' | 'analytics'
+  >('users');
 
   // Challenge modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -331,7 +338,43 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* Admin Tabs */}
-      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2">
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            activeTab === 'users'
+              ? 'bg-violet-600 text-white shadow-xs'
+              : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          <Users className="w-3.5 h-3.5" />
+          {t('admin.tabs.users', 'Users & Moderation')}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('appeals')}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            activeTab === 'appeals'
+              ? 'bg-violet-600 text-white shadow-xs'
+              : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          <FileText className="w-3.5 h-3.5" />
+          {t('admin.tabs.appeals', 'Appeals Queue')}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('audit_logs')}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            activeTab === 'audit_logs'
+              ? 'bg-violet-600 text-white shadow-xs'
+              : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          <History className="w-3.5 h-3.5" />
+          {t('admin.tabs.auditLogs', 'Audit Logs')}
+        </button>
+
         <button
           onClick={() => setActiveTab('challenges')}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
@@ -368,6 +411,15 @@ export const AdminPage: React.FC = () => {
           {t('admin.tabs.analytics', 'Platform Analytics')}
         </button>
       </div>
+
+      {/* TAB 0: Users & Moderation */}
+      {activeTab === 'users' && <UserManagementTab />}
+
+      {/* TAB 0b: Appeals Queue */}
+      {activeTab === 'appeals' && <AppealsQueueTab />}
+
+      {/* TAB 0c: Immutable Audit Logs */}
+      {activeTab === 'audit_logs' && <AuditLogsTab />}
 
       {/* TAB 1: Challenges List */}
       {activeTab === 'challenges' && (

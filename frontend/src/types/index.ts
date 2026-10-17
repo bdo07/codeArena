@@ -7,12 +7,22 @@ export interface UserStreak {
   last_activity_date?: string;
 }
 
+export type UserStatus = 'active' | 'suspended' | 'banned';
+
 export interface User {
   id: number;
   name: string;
   username: string;
   email: string;
   role: 'user' | 'admin';
+  status?: UserStatus;
+  is_suspended?: boolean;
+  suspended_until?: string | null;
+  suspension_reason?: string | null;
+  is_banned?: boolean;
+  banned_at?: string | null;
+  ban_reason?: string | null;
+  deleted_at?: string | null;
   xp: number;
   level: number;
   avatar_url?: string | null;
@@ -29,6 +39,75 @@ export interface User {
   created_at?: string;
   joined_at?: string;
 }
+
+export interface ModerationAuditLog {
+  id: number;
+  admin_id: number | null;
+  target_user_id: number | null;
+  action: string;
+  reason: string;
+  internal_notes?: string | null;
+  metadata?: Record<string, any> | null;
+  ip_address?: string | null;
+  created_at: string;
+  admin?: {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    avatar_url?: string | null;
+  } | null;
+  target_user?: {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    avatar_url?: string | null;
+  } | null;
+}
+
+export interface AccountAppeal {
+  id: number;
+  user_id: number;
+  status: 'pending' | 'approved' | 'rejected';
+  reason: string;
+  contact_email?: string | null;
+  reviewed_by?: number | null;
+  reviewed_at?: string | null;
+  admin_notes?: string | null;
+  rejection_reason?: string | null;
+  created_at: string;
+  user?: User | null;
+  reviewer?: {
+    id: number;
+    name: string;
+    username: string;
+  } | null;
+}
+
+export interface AdminUserListItem {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  role: 'admin' | 'user';
+  status: UserStatus;
+  is_suspended: boolean;
+  suspended_until?: string | null;
+  suspension_reason?: string | null;
+  is_banned: boolean;
+  banned_at?: string | null;
+  ban_reason?: string | null;
+  xp: number;
+  level: number;
+  avatar_url?: string | null;
+  created_at: string;
+  deleted_at?: string | null;
+  is_deleted: boolean;
+  moderation_actions_count: number;
+  pending_appeals_count: number;
+}
+
 
 export interface UserProfileData {
   id: number;
