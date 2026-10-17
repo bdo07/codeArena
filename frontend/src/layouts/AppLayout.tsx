@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { SuspensionNoticeBanner } from '@/features/moderation/SuspensionNoticeBanner';
+
+const PageLoadingFallback: React.FC = () => (
+  <div className="min-h-[50vh] flex items-center justify-center">
+    <div className="flex items-center gap-2.5 text-zinc-500 dark:text-zinc-400 text-sm">
+      <div className="w-5 h-5 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+      <span>Loading...</span>
+    </div>
+  </div>
+);
 
 export const AppLayout: React.FC = () => {
   return (
@@ -10,7 +19,9 @@ export const AppLayout: React.FC = () => {
       <Navbar />
       <SuspensionNoticeBanner />
       <main className="flex-1 w-full">
-        <Outlet />
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </div>
