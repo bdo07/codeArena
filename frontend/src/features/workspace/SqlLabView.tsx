@@ -137,6 +137,7 @@ export const SqlLabView: React.FC<SqlLabViewProps> = ({ challenge, theme, onSubm
       <div className="flex-1 min-h-[260px] border-b border-zinc-800">
         <Editor
           height="100%"
+          loading={<MonacoLoadingSkeleton />}
           language="sql"
           theme={theme === 'dark' ? 'vs-dark' : 'light'}
           value={queryCode}

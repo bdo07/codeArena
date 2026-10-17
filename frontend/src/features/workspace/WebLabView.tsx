@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
+import { MonacoLoadingSkeleton } from '@/components/ui/MonacoLoadingSkeleton';
 import { Layout, Smartphone, Tablet, Monitor, RefreshCw, Send, CheckCircle2, Code, Eye } from 'lucide-react';
 import { Challenge, SubmitResult } from '@/types';
 import { Button } from '@/components/ui/Button';
@@ -192,6 +193,7 @@ export const WebLabView: React.FC<WebLabViewProps> = ({ challenge, theme, onSubm
         {activeCodeTab === 'html' && (
           <Editor
             height="100%"
+            loading={<MonacoLoadingSkeleton />}
             language="html"
             theme={theme === 'dark' ? 'vs-dark' : 'light'}
             value={htmlCode}
@@ -202,6 +204,7 @@ export const WebLabView: React.FC<WebLabViewProps> = ({ challenge, theme, onSubm
         {activeCodeTab === 'css' && (
           <Editor
             height="100%"
+            loading={<MonacoLoadingSkeleton />}
             language="css"
             theme={theme === 'dark' ? 'vs-dark' : 'light'}
             value={cssCode}
@@ -212,6 +215,7 @@ export const WebLabView: React.FC<WebLabViewProps> = ({ challenge, theme, onSubm
         {activeCodeTab === 'js' && (
           <Editor
             height="100%"
+            loading={<MonacoLoadingSkeleton />}
             language="javascript"
             theme={theme === 'dark' ? 'vs-dark' : 'light'}
             value={jsCode}
