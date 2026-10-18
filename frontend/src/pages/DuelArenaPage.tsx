@@ -176,9 +176,9 @@ export const DuelArenaPage: React.FC = () => {
   const myData = myRole === 'creator' ? creator : opponent;
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col bg-zinc-50 dark:bg-zinc-950 text-left">
+    <div className="h-[calc(100vh-4rem)] flex flex-col w-full max-w-full overflow-hidden bg-zinc-50 dark:bg-zinc-950 text-left">
       {/* Top Match Bar */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 px-4 py-2.5 flex items-center justify-between gap-4 shrink-0 shadow-2xs">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 px-4 py-2.5 flex items-center justify-between gap-4 shrink-0 shadow-2xs overflow-x-auto no-scrollbar">
         {/* Left: Nav & Match Status */}
         <div className="flex items-center gap-3">
           <Link

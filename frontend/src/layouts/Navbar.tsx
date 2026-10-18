@@ -51,158 +51,173 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const navScrollRef = React.useRef<HTMLDivElement>(null);
+
+  const handleNavWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (e.deltaY !== 0 && navScrollRef.current) {
+      if (navScrollRef.current.scrollWidth > navScrollRef.current.clientWidth) {
+        navScrollRef.current.scrollLeft += e.deltaY;
+      }
+    }
+  };
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-zinc-200/90 dark:border-zinc-800/80 bg-white/85 dark:bg-zinc-950/80 backdrop-blur-md transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
-          {/* Logo and primary links */}
-          <div className="flex items-center gap-6 lg:gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:border-violet-500/40 group-hover:text-violet-500 dark:group-hover:text-violet-300 transition-colors">
-                <Terminal className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="font-semibold text-sm tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
-                  {t('nav.brand')}
-                  <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 bg-violet-100 dark:bg-violet-950/60 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-800/40 rounded">
-                    {t('nav.beta')}
-                  </span>
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 gap-2 w-full">
+          {/* Logo brand */}
+          <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:border-violet-500/40 group-hover:text-violet-500 dark:group-hover:text-violet-300 transition-colors">
+              <Terminal className="w-4 h-4" />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="font-semibold text-sm tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                {t('nav.brand')}
+                <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 bg-violet-100 dark:bg-violet-950/60 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-800/40 rounded">
+                  {t('nav.beta')}
                 </span>
-              </div>
-            </Link>
+              </span>
+            </div>
+          </Link>
 
-            <div className="hidden xl:flex items-center gap-1">
+          {/* Navigation links: Directly visible in navbar, compact and horizontally scrollable */}
+          <div
+            ref={navScrollRef}
+            onWheel={handleNavWheel}
+            className="hidden sm:flex flex-1 min-w-0 items-center overflow-x-auto no-scrollbar py-1 px-1 mx-2 lg:mx-3 scroll-smooth"
+          >
+            <div className="flex items-center gap-1 shrink-0">
               <Link
                 to="/challenges"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   isActive('/challenges')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Code2 className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-                {t('nav.challenges')}
+                <Code2 className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
+                <span>{t('nav.challenges')}</span>
               </Link>
               <Link
                 to="/leaderboard"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   isActive('/leaderboard')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Trophy className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                {t('nav.leaderboard')}
+                <Trophy className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+                <span>{t('nav.leaderboard')}</span>
               </Link>
               <Link
                 to="/roadmaps"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   isActive('/roadmaps')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Compass className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-                Roadmaps
+                <Compass className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                <span>Roadmaps</span>
               </Link>
               <Link
                 to="/quest"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   location.pathname.startsWith('/quest')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-                {t('nav.quest')}
+                <Sparkles className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
+                <span>{t('nav.quest')}</span>
               </Link>
               <Link
                 to="/git-playground"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   location.pathname.startsWith('/git-playground')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Terminal className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-                {t('nav.gitPlayground', 'Git')}
+                <Terminal className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
+                <span>{t('nav.gitPlayground', 'Git')}</span>
               </Link>
               <Link
                 to="/interview"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   location.pathname.startsWith('/interview')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Layers className="w-3.5 h-3.5 text-teal-500 dark:text-teal-400" />
-                {t('nav.interview', 'Interview')}
+                <Layers className="w-3.5 h-3.5 text-teal-500 dark:text-teal-400 shrink-0" />
+                <span>{t('nav.interview', 'Interview')}</span>
               </Link>
               <Link
                 to="/contests"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   isActive('/contests')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                Contests
+                <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+                <span>Contests</span>
               </Link>
               <Link
                 to="/duels"
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                   location.pathname.startsWith('/duels')
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
-                <Swords className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-                {t('nav.duels', 'Duels')}
+                <Swords className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
+                <span>{t('nav.duels', 'Duels')}</span>
               </Link>
               {user && (
                 <Link
                   to="/dashboard"
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                     isActive('/dashboard')
                       ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                   }`}
                 >
-                  <LayoutDashboard className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-                  {t('nav.dashboard')}
+                  <LayoutDashboard className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
+                  <span>{t('nav.dashboard')}</span>
                 </Link>
               )}
               {user?.role === 'admin' && (
                 <Link
                   to="/admin"
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
                     isActive('/admin')
                       ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                   }`}
                 >
-                  <Shield className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-                  {t('nav.admin')}
+                  <Shield className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
+                  <span>{t('nav.admin')}</span>
                 </Link>
               )}
             </div>
           </div>
 
-          {/* Right controls: Theme, Language, and Profile / Auth */}
-          <div className="hidden md:flex items-center gap-2.5">
+          {/* Right controls: Search, Language, Theme, Bell, and Profile / Auth */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Smart Search Trigger */}
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-violet-500/50 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors cursor-pointer group"
+              className="flex items-center gap-1.5 px-2 py-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-violet-500/50 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors cursor-pointer group shrink-0"
               title={t('search.title', 'Smart Search (⌘K)')}
             >
-              <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-violet-500" />
-              <span className="hidden xl:inline">{t('nav.search', 'Search...')}</span>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono px-1 py-0.2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded text-zinc-400">
+              <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-violet-500 shrink-0" />
+              <span className="hidden 2xl:inline">{t('nav.search', 'Search...')}</span>
+              <kbd className="hidden lg:inline-block text-[10px] font-mono px-1 py-0.2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded text-zinc-400">
                 ⌘K
               </kbd>
             </button>
@@ -216,12 +231,12 @@ export const Navbar: React.FC = () => {
             {/* Notification Bell (if authenticated) */}
             {user && <NotificationBell />}
 
-            <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
+            <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-zinc-800 mx-0.5" />
 
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                 {/* XP & Level pill */}
-                <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full text-xs">
+                <div className="hidden 2xl:flex items-center gap-2 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full text-xs shrink-0">
                   <span className="flex items-center gap-1 text-violet-600 dark:text-violet-400 font-medium">
                     <Sparkles className="w-3 h-3" />
                     {user.xp.toLocaleString()} XP
@@ -245,7 +260,7 @@ export const Navbar: React.FC = () => {
                       size="sm"
                       className="ring-1 ring-violet-500/30"
                     />
-                    <span className="text-xs font-medium max-w-[100px] truncate">
+                    <span className="hidden sm:inline-block text-xs font-medium max-w-[90px] truncate">
                       {user.username}
                     </span>
                   </button>
@@ -342,7 +357,7 @@ export const Navbar: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <Link to="/login">
                   <Button variant="ghost" size="sm">
                     {t('nav.signIn')}
@@ -356,34 +371,12 @@ export const Navbar: React.FC = () => {
               </div>
             )}
 
-            {/* Tablet Menu Toggle (md to xl) */}
+            {/* Mobile Hamburger Button (Strictly on small mobile screens < sm) */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="xl:hidden p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer ml-1"
+              className="sm:hidden p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
               aria-label="Toggle navigation menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-
-          {/* Mobile controls & hamburger button */}
-          <div className="md:hidden flex items-center gap-1 sm:gap-1.5">
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-            <LanguageSelector />
-            <ThemeToggle />
-            {user && <NotificationBell />}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
-              aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -391,9 +384,9 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile/Tablet menu dropdown */}
+      {/* Mobile menu dropdown for small phone screens (< sm) */}
       {isMobileMenuOpen && (
-        <div className="xl:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 pt-2 pb-4 space-y-2 text-left shadow-lg max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+        <div className="sm:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 pt-2 pb-4 space-y-2 text-left shadow-lg max-h-[calc(100vh-3.5rem)] overflow-y-auto">
           <Link
             to="/search"
             onClick={() => setIsMobileMenuOpen(false)}
