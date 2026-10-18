@@ -26,6 +26,8 @@ const InterviewPage = React.lazy(() => import('./pages/InterviewPage').then((m) 
 const LearningReportsPage = React.lazy(() => import('./pages/LearningReportsPage').then((m) => ({ default: m.LearningReportsPage })));
 const PublicShareCardPage = React.lazy(() => import('./pages/PublicShareCardPage').then((m) => ({ default: m.PublicShareCardPage })));
 const SearchPage = React.lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })));
+const DuelLobbyPage = React.lazy(() => import('./pages/DuelLobbyPage').then((m) => ({ default: m.DuelLobbyPage })));
+const DuelArenaPage = React.lazy(() => import('./pages/DuelArenaPage').then((m) => ({ default: m.DuelArenaPage })));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 const queryClient = new QueryClient({
@@ -78,6 +80,22 @@ export const App: React.FC = () => {
                   element={
                     <ProtectedRoute>
                       <LearningReportsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="duels"
+                  element={
+                    <ProtectedRoute>
+                      <DuelLobbyPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="duels/:uuid"
+                  element={
+                    <ProtectedRoute>
+                      <DuelArenaPage />
                     </ProtectedRoute>
                   }
                 />
