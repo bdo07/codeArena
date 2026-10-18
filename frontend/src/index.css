@@ -2,60 +2,61 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Self-hosted Bellefair Font Face Definitions */
+/* Self-hosted Texturina Font Face Definitions */
 @font-face {
-  font-family: 'Bellefair';
+  font-family: 'Texturina';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 800;
   font-display: swap;
-  src: url('/fonts/bellefair-latin.woff2') format('woff2');
+  src: url('/fonts/texturina-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Bellefair';
+  font-family: 'Texturina';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 800;
   font-display: swap;
-  src: url('/fonts/bellefair-latin-ext.woff2') format('woff2');
+  src: url('/fonts/texturina-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+@font-face {
+  font-family: 'Texturina';
+  font-style: italic;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('/fonts/texturina-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @theme {
-  --font-sans: 'Bellefair', Georgia, serif;
-  --font-serif: 'Bellefair', Georgia, serif;
-  --font-display: 'Bellefair', Georgia, serif;
+  --font-sans: 'Texturina', Georgia, serif;
+  --font-serif: 'Texturina', Georgia, serif;
+  --font-display: 'Texturina', Georgia, serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
   :root {
-    --font-sans: 'Bellefair', Georgia, serif;
-    --font-serif: 'Bellefair', Georgia, serif;
-    --font-display: 'Bellefair', Georgia, serif;
+    --font-sans: 'Texturina', Georgia, serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-    /* Semantic light mode tokens - Refined Developer Digital */
-    --canvas-bg: #fafafa;
+    /* Semantic light mode tokens */
+    --canvas-bg: #f8fafc;
     --card-bg: #ffffff;
-    --card-border: #e4e4e7;
-    --border-subtle: #f4f4f5;
-    --text-main: #121214;
-    --text-muted: #71717a;
-    --accent-violet: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.08);
+    --card-border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
   }
 
   .dark {
-    /* Semantic dark mode tokens - Refined Developer Digital */
+    /* Semantic dark mode tokens */
     --canvas-bg: #09090b;
-    --card-bg: #121215;
-    --card-border: #222227;
-    --border-subtle: #18181c;
-    --text-main: #f4f4f6;
-    --text-muted: #93939f;
-    --accent-violet: #818cf8;
-    --accent-glow: rgba(129, 140, 248, 0.12);
+    --card-bg: #18181b;
+    --card-border: #27272a;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
   }
 
   * {
@@ -63,7 +64,7 @@
   }
 
   .dark * {
-    border-color: #222227;
+    border-color: #27272a;
   }
 
   body {
@@ -72,20 +73,12 @@
     color: var(--text-main);
     margin: 0;
     min-height: 100vh;
-    letter-spacing: 0.012em;
-    line-height: 1.55;
     transition: background-color 0.15s ease, color 0.15s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Headings in Bellefair display typography */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sans);
-    letter-spacing: 0.015em;
-  }
-
-  /* CRITICAL: Enforce monospace font stack for code, terminals, kbd, numbers */
+  /* CRITICAL: Enforce monospace font stack for code, terminals, kbd, technical data */
   code,
   pre,
   kbd,
@@ -94,17 +87,6 @@
   .font-mono,
   [data-code] {
     font-family: var(--font-mono) !important;
-    letter-spacing: normal;
-  }
-
-  kbd {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    padding: 0.15rem 0.4rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--card-border);
-    background: var(--border-subtle);
-    color: var(--text-muted);
   }
 }
 
@@ -115,33 +97,33 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f4f4f5;
+  background: #f1f5f9;
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #0f0f12;
+  background: rgb(18 18 20);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: rgb(39 39 42);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: #94a3b8;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: rgb(63 63 70);
 }
 
 /* Accessible focus visible indicators for keyboard navigation */
 :focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #8b5cf6;
   outline-offset: 2px;
 }
 
