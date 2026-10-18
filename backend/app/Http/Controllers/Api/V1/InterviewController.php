@@ -108,8 +108,13 @@ class InterviewController extends Controller
         $user = $request->user('sanctum');
         $session = \App\Models\InterviewSession::where('session_token', $token)->firstOrFail();
 
-        if ($user && $session->user_id && $session->user_id !== $user->id) {
-            return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
+        if ($session->user_id !== null) {
+            if (! $user || ($user->id !== $session->user_id && ! $user->isAdmin())) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized to view this private interview report.',
+                ], 403);
+            }
         }
 
         $report = $this->interviewService->formatCompletedResult($session);

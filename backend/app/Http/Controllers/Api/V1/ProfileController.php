@@ -205,8 +205,32 @@ class ProfileController extends Controller
         ]);
 
         $file = $request->file('avatar');
-        $extension = $file->getClientOriginalExtension() ?: 'png';
-        $safeFilename = Str::uuid()->toString() . '.' . strtolower($extension);
+        $rawExt = strtolower($file->guessExtension() ?: 'png');
+        $allowedExtensions = ['jpeg', 'jpg', 'png', 'webp'];
+        $extension = in_array($rawExt, $allowedExtensions, true) ? $rawExt : 'png';
+
+        // Byte-level image verification using getimagesize() to defeat polyglots
+        $imageInfo = @getimagesize($file->getRealPath());
+        if ($imageInfo === false || empty($imageInfo[0]) || empty($imageInfo[1])) {
+            return response()->json([
+                'message' => 'The uploaded file is not a valid or decipherable image.',
+                'errors' => [
+                    'avatar' => ['The uploaded file does not match a valid image payload.'],
+                ],
+            ], 422);
+        }
+
+        // Prevent pixel bomb / decompression DoS attacks
+        if ($imageInfo[0] > 4096 || $imageInfo[1] > 4096) {
+            return response()->json([
+                'message' => 'Avatar dimensions cannot exceed 4096 x 4096 pixels.',
+                'errors' => [
+                    'avatar' => ['Image dimensions are too large.'],
+                ],
+            ], 422);
+        }
+
+        $safeFilename = Str::uuid()->toString() . '.' . $extension;
 
         // Store in public avatars directory
         $storedPath = $file->storeAs('avatars', $safeFilename, 'public');

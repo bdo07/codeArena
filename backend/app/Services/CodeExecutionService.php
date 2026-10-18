@@ -239,6 +239,36 @@ class CodeExecutionService
             ];
         }
 
+        // Production Security Guard:
+        // Do not execute arbitrary code directly on the host in production without isolated runner/Judge0
+        if (app()->isProduction() && !config('services.judge0.allow_local_fallback_in_production', false)) {
+            return [
+                'status' => 'Internal Error',
+                'stdout' => '',
+                'stderr' => 'Isolated execution service is currently unavailable. Direct host execution is strictly disabled in production for security.',
+                'execution_time_ms' => 0,
+                'memory_kb' => 0,
+                'passed' => false,
+                'is_demo_mode' => false,
+                'provider' => 'none',
+            ];
+        }
+
+        // Validate source code against dangerous host operations in local fallback mode
+        $securityViolation = $this->validateSafeSourceCode($language, $sourceCode);
+        if ($securityViolation !== null) {
+            return [
+                'status' => 'Runtime Error',
+                'stdout' => '',
+                'stderr' => $securityViolation,
+                'execution_time_ms' => 0,
+                'memory_kb' => 0,
+                'passed' => false,
+                'is_demo_mode' => false,
+                'provider' => 'local_sandbox',
+            ];
+        }
+
         $procResult = match ($language) {
             'python', 'python3', 'py' => $this->executePythonLocal($sourceCode, $stdin, $expectedOutput, $timeLimitMs),
             'javascript', 'js', 'node' => $this->executeNodeLocal($sourceCode, $stdin, $expectedOutput, $timeLimitMs),
@@ -407,7 +437,15 @@ class CodeExecutionService
         ];
 
         $startTime = microtime(true);
-        $process = proc_open($cmd, $descriptors, $pipes);
+        $tempDir = sys_get_temp_dir();
+        $safeEnv = [
+            'PATH' => '/usr/bin:/bin:/usr/local/bin',
+            'LANG' => 'en_US.UTF-8',
+            'LC_ALL' => 'en_US.UTF-8',
+            'HOME' => $tempDir,
+            'TMPDIR' => $tempDir,
+        ];
+        $process = proc_open($cmd, $descriptors, $pipes, $tempDir, $safeEnv);
 
         if (! is_resource($process)) {
             return [
@@ -807,4 +845,55 @@ class CodeExecutionService
 
         return $water;
     }
+
+    /**
+     * Inspect source code submitted for local fallback execution.
+     * Blocks dangerous system calls, network sockets, process spawning, and host file access.
+     */
+    protected function validateSafeSourceCode(string $language, string $sourceCode): ?string
+    {
+        $normalizedLang = strtolower($language);
+
+        if (in_array($normalizedLang, ['python', 'python3', 'py'], true)) {
+            $dangerousPython = [
+                '/\bimport\s+(os|subprocess|socket|shutil|pty|ctypes|requests|urllib|http\.client|webbrowser|importlib|pickle)\b/i' => 'System/Network module import blocked',
+                '/\bfrom\s+(os|subprocess|socket|shutil|pty|ctypes|requests|urllib|http\.client|webbrowser|importlib|pickle)\s+import\b/i' => 'System/Network module import blocked',
+                '/\b(open|eval|exec|compile|__import__|getattr|setattr|globals|locals)\s*\(/i' => 'Dynamic execution or file I/O call blocked',
+                '/\b(__builtins__|__subclasses__|sys\.modules)\b/i' => 'Introspection escape sequence blocked',
+            ];
+
+            foreach ($dangerousPython as $pattern => $msg) {
+                if (preg_match($pattern, $sourceCode, $matches)) {
+                    return "Security Violation: {$msg} ('{$matches[0]}') in local execution sandbox.";
+                }
+            }
+        } elseif (in_array($normalizedLang, ['javascript', 'js', 'node'], true)) {
+            $dangerousJs = [
+                '/\b(child_process|fs|net|http|https|tls|dgram|cluster|v8|vm)\b/i' => 'System/Network module reference blocked',
+                '/\bprocess\s*\.\s*(env|mainModule|binding|exit|kill)\b/i' => 'Process introspection/termination call blocked',
+                '/\b(eval|Function)\s*\(/i' => 'Dynamic evaluation blocked',
+                '/\brequire\s*\(\s*[\'"][^\'"]*[\'"]\s*\)/i' => 'Module require blocked in local sandbox',
+            ];
+
+            foreach ($dangerousJs as $pattern => $msg) {
+                if (preg_match($pattern, $sourceCode, $matches)) {
+                    return "Security Violation: {$msg} ('{$matches[0]}') in local execution sandbox.";
+                }
+            }
+        } elseif (in_array($normalizedLang, ['cpp', 'c++', 'c'], true)) {
+            $dangerousCpp = [
+                '/#\s*include\s*[<"](cstdlib|fstream|sys\/|unistd\.h|windows\.h|direct\.h|dlfcn\.h)[>"]/i' => 'System header include blocked',
+                '/\b(system|popen|fork|execv|execvp|execl|kill|exit|abort)\s*\(/i' => 'Host process/system call blocked',
+            ];
+
+            foreach ($dangerousCpp as $pattern => $msg) {
+                if (preg_match($pattern, $sourceCode, $matches)) {
+                    return "Security Violation: {$msg} ('{$matches[0]}') in local execution sandbox.";
+                }
+            }
+        }
+
+        return null;
+    }
 }
+

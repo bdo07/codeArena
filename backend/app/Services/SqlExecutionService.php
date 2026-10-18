@@ -16,6 +16,9 @@ class SqlExecutionService
         '/\bDETACH\b/i',
         '/\bPRAGMA\b/i',
         '/\bLOAD_EXTENSION\b/i',
+        '/\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|REPLACE|TRUNCATE|VACUUM)\b/i',
+        '/\b(WRITEFILE|READFILE)\b/i',
+        '/\bsqlite_master\b/i',
     ];
 
     /**
@@ -31,9 +34,37 @@ class SqlExecutionService
     {
         $startTime = microtime(true);
 
-        // Security check on user query
+        $cleanQuery = trim($userQuery);
+        // Strip trailing semicolons
+        $cleanQuery = rtrim($cleanQuery, "; \t\n\r\0\x0B");
+
+        // Disallow multi-statement queries
+        if (str_contains($cleanQuery, ';')) {
+            return [
+                'success' => false,
+                'passed' => false,
+                'error' => 'Multi-statement SQL queries are not permitted.',
+                'user_result' => null,
+                'expected_result' => null,
+                'execution_time_ms' => 0,
+            ];
+        }
+
+        // Require SELECT or WITH CTE queries only
+        if (! preg_match('/^\s*(SELECT|WITH)\b/i', $cleanQuery)) {
+            return [
+                'success' => false,
+                'passed' => false,
+                'error' => 'Disallowed SQL statement: only read-only SELECT or CTE queries are permitted.',
+                'user_result' => null,
+                'expected_result' => null,
+                'execution_time_ms' => 0,
+            ];
+        }
+
+        // Security check on user query keywords
         foreach ($this->blacklistedPatterns as $pattern) {
-            if (preg_match($pattern, $userQuery)) {
+            if (preg_match($pattern, $cleanQuery)) {
                 return [
                     'success' => false,
                     'passed' => false,
@@ -59,11 +90,31 @@ class SqlExecutionService
                 $userPdo->exec($seed);
             }
 
+            // Enforce engine-level read-only mode and resource limits
+            $userPdo->setAttribute(PDO::ATTR_TIMEOUT, 2);
+            $userPdo->exec('PRAGMA max_page_count = 2000;');
+            $userPdo->exec('PRAGMA query_only = ON;');
+
             // Execute user query
-            $stmt = $userPdo->prepare($userQuery);
+            $stmt = $userPdo->prepare($cleanQuery);
             $stmt->execute();
 
-            $userRows = $stmt->fetchAll();
+            $maxRows = 500;
+            $userRows = [];
+            while (($row = $stmt->fetch()) !== false) {
+                if (count($userRows) >= $maxRows) {
+                    return [
+                        'success' => false,
+                        'passed' => false,
+                        'error' => "Query returned too many rows (limit is {$maxRows} rows).",
+                        'user_result' => null,
+                        'expected_result' => null,
+                        'execution_time_ms' => round((microtime(true) - $startTime) * 1000, 2),
+                    ];
+                }
+                $userRows[] = $row;
+            }
+
             $columns = [];
             if (!empty($userRows)) {
                 $columns = array_keys($userRows[0]);
