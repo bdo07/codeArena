@@ -104,7 +104,7 @@ export const DuelArenaPage: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [duel?.status, duel?.time_remaining_seconds, uuid, queryClient]);
+  }, [duel, uuid, queryClient]);
 
   // Mutations
   const submitMutation = useMutation({
