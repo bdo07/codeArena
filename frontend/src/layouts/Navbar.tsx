@@ -440,6 +440,13 @@ export const Navbar: React.FC = () => {
           >
             Contests
           </Link>
+          <Link
+            to="/duels"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-md text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            {t('nav.duels', 'Code Duels')}
+          </Link>
           {user && (
             <>
               <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
