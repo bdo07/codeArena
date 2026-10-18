@@ -14,14 +14,14 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className = '' }
     <button
       type="button"
       onClick={toggleTheme}
-      className={`h-8 w-8 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121215] text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100/80 dark:hover:bg-zinc-800/80 transition-all cursor-pointer flex items-center justify-center ${className}`}
+      className={`p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/70 dark:hover:bg-zinc-800 transition-all cursor-pointer flex items-center justify-center ${className}`}
       title={label}
       aria-label={label}
     >
       {isDark ? (
-        <Sun className="w-3.5 h-3.5 text-amber-400 transition-transform duration-200 hover:rotate-45" />
+        <Sun className="w-4 h-4 text-amber-400 transition-transform duration-200 hover:rotate-45" />
       ) : (
-        <Moon className="w-3.5 h-3.5 text-violet-600 transition-transform duration-200 hover:-rotate-12" />
+        <Moon className="w-4 h-4 text-violet-600 transition-transform duration-200 hover:-rotate-12" />
       )}
     </button>
   );

@@ -186,7 +186,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-2xl overflow-hidden flex flex-col text-zinc-900 dark:text-zinc-100 divide-y divide-zinc-200 dark:divide-zinc-800"
+        className="w-full max-w-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden flex flex-col text-zinc-900 dark:text-zinc-100 divide-y divide-zinc-200 dark:divide-zinc-800"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >

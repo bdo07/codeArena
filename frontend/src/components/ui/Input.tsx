@@ -45,7 +45,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             id={inputId}
             ref={ref}
-            className={`w-full bg-white dark:bg-[#121215] border text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-sm rounded-md px-3 py-2 transition-colors focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/70 dark:focus:border-violet-400 dark:focus:ring-violet-400/50 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-950 ${
+            className={`w-full bg-white dark:bg-zinc-900/70 border text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-sm rounded-lg px-3 py-2 transition-colors focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/80 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-950 ${
               leftIcon ? 'pl-9' : ''
             } ${rightIcon ? 'pr-9' : ''} ${
               error

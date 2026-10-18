@@ -46,7 +46,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   const { container, text } = sizeClasses[size];
   const borderStyle = showBorder
-    ? 'border border-zinc-200/90 dark:border-zinc-800 shadow-2xs'
+    ? 'border border-violet-200 dark:border-violet-800/50 shadow-2xs'
     : '';
 
   const initials = getInitials(name);
@@ -69,7 +69,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <div
-      className={`relative inline-flex shrink-0 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 text-violet-700 dark:text-violet-400 font-semibold select-none ${container} ${text} ${borderStyle} ${className}`}
+      className={`relative inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-100 to-indigo-100 dark:from-violet-950/80 dark:to-indigo-950/80 text-violet-700 dark:text-violet-300 font-semibold select-none ${container} ${text} ${borderStyle} ${className}`}
       aria-label={alt || name}
     >
       {initials}
