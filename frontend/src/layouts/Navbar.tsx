@@ -13,6 +13,7 @@ import {
   Sparkles,
   Compass,
   Flame,
+  Swords,
   Edit3,
   Settings,
   Layers,
