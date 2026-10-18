@@ -16,11 +16,13 @@ class LeaderboardController extends Controller
     {
         $perPage = max(1, min(100, (int) $request->input('per_page', 20)));
 
-        $users = User::withCount([
-            'progress as solved_count' => function ($q) {
-                $q->whereNotNull('solved_at');
-            },
-        ])
+        $users = User::whereNull('deleted_at')
+            ->where('status', 'active')
+            ->withCount([
+                'progress as solved_count' => function ($q) {
+                    $q->whereNotNull('solved_at');
+                },
+            ])
             ->with('badges')
             ->orderBy('xp', 'desc')
             ->orderBy('solved_count', 'desc')

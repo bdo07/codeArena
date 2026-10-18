@@ -63,14 +63,18 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Snake stats
-        $snakeCompleted = SnakeGame::where('user_id', $user->id)->where('status', 'completed');
-        $snakeGamesCount = (clone $snakeCompleted)->count();
+        // Snake stats (computed in a single aggregation query)
+        $snakeAgg = SnakeGame::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->selectRaw('count(*) as total_games, coalesce(max(score), 0) as high_score, coalesce(sum(score), 0) as cumulative_score, coalesce(avg(score), 0) as average_score')
+            ->first();
+
+        $snakeGamesCount = (int) ($snakeAgg->total_games ?? 0);
         $snakeStats = [
             'total_games' => $snakeGamesCount,
-            'high_score' => (clone $snakeCompleted)->max('score') ?? 0,
-            'cumulative_score' => (clone $snakeCompleted)->sum('score') ?? 0,
-            'average_score' => $snakeGamesCount > 0 ? round((clone $snakeCompleted)->avg('score'), 1) : 0,
+            'high_score' => (int) ($snakeAgg->high_score ?? 0),
+            'cumulative_score' => (int) ($snakeAgg->cumulative_score ?? 0),
+            'average_score' => round((float) ($snakeAgg->average_score ?? 0), 1),
         ];
 
         return response()->json([
