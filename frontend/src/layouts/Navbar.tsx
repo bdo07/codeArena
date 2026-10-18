@@ -73,7 +73,7 @@ export const Navbar: React.FC = () => {
               </div>
             </Link>
 
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden xl:flex items-center gap-1">
               <Link
                 to="/challenges"
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
@@ -221,7 +221,7 @@ export const Navbar: React.FC = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 {/* XP & Level pill */}
-                <div className="flex items-center gap-2 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full text-xs">
+                <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full text-xs">
                   <span className="flex items-center gap-1 text-violet-600 dark:text-violet-400 font-medium">
                     <Sparkles className="w-3 h-3" />
                     {user.xp.toLocaleString()} XP
@@ -355,10 +355,20 @@ export const Navbar: React.FC = () => {
                 </Link>
               </div>
             )}
+
+            {/* Tablet Menu Toggle (md to xl) */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="xl:hidden p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer ml-1"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
 
           {/* Mobile controls & hamburger button */}
-          <div className="md:hidden flex items-center gap-1.5">
+          <div className="md:hidden flex items-center gap-1 sm:gap-1.5">
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
@@ -369,6 +379,7 @@ export const Navbar: React.FC = () => {
             </button>
             <LanguageSelector />
             <ThemeToggle />
+            {user && <NotificationBell />}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
@@ -380,9 +391,9 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu dropdown */}
+      {/* Mobile/Tablet menu dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 pt-2 pb-4 space-y-2 text-left shadow-lg">
+        <div className="xl:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 pt-2 pb-4 space-y-2 text-left shadow-lg max-h-[calc(100vh-3.5rem)] overflow-y-auto">
           <Link
             to="/search"
             onClick={() => setIsMobileMenuOpen(false)}

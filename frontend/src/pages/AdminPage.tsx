@@ -338,10 +338,10 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* Admin Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2 overflow-x-auto no-scrollbar sm:flex-wrap">
         <button
           onClick={() => setActiveTab('users')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'users'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -353,7 +353,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('appeals')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'appeals'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -365,7 +365,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('audit_logs')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'audit_logs'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -377,7 +377,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('challenges')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'challenges'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -389,7 +389,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('import_export')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'import_export'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -401,7 +401,7 @@ export const AdminPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('analytics')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'analytics'
               ? 'bg-violet-600 text-white shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -424,7 +424,8 @@ export const AdminPage: React.FC = () => {
       {/* TAB 1: Challenges List */}
       {activeTab === 'challenges' && (
         <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/30 shadow-xs">
-          <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[560px]">
             <thead>
               <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 <th className="py-3 px-4">{t('admin.table.titleSlug')}</th>
@@ -522,6 +523,7 @@ export const AdminPage: React.FC = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -691,7 +693,7 @@ export const AdminPage: React.FC = () => {
           ) : analytics ? (
             <>
               {/* Overview Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40">
                   <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
                     {t('admin.analytics.totalUsers', 'Total Users')}
@@ -835,16 +837,18 @@ export const AdminPage: React.FC = () => {
                   <Clock className="w-3.5 h-3.5 text-violet-500" />
                   {t('admin.analytics.activityTrend', 'Recent 7-Day Activity')}
                 </h4>
-                <div className="grid grid-cols-7 gap-2 text-center">
-                  {(analytics.activity_trend || []).map((day) => (
-                    <div key={day.date} className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
-                      <div className="text-[10px] text-zinc-500">{day.date.slice(5)}</div>
-                      <div className="text-sm font-bold font-mono text-violet-600 dark:text-violet-400 mt-1">
-                        {day.submissions}
+                <div className="overflow-x-auto pb-1">
+                  <div className="grid grid-cols-7 gap-2 text-center min-w-[520px]">
+                    {(analytics.activity_trend || []).map((day) => (
+                      <div key={day.date} className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800">
+                        <div className="text-[10px] text-zinc-500">{day.date.slice(5)}</div>
+                        <div className="text-sm font-bold font-mono text-violet-600 dark:text-violet-400 mt-1">
+                          {day.submissions}
+                        </div>
+                        <div className="text-[9px] text-zinc-400">submissions</div>
                       </div>
-                      <div className="text-[9px] text-zinc-400">submissions</div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </>
@@ -1038,7 +1042,7 @@ export const AdminPage: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <textarea
                       rows={2}
                       value={tc.input_data}

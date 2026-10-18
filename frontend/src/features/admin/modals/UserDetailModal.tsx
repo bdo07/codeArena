@@ -170,10 +170,10 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-4 px-5 pt-3 border-b border-zinc-200 dark:border-zinc-800 text-xs">
+        <div className="flex items-center gap-4 px-5 pt-3 border-b border-zinc-200 dark:border-zinc-800 text-xs overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
+            className={`shrink-0 pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
               activeTab === 'overview'
                 ? 'border-violet-600 text-violet-600 dark:text-violet-400'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -184,7 +184,7 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('moderation')}
-            className={`pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
+            className={`shrink-0 pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
               activeTab === 'moderation'
                 ? 'border-violet-600 text-violet-600 dark:text-violet-400'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -195,7 +195,7 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('appeals')}
-            className={`pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
+            className={`shrink-0 pb-2.5 font-medium transition-colors border-b-2 flex items-center gap-1.5 ${
               activeTab === 'appeals'
                 ? 'border-violet-600 text-violet-600 dark:text-violet-400'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
