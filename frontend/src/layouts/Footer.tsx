@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2">
           <Link to="/challenges" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">
             {t('footer.challenges')}
           </Link>

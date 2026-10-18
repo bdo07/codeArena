@@ -218,7 +218,7 @@ export const ChallengesPage: React.FC = () => {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
         {categories.map((cat) => {
           const isSelected = (!category && cat.value === '') || category === cat.value;
           const count = cat.value ? data?.meta?.category_counts?.[cat.value] : null;
@@ -345,7 +345,8 @@ export const ChallengesPage: React.FC = () => {
 
       {/* Challenges Table */}
       <div className="border border-zinc-200/90 dark:border-zinc-800/80 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/30 shadow-xs">
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[560px]">
           <thead>
             <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/90 dark:bg-zinc-900/80 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
               {user && <th className="py-3 px-4 w-12 text-center">{t('challenges.table.status')}</th>}
@@ -473,6 +474,7 @@ export const ChallengesPage: React.FC = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Pagination */}

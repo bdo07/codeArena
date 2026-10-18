@@ -73,7 +73,8 @@ export const LeaderboardPage: React.FC = () => {
 
       {/* Leaderboard Table */}
       <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/30 shadow-xs">
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[500px]">
           <thead>
             <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
               <th className="py-3 px-4 w-16 text-center">{t('leaderboard.rank')}</th>
@@ -158,6 +159,7 @@ export const LeaderboardPage: React.FC = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Pagination Controls */}

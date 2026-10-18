@@ -67,15 +67,31 @@
     border-color: #27272a;
   }
 
+  html {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     font-family: var(--font-sans);
     background-color: var(--canvas-bg);
     color: var(--text-main);
     margin: 0;
     min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
     transition: background-color 0.15s ease, color 0.15s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   /* CRITICAL: Enforce monospace font stack for code, terminals, kbd, technical data */
@@ -138,3 +154,16 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Utility to completely hide scrollbars while allowing touch/wheel scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
