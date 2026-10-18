@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\CollectionController;
 use App\Http\Controllers\Api\V1\ContestController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DiscussionController;
+use App\Http\Controllers\Api\V1\DuelController;
 use App\Http\Controllers\Api\V1\GitPlaygroundController;
 use App\Http\Controllers\Api\V1\InterviewController;
 use App\Http\Controllers\Api\V1\LanguageController;
@@ -154,6 +155,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/challenges/{challenge}/note', [NoteController::class, 'show']);
         Route::get('/share-card/settings', [ShareableCardController::class, 'getSettings']);
 
+        // Code Duel (Read/Poll)
+        Route::get('/duels', [DuelController::class, 'index']);
+        Route::get('/duels/{uuid}', [DuelController::class, 'show']);
+
         // State-Modifying Actions Guarded by EnsureAccountActive
         Route::middleware(EnsureAccountActive::class)->group(function () {
 
@@ -211,6 +216,14 @@ Route::prefix('v1')->group(function () {
             // Shareable Achievement Cards
             Route::put('/share-card/settings', [ShareableCardController::class, 'updateSettings']);
             Route::post('/share-card/regenerate-token', [ShareableCardController::class, 'regenerateToken']);
+
+            // Code Duel Actions
+            Route::post('/duels', [DuelController::class, 'store'])->middleware('throttle:20,1');
+            Route::post('/duels/{uuid}/accept', [DuelController::class, 'accept'])->middleware('throttle:20,1');
+            Route::post('/duels/{uuid}/decline', [DuelController::class, 'decline'])->middleware('throttle:20,1');
+            Route::post('/duels/{uuid}/cancel', [DuelController::class, 'cancel'])->middleware('throttle:20,1');
+            Route::post('/duels/{uuid}/forfeit', [DuelController::class, 'forfeit'])->middleware('throttle:20,1');
+            Route::post('/duels/{uuid}/submit', [DuelController::class, 'submit'])->middleware('throttle:15,1');
         });
     });
 
