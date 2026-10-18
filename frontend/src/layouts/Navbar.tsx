@@ -289,17 +289,7 @@ export const Navbar: React.FC = () => {
                         {t('nav.myProfile', 'My Profile')}
                       </Link>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                          setIsEditModalOpen(true);
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-left cursor-pointer"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                        {t('profile.editProfile', 'Edit Profile')}
-                      </button>
+                     
 
                       <Link
                         to={`/profile/${user.username}?edit=true`}
