@@ -165,7 +165,9 @@ class DuelController extends Controller
             ->firstOrFail();
 
         // Check and apply timeout if active and time limit reached
-        $duel->checkAndApplyTimeout();
+        if ($duel->checkAndApplyTimeout()) {
+            $duel->load(['winner', 'creator', 'opponent']);
+        }
 
         $isParticipant = $user && $duel->isParticipant($user);
 
