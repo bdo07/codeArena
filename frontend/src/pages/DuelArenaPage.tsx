@@ -527,7 +527,7 @@ export const DuelArenaPage: React.FC = () => {
               value={code}
               onChange={(val) => setCode(val || '')}
               theme={theme === 'dark' ? 'vs-dark' : 'light'}
-              loading={<MonacoLoadingSkeleton height="100%" />}
+              loading={<MonacoLoadingSkeleton />}
               options={{
                 readOnly: duel.status !== 'active' || !isUserParticipant,
                 minimap: { enabled: false },
