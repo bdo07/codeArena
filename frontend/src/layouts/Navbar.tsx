@@ -100,17 +100,16 @@ export const Navbar: React.FC = () => {
                 <Code2 className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
                 <span>{t('nav.challenges')}</span>
               </Link>
-              <Link
-                to="/leaderboard"
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
-                  isActive('/leaderboard')
-                    ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
-                }`}
-              >
-                <Trophy className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
-                <span>{t('nav.leaderboard')}</span>
-              </Link>
+             
+
+
+
+
+
+
+
+
+
               <Link
                 to="/roadmaps"
                 className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
@@ -166,61 +165,15 @@ export const Navbar: React.FC = () => {
                 <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
                 <span>Contests</span>
               </Link>
-              <Link
-                to="/duels"
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
-                  location.pathname.startsWith('/duels')
-                    ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
-                }`}
-              >
-                <Swords className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
-                <span>{t('nav.duels', 'Duels')}</span>
-              </Link>
-              {user && (
-                <Link
-                  to="/dashboard"
-                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
-                    isActive('/dashboard')
-                      ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
-                  }`}
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
-                  <span>{t('nav.dashboard')}</span>
-                </Link>
-              )}
-              {user?.role === 'admin' && (
-                <Link
-                  to="/admin"
-                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
-                    isActive('/admin')
-                      ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-700/50 shadow-2xs'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
-                  }`}
-                >
-                  <Shield className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
-                  <span>{t('nav.admin')}</span>
-                </Link>
-              )}
+              
+             
             </div>
           </div>
 
           {/* Right controls: Search, Language, Theme, Bell, and Profile / Auth */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Smart Search Trigger */}
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-1.5 px-2 py-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-violet-500/50 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors cursor-pointer group shrink-0"
-              title={t('search.title', 'Smart Search (⌘K)')}
-            >
-              <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-violet-500 shrink-0" />
-              <span className="hidden 2xl:inline">{t('nav.search', 'Search...')}</span>
-              <kbd className="hidden lg:inline-block text-[10px] font-mono px-1 py-0.2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded text-zinc-400">
-                ⌘K
-              </kbd>
-            </button>
+            
 
             {/* Language Selector */}
             <LanguageSelector />
