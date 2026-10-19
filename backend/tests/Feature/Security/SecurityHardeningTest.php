@@ -134,6 +134,9 @@ class SecurityHardeningTest extends TestCase
             'questions_payload' => [],
             'answers_payload' => [],
             'score' => 85,
+            'started_at' => now(),
+            'expires_at' => now()->addMinutes(30),
+            'completed_at' => now(),
         ]);
 
         // Unauthenticated access attempt
