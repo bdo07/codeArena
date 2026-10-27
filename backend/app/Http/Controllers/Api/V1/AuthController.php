@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\Api\V1\UserResource;
@@ -10,7 +11,9 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -129,6 +132,57 @@ class AuthController extends Controller
 
         return response()->json([
             'user' => new UserResource($user->load('badges')),
+        ]);
+    }
+
+    /**
+     * Change password for the authenticated user.
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $validated = $request->validated();
+
+        // 1. Verify current password
+        if (! Hash::check($validated['current_password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['The current password is incorrect.'],
+            ]);
+        }
+
+        // 2. Hash and update password securely
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        // 3. Revoke other personal access tokens if user has a current token
+        $currentToken = $user->currentAccessToken();
+        if ($currentToken && isset($currentToken->id)) {
+            $user->tokens()->where('id', '!=', $currentToken->id)->delete();
+        }
+
+        // 4. Securely revoke other browser sessions in database if session storage table exists
+        if (Schema::hasTable('sessions')) {
+            $currentSessionId = $request->hasSession() ? $request->session()->getId() : null;
+            DB::table('sessions')
+                ->where('user_id', $user->id)
+                ->when($currentSessionId, function ($query, $sessionId) {
+                    return $query->where('id', '!=', $sessionId);
+                })
+                ->delete();
+        }
+
+        // 5. Keep current session active without logging the user out
+        if ($request->hasSession()) {
+            Auth::guard('web')->login($user);
+            $request->session()->regenerate();
+        }
+
+        return response()->json([
+            'message' => 'Password changed successfully.',
         ]);
     }
 }

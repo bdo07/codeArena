@@ -62,6 +62,8 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::get('/me', [AuthController::class, 'me']);
+            Route::put('/password', [AuthController::class, 'changePassword'])
+                ->middleware([EnsureAccountActive::class, 'throttle:5,1']);
         });
     });
 
@@ -174,6 +176,8 @@ Route::prefix('v1')->group(function () {
 
             // Profile Management (Self)
             Route::put('/profile', [ProfileController::class, 'update']);
+            Route::put('/profile/password', [AuthController::class, 'changePassword'])
+                ->middleware('throttle:5,1');
             Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
             Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 

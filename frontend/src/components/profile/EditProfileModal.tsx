@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   Upload,
   Trash2,
@@ -14,6 +14,11 @@ import {
   Eye,
   EyeOff,
   Link as LinkIcon,
+  Shield,
+  KeyRound,
+  ShieldCheck,
+  Check,
+  Lock,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -29,6 +34,7 @@ interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSaved?: (updatedUser: User) => void;
+  defaultTab?: 'profile' | 'social' | 'skills' | 'security';
 }
 
 const POPULAR_LANGUAGES = [
@@ -70,6 +76,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   isOpen,
   onClose,
   onSaved,
+  defaultTab = 'profile',
 }) => {
   const { user, refreshUser } = useAuth();
   const { t } = useTranslation();
@@ -77,7 +84,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Active sub-tab in the modal
-  const [activeTab, setActiveTab] = useState<'profile' | 'social' | 'skills'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'social' | 'skills' | 'security'>(defaultTab);
 
   // Form states
   const [name, setName] = useState('');
@@ -96,11 +103,68 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isAvatarMarkedForDeletion, setIsAvatarMarkedForDeletion] = useState(false);
 
-  // Status & validation states
+  // Status & validation states for profile
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Change Password states
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>({});
+  const [passwordGeneralError, setPasswordGeneralError] = useState<string | null>(null);
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState<string | null>(null);
+
+  // Real-time password strength calculation
+  const passwordStrength = useMemo(() => {
+    if (!newPassword) return { score: 0, label: '', percent: 0, color: '', textColor: '' };
+    let score = 0;
+    if (newPassword.length >= 8) score += 1;
+    if (newPassword.length >= 12) score += 0.5;
+    if (/[a-z]/.test(newPassword) && /[A-Z]/.test(newPassword)) score += 1;
+    if (/[0-9]/.test(newPassword)) score += 0.5;
+    if (/[^a-zA-Z0-9]/.test(newPassword)) score += 1;
+
+    if (score < 2) {
+      return {
+        score: 1,
+        label: t('profile.passwordStrengthWeak', 'Weak'),
+        percent: 33,
+        color: 'bg-rose-500',
+        textColor: 'text-rose-500',
+      };
+    } else if (score < 3.5) {
+      return {
+        score: 2,
+        label: t('profile.passwordStrengthMedium', 'Medium'),
+        percent: 66,
+        color: 'bg-amber-500',
+        textColor: 'text-amber-500',
+      };
+    } else {
+      return {
+        score: 3,
+        label: t('profile.passwordStrengthStrong', 'Strong'),
+        percent: 100,
+        color: 'bg-emerald-500',
+        textColor: 'text-emerald-500',
+      };
+    }
+  }, [newPassword, t]);
+
+  const passwordRequirements = {
+    length: newPassword.length >= 8,
+    mixedCase: /[a-z]/.test(newPassword) && /[A-Z]/.test(newPassword),
+    symbolOrNumber: /[0-9]/.test(newPassword) || /[^a-zA-Z0-9]/.test(newPassword),
+  };
+
+  const isPasswordDirty = Boolean(currentPassword || newPassword || confirmPassword);
 
   // Initialize form with current user data
   useEffect(() => {
@@ -121,9 +185,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       setErrors({});
       setGeneralError(null);
       setSuccessMessage(null);
-      setActiveTab('profile');
+      setActiveTab(defaultTab);
+
+      // Reset password change form
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setShowCurrentPassword(false);
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
+      setIsChangingPassword(false);
+      setPasswordErrors({});
+      setPasswordGeneralError(null);
+      setPasswordSuccessMessage(null);
     }
-  }, [user, isOpen]);
+  }, [user, isOpen, defaultTab]);
 
   // Clean up preview object URL on unmount or change
   useEffect(() => {
@@ -152,13 +228,76 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     isAvatarMarkedForDeletion;
 
   const handleClose = () => {
-    if (isDirty) {
+    const dirty = activeTab === 'security' ? isPasswordDirty : isDirty;
+    if (dirty) {
       const confirmDiscard = window.confirm(
         t('profile.confirmDiscard', 'You have unsaved changes. Discard them?')
       );
       if (!confirmDiscard) return;
     }
     onClose();
+  };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordErrors({});
+    setPasswordGeneralError(null);
+    setPasswordSuccessMessage(null);
+
+    // Frontend validation
+    const localErrors: Record<string, string> = {};
+    if (!currentPassword) {
+      localErrors.current_password = t('profile.passwordErrors.currentPasswordRequired', 'Please enter your current password.');
+    }
+    if (!newPassword) {
+      localErrors.password = t('profile.passwordErrors.newPasswordRequired', 'Please enter a new password.');
+    } else if (newPassword.length < 8) {
+      localErrors.password = t('profile.passwordErrors.passwordMin', 'Password must be at least 8 characters.');
+    } else if (currentPassword && newPassword === currentPassword) {
+      localErrors.password = t('profile.passwordErrors.passwordSameAsCurrent', 'New password must be different from current password.');
+    }
+    if (!confirmPassword) {
+      localErrors.password_confirmation = t('profile.passwordErrors.confirmPasswordRequired', 'Please confirm your new password.');
+    } else if (newPassword && confirmPassword !== newPassword) {
+      localErrors.password_confirmation = t('profile.passwordErrors.passwordsDontMatch', 'Password confirmation does not match.');
+    }
+
+    if (Object.keys(localErrors).length > 0) {
+      setPasswordErrors(localErrors);
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      const res = await api.put('/auth/password', {
+        current_password: currentPassword,
+        password: newPassword,
+        password_confirmation: confirmPassword,
+      });
+
+      setPasswordSuccessMessage(res.data?.message || t('profile.passwordChangedSuccess', 'Password updated successfully!'));
+      // Reset password fields
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setShowCurrentPassword(false);
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
+    } catch (err: any) {
+      if (err.response?.status === 422 && err.response?.data?.errors) {
+        const backendErrors: Record<string, string> = {};
+        Object.entries(err.response.data.errors).forEach(([field, msgs]: [string, any]) => {
+          backendErrors[field] = Array.isArray(msgs) ? msgs[0] : String(msgs);
+        });
+        setPasswordErrors(backendErrors);
+      } else {
+        setPasswordGeneralError(
+          err.response?.data?.message || t('auth.unexpectedError', 'An unexpected error occurred.')
+        );
+      }
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -355,16 +494,16 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       description={t('profile.editSubtitle', 'Update your public persona and developer details')}
       maxWidth="2xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-4">
         {/* Status Alerts */}
-        {generalError && (
+        {activeTab !== 'security' && generalError && (
           <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-600 dark:text-rose-300 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{generalError}</span>
           </div>
         )}
 
-        {successMessage && (
+        {activeTab !== 'security' && successMessage && (
           <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-600 dark:text-emerald-300 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMessage}</span>
@@ -372,55 +511,73 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-800/60 rounded-xl border border-zinc-200 dark:border-zinc-800/80">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-zinc-100 dark:bg-zinc-800/60 rounded-xl border border-zinc-200 dark:border-zinc-800/80">
           <button
             type="button"
             onClick={() => setActiveTab('profile')}
-            className={`flex items-center justify-center gap-2 flex-1 py-1.5 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
               activeTab === 'profile'
                 ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-2xs font-semibold'
                 : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
             }`}
           >
-            <UserIcon className="w-3.5 h-3.5 text-violet-500" />
-            <span>Profile & Bio</span>
+            <UserIcon className="w-3.5 h-3.5 text-violet-500 shrink-0" />
+            <span className="truncate">{t('profile.tabs.profile', 'Profile & Bio')}</span>
             {(errors.name || errors.username || errors.tagline || errors.bio) && (
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
             )}
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('social')}
-            className={`flex items-center justify-center gap-2 flex-1 py-1.5 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
               activeTab === 'social'
                 ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-2xs font-semibold'
                 : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
             }`}
           >
-            <Globe className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Social & Links</span>
+            <Globe className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+            <span className="truncate">{t('profile.tabs.social', 'Social & Links')}</span>
             {(errors.websiteUrl || errors.website_url || errors.githubUrl || errors.github_url || errors.linkedinUrl || errors.linkedin_url) && (
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
             )}
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('skills')}
-            className={`flex items-center justify-center gap-2 flex-1 py-1.5 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
               activeTab === 'skills'
                 ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-2xs font-semibold'
                 : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
             }`}
           >
-            <Code2 className="w-3.5 h-3.5 text-amber-500" />
-            <span>Skills & Privacy</span>
+            <Code2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span className="truncate">{t('profile.tabs.skills', 'Skills & Privacy')}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('security')}
+            className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              activeTab === 'security'
+                ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-2xs font-semibold'
+                : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+            }`}
+          >
+            <Shield className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+            <span className="truncate">{t('profile.tabs.security', 'Security')}</span>
+            {(passwordErrors.current_password || passwordErrors.password || passwordErrors.password_confirmation) && (
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+            )}
           </button>
         </div>
 
-        {/* Tab 1: Profile & Bio Content */}
+        {/* Tab Content Container */}
         <div className="max-h-[52vh] sm:max-h-[58vh] overflow-y-auto no-scrollbar pr-1 space-y-4">
+          {activeTab !== 'security' && (
+            <form id="profile-edit-form" onSubmit={handleSubmit} className="space-y-4">
           {activeTab === 'profile' && (
             <div className="space-y-4">
               {/* Avatar Uploader Section */}
@@ -683,12 +840,215 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               </div>
             </div>
           )}
+            </form>
+          )}
+
+          {/* Tab 4: Security & Change Password Content */}
+          {activeTab === 'security' && (
+            <form id="change-password-form" onSubmit={handlePasswordSubmit} className="space-y-4">
+              {/* Context info box */}
+              <div className="p-3.5 rounded-xl bg-zinc-50/80 dark:bg-zinc-950/40 border border-zinc-200 dark:border-zinc-800 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                    <KeyRound className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                      {t('profile.changePassword', 'Change Password')}
+                    </h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                      {t('profile.securitySubtitle', 'Ensure your account is using a long, random password to stay secure')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2 pt-1 border-t border-zinc-200/60 dark:border-zinc-800/60 text-[11px] text-zinc-500 dark:text-zinc-400">
+                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
+                  <span>
+                    {t(
+                      'profile.securityBestPractice',
+                      'Changing your password will automatically terminate other active sessions and tokens for security.'
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {/* Status alerts for password change */}
+              {passwordGeneralError && (
+                <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-600 dark:text-rose-300 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+                  <span>{passwordGeneralError}</span>
+                </div>
+              )}
+
+              {passwordSuccessMessage && (
+                <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-600 dark:text-emerald-300 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+                  <span>{passwordSuccessMessage}</span>
+                </div>
+              )}
+
+              {/* Field 1: Current Password */}
+              <div className="space-y-1">
+                <Input
+                  id="current-password-input"
+                  label={t('profile.currentPassword', 'Current Password')}
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => {
+                    setCurrentPassword(e.target.value);
+                    if (passwordErrors.current_password) {
+                      setPasswordErrors((prev) => ({ ...prev, current_password: '' }));
+                    }
+                  }}
+                  placeholder={t('profile.currentPasswordPlaceholder', 'Enter current password')}
+                  autoComplete="current-password"
+                  leftIcon={<Lock className="w-4 h-4" />}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword((prev) => !prev)}
+                      className="pointer-events-auto p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                      title={showCurrentPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                      aria-label={showCurrentPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                    >
+                      {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  }
+                  error={passwordErrors.current_password}
+                />
+              </div>
+
+              {/* Field 2: New Password */}
+              <div className="space-y-2">
+                <Input
+                  id="new-password-input"
+                  label={t('profile.newPassword', 'New Password')}
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    if (passwordErrors.password) {
+                      setPasswordErrors((prev) => ({ ...prev, password: '' }));
+                    }
+                  }}
+                  placeholder={t('profile.newPasswordPlaceholder', 'At least 8 characters')}
+                  autoComplete="new-password"
+                  leftIcon={<Lock className="w-4 h-4" />}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="pointer-events-auto p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                      title={showNewPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                      aria-label={showNewPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                    >
+                      {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  }
+                  error={passwordErrors.password}
+                />
+
+                {/* Password Strength Guidance */}
+                {newPassword.length > 0 && (
+                  <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
+                        {t('profile.passwordStrength', 'Password Strength')}:
+                      </span>
+                      <span className={`text-[11px] font-bold font-mono ${passwordStrength.textColor}`}>
+                        {passwordStrength.label}
+                      </span>
+                    </div>
+
+                    {/* Segmented Strength Bar */}
+                    <div className="grid grid-cols-3 gap-1.5 h-1.5 w-full">
+                      <div
+                        className={`rounded-full transition-all duration-300 ${
+                          passwordStrength.score >= 1 ? passwordStrength.color : 'bg-zinc-200 dark:bg-zinc-800'
+                        }`}
+                      />
+                      <div
+                        className={`rounded-full transition-all duration-300 ${
+                          passwordStrength.score >= 2 ? passwordStrength.color : 'bg-zinc-200 dark:bg-zinc-800'
+                        }`}
+                      />
+                      <div
+                        className={`rounded-full transition-all duration-300 ${
+                          passwordStrength.score >= 3 ? passwordStrength.color : 'bg-zinc-200 dark:bg-zinc-800'
+                        }`}
+                      />
+                    </div>
+
+                    {/* Requirements Checklist */}
+                    <div className="space-y-1 pt-1 font-mono text-[11px]">
+                      <div className={`flex items-center gap-1.5 ${passwordRequirements.length ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                        {passwordRequirements.length ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700 ml-0.5 mr-1" />}
+                        <span>{t('profile.passwordRequirementLength', 'At least 8 characters')}</span>
+                      </div>
+                      <div className={`flex items-center gap-1.5 ${passwordRequirements.mixedCase ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                        {passwordRequirements.mixedCase ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700 ml-0.5 mr-1" />}
+                        <span>{t('profile.passwordRequirementCase', 'Uppercase and lowercase letters')}</span>
+                      </div>
+                      <div className={`flex items-center gap-1.5 ${passwordRequirements.symbolOrNumber ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                        {passwordRequirements.symbolOrNumber ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700 ml-0.5 mr-1" />}
+                        <span>{t('profile.passwordRequirementNumberOrSymbol', 'At least one number or special symbol')}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Field 3: Confirm New Password */}
+              <div className="space-y-1">
+                <Input
+                  id="confirm-password-input"
+                  label={t('profile.confirmNewPassword', 'Confirm New Password')}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (passwordErrors.password_confirmation) {
+                      setPasswordErrors((prev) => ({ ...prev, password_confirmation: '' }));
+                    }
+                  }}
+                  placeholder={t('profile.confirmNewPasswordPlaceholder', 'Re-enter new password')}
+                  autoComplete="new-password"
+                  leftIcon={<Lock className="w-4 h-4" />}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="pointer-events-auto p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                      title={showConfirmPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                      aria-label={showConfirmPassword ? t('profile.hidePassword', 'Hide password') : t('profile.showPassword', 'Show password')}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  }
+                  error={passwordErrors.password_confirmation}
+                />
+              </div>
+            </form>
+          )}
         </div>
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-zinc-800">
           <div className="text-xs">
-            {isDirty ? (
+            {activeTab === 'security' ? (
+              isPasswordDirty ? (
+                <span className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-mono text-[11px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  Unsaved password
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-zinc-400 font-mono text-[11px]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  Sanctum TLS Protected
+                </span>
+              )
+            ) : isDirty ? (
               <span className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-mono text-[11px]">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                 Unsaved edits
@@ -704,24 +1064,38 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               variant="ghost"
               size="sm"
               onClick={handleClose}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isChangingPassword}
               leftIcon={<X className="w-3.5 h-3.5" />}
             >
               {t('common.cancel', 'Cancel')}
             </Button>
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              isLoading={isSubmitting}
-              leftIcon={<Save className="w-3.5 h-3.5" />}
-            >
-              {t('common.saveChanges', 'Save Changes')}
-            </Button>
+            {activeTab === 'security' ? (
+              <Button
+                type="submit"
+                form="change-password-form"
+                variant="primary"
+                size="sm"
+                isLoading={isChangingPassword}
+                leftIcon={<Lock className="w-3.5 h-3.5" />}
+              >
+                {t('profile.updatePassword', 'Update Password')}
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                form="profile-edit-form"
+                variant="primary"
+                size="sm"
+                isLoading={isSubmitting}
+                leftIcon={<Save className="w-3.5 h-3.5" />}
+              >
+                {t('common.saveChanges', 'Save Changes')}
+              </Button>
+            )}
           </div>
         </div>
-      </form>
+      </div>
     </Modal>
   );
 };

@@ -46,6 +46,7 @@ export const ProfilePage: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [defaultEditTab, setDefaultEditTab] = useState<'profile' | 'social' | 'skills' | 'security'>('profile');
   const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<'solved' | 'badges' | 'activity'>('solved');
@@ -53,10 +54,17 @@ export const ProfilePage: React.FC = () => {
   // Support opening edit modal via ?edit=true if user is viewing their own profile
   useEffect(() => {
     if (searchParams.get('edit') === 'true') {
+      const tabParam = searchParams.get('tab');
+      if (tabParam === 'security' || tabParam === 'social' || tabParam === 'skills') {
+        setDefaultEditTab(tabParam);
+      } else {
+        setDefaultEditTab('profile');
+      }
       setIsEditModalOpen(true);
       // Clean query parameter
       const next = new URLSearchParams(searchParams);
       next.delete('edit');
+      next.delete('tab');
       setSearchParams(next, { replace: true });
     }
   }, [searchParams, setSearchParams]);
@@ -636,6 +644,7 @@ export const ProfilePage: React.FC = () => {
           <EditProfileModal
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
+            defaultTab={defaultEditTab}
             onSaved={() => {
               refetch();
             }}
