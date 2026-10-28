@@ -62,19 +62,7 @@ export const LoginPage: React.FC = () => {
           <p className="text-xs text-zinc-500 dark:text-zinc-400">{t('auth.signInSubtitle')}</p>
         </div>
 
-        {/* Demo credentials hint */}
-        <div className="p-3 bg-zinc-100/90 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-600 dark:text-zinc-400 space-y-1 text-left shadow-2xs">
-          <div className="font-medium text-zinc-800 dark:text-zinc-300">{t('auth.quickTestCredentials')}</div>
-          <div className="font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
-            Username: <span className="text-violet-600 dark:text-violet-300 font-semibold">alexchen</span> · Pass:{' '}
-            <span className="text-violet-600 dark:text-violet-300">Password123!</span>
-          </div>
-          <div className="font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
-            Admin: <span className="text-violet-600 dark:text-violet-300 font-semibold">admin</span> · Pass:{' '}
-            <span className="text-violet-600 dark:text-violet-300">Password123!</span>
-          </div>
-        </div>
-
+      
         {serverError && (
           <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 rounded-lg text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2 text-left">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400" />
